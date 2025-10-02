@@ -1,0 +1,679 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+}
+.hero-container {
+ 
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a1f1a 0%, #1a2f28 50%, #0d2820 100%);
+  position: relative;
+  overflow: hidden;
+}
+/* Animated Background Pattern */
+.hero-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(126, 213, 111, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(126, 213, 111, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+/* Hero Content */
+.hero-content {
+  max-width: 1400px;
+  margin-top: 100px;
+  padding: 60px 50px 40px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  position: relative;
+  z-index: 2;  
+}
+.hero-left {
+ 
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.hero-subtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Main Title Section - Industry 5.0 */
+.main-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.main-title {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+  line-height: 1;
+  flex-wrap: wrap;
+}
+.industry-black {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 100px;
+  font-weight: 400;
+  color: #ffffff;
+  letter-spacing: 2px;
+}
+.industry-green {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 120px;
+  font-weight: 400;
+  color: #7ED56F;
+  letter-spacing: 2px;
+  
+}
+
+.main-subtitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  margin-left: 2px;
+}
+/* Convention Info */
+.convention-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.convention-title {
+  font-size: 30px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.3;
+}
+.convention-subtitle {
+  font-size: 24px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.3;
+}
+
+.hero-right {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeInRight 1s ease-out;
+}
+
+.image-container {
+    
+margin-right: -20%;
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+.hero-image {
+  width: 100%;
+  height: auto;
+  max-width: 550px;
+  object-fit: contain;
+ 
+  position: relative;
+  z-index: 2;
+}
+
+.floating-particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #7ED56F;
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(126, 213, 111, 0.8);
+  animation: particleFloat 8s ease-in-out infinite;
+}
+
+.particle-1 {
+  top: 10%;
+  right: 15%;
+  animation-delay: 0s;
+}
+
+.particle-2 {
+  bottom: 20%;
+  left: 10%;
+  animation-delay: 2s;
+}
+
+.particle-3 {
+  top: 50%;
+  right: -5%;
+  animation-delay: 4s;
+}
+
+.particle-4 {
+  bottom: 10%;
+  right: 20%;
+  animation-delay: 6s;
+}
+
+/* Animations */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-30px) translateX(20px);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-50px) translateX(-10px);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translateY(-30px) translateX(-30px);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .industry-black {
+    font-size: 85px;
+  }
+  
+  .industry-green {
+    font-size: 100px;
+  }
+  
+  .main-subtitle {
+    font-size: 22px;
+  }
+  
+  .convention-title {
+    font-size: 26px;
+  }
+  
+  .convention-subtitle {
+    font-size: 22px;
+  }
+  
+  .theme-text {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 60px;
+    padding: 50px 40px 40px;
+  }
+
+  .industry-black {
+    font-size: 75px;
+  }
+  
+  .industry-green {
+    font-size: 90px;
+  }
+
+  .image-container {
+    max-width: 450px;
+  }
+
+  .hero-image {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-content {
+    padding: 0 30px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .menu-btn {
+    display: flex;
+  }
+
+  .hero-content {
+    padding: 40px 30px 40px;
+  }
+
+  .hero-left {
+    gap: 25px;
+  }
+
+  .industry-black {
+    font-size: 60px;
+  }
+  
+  .industry-green {
+    font-size: 75px;
+  }
+
+  .main-subtitle {
+    font-size: 18px;
+  }
+
+  .convention-title {
+    font-size: 22px;
+  }
+
+  .convention-subtitle {
+    font-size: 18px;
+  }
+
+  .theme-text {
+    font-size: 18px;
+  }
+
+  .date-title {
+    font-size: 38px;
+  }
+
+  .tagline p {
+    font-size: 16px;
+  }
+
+  .cta-button {
+    padding: 16px 40px;
+    font-size: 14px;
+    align-self: center;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .image-container {
+    max-width: 350px;
+  }
+  .particle{
+    display: none;
+  }
+  .hero-image {
+    margin-right: -40%;
+    margin-top: -520px;
+    width: 100%;
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-green,
+  .logo-light {
+    font-size: 22px;
+  }
+
+  .logo-tagline {
+    font-size: 9px;
+  }
+
+  .hero-left {
+    gap: 20px;
+  }
+
+  .main-title {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .industry-black {
+    font-size: 50px;
+  }
+  
+  .industry-green {
+    font-size: 65px;
+  }
+
+  .main-subtitle {
+    font-size: 16px;
+  }
+
+  .convention-title {
+    font-size: 20px;
+  }
+
+  .convention-subtitle {
+    font-size: 16px;
+  }
+
+  .theme-card {
+    padding: 20px 25px;
+  }
+
+  .theme-text {
+    font-size: 16px;
+  }
+
+  .date-title {
+    font-size: 32px;
+  }
+
+  .tagline p {
+    font-size: 14px;
+  }
+
+  .image-container {
+    max-width: 280px;
+  }
+
+  .hero-image {
+    max-width: 240px;
+  }
+}
+/* Tagline Box */
+.tagline-box {
+    background: rgba(126, 213, 111, 0.1);
+    border-left: 4px solid #7ED56F;
+    padding: 20px 25px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .tagline-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: #7ED56F;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  
+  /* Footer Banner */
+  .footer-banner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(10, 20, 15, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(126, 213, 111, 0.2);
+    padding: 20px 50px;
+    text-align: center;
+    z-index: 10;
+  }
+  
+  .footer-banner p {
+    font-size: 16px;
+    font-weight: 600;
+    color: #7ED56F;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  
+  /* Responsive Design for Banner */
+  @media (max-width: 768px) {
+    .tagline-box {
+      padding: 15px 20px;
+    }
+  
+    .tagline-text {
+      font-size: 16px;
+    }
+  
+    .footer-banner {
+      padding: 15px 30px;
+    }
+  
+    .footer-banner p {
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .tagline-box {
+      padding: 12px 15px;
+    }
+  
+    .tagline-text {
+      font-size: 14px;
+      letter-spacing: 0.3px;
+    }
+  
+    .footer-banner {
+      padding: 12px 20px;
+    }
+  
+    .footer-banner p {
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+  }
+  /* Date Section */
+.date-section {
+    margin-top: 20px;
+  }
+  
+  .date-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px 25px;
+    border-radius: 12px;
+    border: 1px solid rgba(126, 213, 111, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .date-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #7ED56F 0%, #5FB952 100%);
+  }
+  
+  .date-icon {
+    font-size: 28px;
+    opacity: 0.9;
+  }
+  
+  .date-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+  }
+  
+  .date-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .date-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #7ED56F;
+    letter-spacing: 0.5px;
+  }
+  
+  .coming-soon-tag {
+    background: linear-gradient(135deg, #7ED56F 0%, #5FB952 100%);
+    color: #0a1f1a;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(126, 213, 111, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  /* Alternative Date Section Style */
+  .date-section-alternative {
+    margin-top: 20px;
+  }
+  
+  .date-container-alternative {
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(126, 213, 111, 0.1);
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: 2px solid rgba(126, 213, 111, 0.3);
+    position: relative;
+  }
+  
+  .date-content-alternative {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .date-icon-alternative {
+    font-size: 24px;
+  }
+  
+  .date-text-alternative {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .date-label-alternative {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .date-value-alternative {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+  
+  .coming-soon-tag-alternative {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  /* Enhanced pulse animation */
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 4px 15px rgba(126, 213, 111, 0.3);
+    }
+    50% {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(126, 213, 111, 0.5);
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .date-container {
+      padding: 15px 20px;
+      gap: 12px;
+    }
+    
+    .date-icon {
+      font-size: 24px;
+    }
+    
+    .date-value {
+      font-size: 16px;
+    }
+    
+    .coming-soon-tag {
+      padding: 6px 12px;
+      font-size: 10px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .date-container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 15px;
+    }
+    
+    .date-content {
+      width: 100%;
+    }
+    .coming-soon-tag {
+      align-self: flex-end;
+    }
+  }
