@@ -660,6 +660,9 @@ margin-right: -20%;
       padding: 6px 12px;
       font-size: 10px;
     }
+    .image-container{
+        margin-top: -400px;
+    }
   }
   
   @media (max-width: 480px) {
