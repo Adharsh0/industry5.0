@@ -7,9 +7,11 @@
   width: 100%;
   padding: 15px 0;
   /* background: rgba(10, 31, 26, 0.9); */
-  background-color: black;
+  
+  background-color: linear-gradient(90deg, rgba(126, 213, 111, 0.03) 1px, transparent 1px),
+  linear-gradient(rgba(126, 213, 111, 0.03) 1px, transparent 1px);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(126, 213, 111, 0.1);
+ 
   z-index: 1000;
   transition: all 0.3s ease;
 }
