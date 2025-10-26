@@ -1,17 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FaCalendarAlt, FaMapMarkerAlt, FaArrowRight, FaInfoCircle } from 'react-icons/fa';
 import './HomeSection.css';
 
 const HomeSection = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   const handleRegister = () => {
-    // Add registration functionality
     console.log('Register clicked');
   };
 
   const handleKnowMore = () => {
-    // Add know more functionality
     console.log('Know more clicked');
   };
 
@@ -52,11 +48,21 @@ const HomeSection = () => {
         <div className="hero-right">
           <div className="image-container">
             <div className="image-glow"></div>
+            
+            {/* Desktop Image */}
             <img 
               src="robo.png" 
-              alt="AI Robot holding Earth"
-              className="hero-image"
+              alt="AI Robot representing Industry 5.0"
+              className="hero-image desktop-image"
             />
+            
+            {/* Mobile Image */}
+            <img 
+              src="mobile.png" 
+              alt="AI Robot representing Industry 5.0"
+              className="hero-image mobile-image"
+            />
+            
             <div className="floating-particles">
               <div className="particle particle-1"></div>
               <div className="particle particle-2"></div>
@@ -78,14 +84,7 @@ const HomeSection = () => {
               <FaMapMarkerAlt className="marquee-icon" />
               MBCET Trivandrum
             </span>
-            <span className="marquee-text">
-              <FaCalendarAlt className="marquee-icon" />
-              Event Date: 9th & 10th January 2026
-            </span>
-            <span className="marquee-text">
-              <FaMapMarkerAlt className="marquee-icon" />
-              MBCET Trivandrum
-            </span>
+            {/* Repeat for seamless animation */}
             <span className="marquee-text">
               <FaCalendarAlt className="marquee-icon" />
               Event Date: 9th & 10th January 2026
