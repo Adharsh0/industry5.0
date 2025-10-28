@@ -1,18 +1,30 @@
 import React, { useState } from 'react';
-import { FaCalendarAlt, FaMapMarkerAlt, FaArrowRight, FaInfoCircle } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaArrowRight, FaInfoCircle, FaSpinner } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import './HomeSection.css';
 
 const HomeSection = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleRegister = () => {
-    // Add registration functionality
-    console.log('Register clicked');
+  const handleRegister = async () => {
+    // Set loading state to true
+    setIsRegisterLoading(true);
+    
+    // Simulate a small delay for better UX
+    setTimeout(() => {
+      navigate('/register');
+      // Note: The loading state will reset when component unmounts during navigation
+    }, 1000);
   };
 
   const handleKnowMore = () => {
-    // Add know more functionality
-    console.log('Know more clicked');
+    // Scroll to about section
+    const aboutSection = document.getElementById('about');
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -38,9 +50,22 @@ const HomeSection = () => {
           </div>
 
           <div className="cta-buttons">
-            <button className="cta-button btn-primary" onClick={handleRegister}>
-              <span>Register Now</span>
-              <FaArrowRight className="btn-icon" />
+            <button 
+              className={`cta-button btn-primary ${isRegisterLoading ? 'loading' : ''}`} 
+              onClick={handleRegister}
+              disabled={isRegisterLoading}
+            >
+              {isRegisterLoading ? (
+                <>
+                  <FaSpinner className="btn-icon spinner" />
+                  <span>Loading...</span>
+                </>
+              ) : (
+                <>
+                  <span>Register Now</span>
+                  <FaArrowRight className="btn-icon" />
+                </>
+              )}
             </button>
             <button className="cta-button btn-secondary" onClick={handleKnowMore}>
               <span>Know More</span>

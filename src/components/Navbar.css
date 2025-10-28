@@ -287,3 +287,48 @@
     height: 40px;
   }
 }
+/* Button styles for navigation */
+.nav-link-btn, .mobile-link-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 0;
+  font-family: inherit;
+}
+
+.nav-link-btn::after, .mobile-link-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #7ED56F;
+  transition: width 0.3s ease;
+}
+
+.nav-link-btn:hover, .mobile-link-btn:hover {
+  color: #7ED56F;
+}
+
+.nav-link-btn:hover::after, .mobile-link-btn:hover::after {
+  width: 100%;
+}
+
+/* Mobile menu button styles */
+.mobile-link-btn {
+  width: 100%;
+  text-align: left;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(126, 213, 111, 0.1);
+  font-size: 18px;
+}
+
+.mobile-link-btn:hover {
+  padding-left: 10px;
+}

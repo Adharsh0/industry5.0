@@ -8,114 +8,110 @@ import {
   FaClock,
   FaHistory,
   FaStar,
-  FaArrowRight
+  FaArrowRight,
+  FaInfoCircle
 } from 'react-icons/fa';
 import './AboutSection.css';
 
 const AboutSection = () => {
+  const handleRegisterInterest = () => {
+    // Scroll to registration section or navigate
+    const registerSection = document.getElementById('register');
+    if (registerSection) {
+      registerSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="about-container" id="about" aria-labelledby="about-title">
+      {/* Background Shapes */}
+      <div className="bg-shapes">
+        <div className="shape shape-1"></div>
+        <div className="shape shape-2"></div>
+        <div className="shape shape-3"></div>
+      </div>
+
       <div className="about-content">
-        <header className="section-header">
-     
-          <h2 className="section-title" id="about-title">
-            What is <span className="title-highlight">ISTE INDUSTRY 5.0</span>?
-          </h2>
-          <div className="title-divider" role="presentation"></div>
-          <p className="section-subtitle">
+        {/* Header Section */}
+        <div className="registration-header">
+         
+          
+          <h1 className="main-heading">
+            About <span className="gradient-text">ISTE INDUSTRY 5.0</span>
+          </h1>
+          
+          <p className="header-description">
             Pioneering the future of human-centric smart engineering and sustainable innovation
           </p>
-        </header>
+        </div>
 
-        <div className="about-grid">
-          <div className="about-main">
-            <div className="about-text">
-              <p className="about-paragraph">
-                The ISTE Annual State Convention stands as one of Kerala's most prestigious student-driven technical gatherings, 
-                bringing together the brightest minds in engineering and technology. Over the past 23 editions, it has evolved 
-                into a dynamic platform for learning, collaboration, and fostering long-term partnerships between academia and industry.
-              </p>
+        <div className="registration-layout">
+          {/* Main Content */}
+          <div className="form-section">
+            <div className="form-card">
+              <div className="form-header">
+                <h2 className="form-title">What is ISTE INDUSTRY 5.0?</h2>
+                <p className="form-subtitle">Kerala's Premier Student Technical Convention</p>
+              </div>
 
-              <p className="about-paragraph">
-                The 2026 edition promises to unite over a thousand passionate participants, including students, researchers, 
-                entrepreneurs, policymakers, and industry leaders. This immersive two-day event will feature cutting-edge 
-                keynote sessions, thought-provoking expert panels, innovative exhibitions, competitive ideathons, and 
-                inspiring startup showcases.
-              </p>
+              <div className="about-text-content">
+                <p className="about-paragraph">
+                  The ISTE Annual State Convention stands as one of Kerala's most prestigious student-driven technical gatherings, 
+                  bringing together the brightest minds in engineering and technology. Over the past 23 editions, it has evolved 
+                  into a dynamic platform for learning, collaboration, and fostering long-term partnerships between academia and industry.
+                </p>
 
-              <div className="highlight-box">
-                <FaStar className="highlight-icon" />
-                <p className="highlight-text">
-                  Themed <strong>"Smart and Sustainable: Engineering a Better Tomorrow with AI"</strong>, the convention 
-                  explores Industry 5.0—where human ingenuity and intelligent automation converge to create a more 
-                  sustainable and equitable future for all.
+                <p className="about-paragraph">
+                  The 2026 edition promises to unite over a thousand passionate participants, including students, researchers, 
+                  entrepreneurs, policymakers, and industry leaders. This immersive two-day event will feature cutting-edge 
+                  keynote sessions, thought-provoking expert panels, innovative exhibitions, competitive ideathons, and 
+                  inspiring startup showcases.
+                </p>
+
+                <div className="highlight-box">
+                  <FaStar className="highlight-icon" />
+                  <p className="highlight-text">
+                    Themed <strong>"Smart and Sustainable: Engineering a Better Tomorrow with AI"</strong>, the convention 
+                    explores Industry 5.0—where human ingenuity and intelligent automation converge to create a more 
+                    sustainable and equitable future for all.
+                  </p>
+                </div>
+
+                <p className="about-paragraph">
+                  Hosted by the ISTE Kerala Section in collaboration with Mar Baselios College of Engineering and Technology, 
+                  the 24th Annual State Students Convention represents a landmark event that brings together diverse 
+                  stakeholders in innovation and education.
+                </p>
+
+                <p className="about-paragraph">
+                  For industry partners and sponsors, this convention offers an unparalleled opportunity to showcase brand 
+                  leadership, demonstrate technological excellence, and engage directly with the next generation of 
+                  innovators, thinkers, and change-makers in the fields of sustainability and artificial intelligence.
                 </p>
               </div>
 
-              <p className="about-paragraph">
-                Hosted by the ISTE Kerala Section in collaboration with Mar Baselios College of Engineering and Technology, 
-                the 24th Annual State Students Convention represents a landmark event that brings together diverse 
-                stakeholders in innovation and education.
-              </p>
-
-              <p className="about-paragraph">
-                For industry partners and sponsors, this convention offers an unparalleled opportunity to showcase brand 
-                leadership, demonstrate technological excellence, and engage directly with the next generation of 
-                innovators, thinkers, and change-makers in the fields of sustainability and artificial intelligence.
-              </p>
-            </div>
-
-            <div className="features-grid">
-              <div className="feature-item">
-                <div className="feature-icon">
-                  <FaLightbulb />
-                </div>
-                <div className="feature-content">
-                  <h3 className="feature-title">Vision</h3>
-                  <p className="feature-description">
-                    To create a collaborative ecosystem where academia and industry converge to shape the future of smart engineering
-                  </p>
-                </div>
-              </div>
-
-              <div className="feature-item">
-                <div className="feature-icon">
-                  <FaRocket />
-                </div>
-                <div className="feature-content">
-                  <h3 className="feature-title">Mission</h3>
-                  <p className="feature-description">
-                    Empower students with industry insights, foster innovation, and build sustainable solutions for tomorrow's challenges
-                  </p>
-                </div>
-              </div>
-
-              <div className="feature-item">
-                <div className="feature-icon">
-                  <FaHandsHelping />
-                </div>
-                <div className="feature-content">
-                  <h3 className="feature-title">Impact</h3>
-                  <p className="feature-description">
-                    Creating lasting partnerships and driving meaningful change through technology and collaboration
-                  </p>
-                </div>
-              </div>
+              {/* Features Grid */}
             </div>
           </div>
 
-          <aside className="about-sidebar">
-            <div className="stats-container">
-              <h3 className="stats-title">Convention Highlights</h3>
-              <div className="about-stats" aria-label="Event statistics">
+          {/* Sidebar */}
+          <div className="info-section">
+            {/* Stats Card */}
+            <div className="info-card">
+              <div className="card-header">
+                <div className="card-glow"></div>
+                <h3 className="card-title">Convention Highlights</h3>
+              </div>
+              
+              <div className="about-stats">
                 <div className="stat-item">
                   <div className="stat-icon">
                     <FaHistory />
                   </div>
-                  <div className="stat-content">
-                    <div className="stat-number">24<sup>th</sup></div>
+                  <div className="stat-info">
                     <div className="stat-label">Prestigious Edition</div>
-                    <div className="stat-description">Years of excellence in technical education</div>
+                    <div className="stat-number">24<sup>th</sup></div>
+                    <div className="stat-description">Years of excellence</div>
                   </div>
                 </div>
 
@@ -123,10 +119,10 @@ const AboutSection = () => {
                   <div className="stat-icon">
                     <FaUsers />
                   </div>
-                  <div className="stat-content">
-                    <div className="stat-number">1000+</div>
+                  <div className="stat-info">
                     <div className="stat-label">Innovative Minds</div>
-                    <div className="stat-description">Students, experts, and industry leaders</div>
+                    <div className="stat-number">1000+</div>
+                    <div className="stat-description">Students & leaders</div>
                   </div>
                 </div>
 
@@ -134,10 +130,10 @@ const AboutSection = () => {
                   <div className="stat-icon">
                     <FaClock />
                   </div>
-                  <div className="stat-content">
-                    <div className="stat-number">2</div>
+                  <div className="stat-info">
                     <div className="stat-label">Action-Packed Days</div>
-                    <div className="stat-description">Of learning and collaboration</div>
+                    <div className="stat-number">2</div>
+                    <div className="stat-description">Learning & collaboration</div>
                   </div>
                 </div>
 
@@ -145,25 +141,34 @@ const AboutSection = () => {
                   <div className="stat-icon">
                     <FaCalendarAlt />
                   </div>
-                  <div className="stat-content">
-                    <div className="stat-number">23+</div>
+                  <div className="stat-info">
                     <div className="stat-label">Years Legacy</div>
-                    <div className="stat-description">Building future technologists</div>
+                    <div className="stat-number">23+</div>
+                    <div className="stat-description">Building technologists</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="cta-card">
-              <h3 className="cta-title">Join the Revolution</h3>
-              <p className="cta-description">
-                Be part of Kerala's largest student technical convention and shape the future of Industry 5.0
-              </p>
-              <button className="cta-button">
-                Register Your Interest <FaArrowRight className="btn-icon" />
-              </button>
+            {/* CTA Card */}
+            <div className="event-card">
+              <div className="card-header">
+                <div className="card-glow"></div>
+                <h3 className="event-title">Join the Revolution</h3>
+              </div>
+              
+              <div className="event-details">
+                <p className="cta-description">
+                  Be part of Kerala's largest student technical convention and shape the future of Industry 5.0
+                </p>
+                
+                <button className="submit-btn" onClick={handleRegisterInterest}>
+                  <span>Register Your Interest</span>
+                  <FaArrowRight className="btn-icon" />
+                </button>
+              </div>
             </div>
-          </aside>
+          </div>
         </div>
       </div>
     </section>
