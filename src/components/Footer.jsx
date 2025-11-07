@@ -9,13 +9,33 @@ import {
   FaEnvelope,
   FaPhone,
   FaArrowRight,
-  FaInfoCircle
+  FaInfoCircle,
+  FaUserShield
 } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import './Footer.css';
 
 const Footer = () => {
+  const handleRegisterClick = () => {
+    // Scroll to registration section or navigate to register page
+    const registerSection = document.getElementById('register');
+    if (registerSection) {
+      registerSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.location.href = '/register';
+    }
+  };
+
+  const handleLearnMoreClick = () => {
+    // Scroll to about section
+    const aboutSection = document.getElementById('about');
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <footer className="footer">
+    <footer className="footer" id="footer">
       {/* CTA Section - Hidden on mobile */}
       <div className="footer-top">
         <div className="footer-cta">
@@ -32,10 +52,16 @@ const Footer = () => {
             </p>
           </div>
           <div className="cta-buttons">
-            <button className="cta-button btn-primary">
+            <button 
+              className="cta-button btn-primary"
+              onClick={handleRegisterClick}
+            >
               Register Now <FaArrowRight className="btn-icon" />
             </button>
-            <button className="cta-button btn-secondary">
+            <button 
+              className="cta-button btn-secondary"
+              onClick={handleLearnMoreClick}
+            >
               Learn More <FaInfoCircle className="btn-icon" />
             </button>
           </div>
@@ -59,7 +85,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="footer-description">
-              Empowering the next generation of engineers and innovators through cutting-edge technology.
+              Empowering the next generation of engineers and innovators through cutting-edge technology and sustainable innovation.
             </p>
             <div className="footer-social">
               <a href="#" className="social-link" aria-label="Facebook">
@@ -88,16 +114,17 @@ const Footer = () => {
               <a href="#about" className="footer-link">About</a>
               <a href="#events" className="footer-link">Events</a>
               <a href="#schedule" className="footer-link">Schedule</a>
+              <Link to="/register" className="footer-link">Register</Link>
             </div>
           </div>
 
           {/* Contact Info - Always visible */}
           <div className="footer-section footer-contact-section">
-            <h3 className="footer-title">Contact</h3>
+            <h3 className="footer-title">Contact Info</h3>
             <div className="footer-links">
               <div className="footer-contact-item">
                 <FaMapMarkerAlt className="footer-contact-icon" />
-                <span>MBCET, Trivandrum, Kerala</span>
+                <span>Mar Baselios College of Engineering & Technology</span>
               </div>
               <div className="footer-contact-item">
                 <FaEnvelope className="footer-contact-icon" />
@@ -117,7 +144,10 @@ const Footer = () => {
 
         {/* Mobile CTA - Only visible on mobile */}
         <div className="mobile-cta">
-          <button className="mobile-cta-button btn-primary">
+          <button 
+            className="mobile-cta-button btn-primary"
+            onClick={handleRegisterClick}
+          >
             Register Now <FaArrowRight className="btn-icon" />
           </button>
         </div>
@@ -125,12 +155,18 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="footer-bottom">
           <p className="footer-copyright">
-            © 2026 ISTE Kerala Section. All rights reserved.
+            © 2026 ISTE Kerala Section - Industry 5.0 Convention. All rights reserved.
           </p>
           <div className="footer-credits">
-            <a href="#" className="footer-credit-link">Privacy</a>
-            <a href="#" className="footer-credit-link">Terms</a>
-            <a href="#" className="footer-credit-link">Cookies</a>
+            <a href="#" className="footer-credit-link">Privacy Policy</a>
+            <a href="#" className="footer-credit-link">Terms of Service</a>
+            <a href="#" className="footer-credit-link">Cookie Policy</a>
+            
+            {/* Admin Link */}
+            <Link to="/admin-login" className="footer-admin-link">
+              <FaUserShield className="admin-icon" />
+              Admin
+            </Link>
           </div>
         </div>
       </div>

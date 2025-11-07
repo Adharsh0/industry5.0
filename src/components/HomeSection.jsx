@@ -97,7 +97,7 @@ const HomeSection = () => {
           <div className="marquee-content">
             <span className="marquee-text">
               <FaCalendarAlt className="marquee-icon" />
-              Event Date: 9th & 10th January 2026
+              Event Date: 30th & 31th January 2026
             </span>
             <span className="marquee-text">
               <FaMapMarkerAlt className="marquee-icon" />
@@ -105,7 +105,7 @@ const HomeSection = () => {
             </span>
             <span className="marquee-text">
               <FaCalendarAlt className="marquee-icon" />
-              Event Date: 9th & 10th January 2026
+              Event Date: 30th & 31th January 2026
             </span>
             <span className="marquee-text">
               <FaMapMarkerAlt className="marquee-icon" />
@@ -113,7 +113,7 @@ const HomeSection = () => {
             </span>
             <span className="marquee-text">
               <FaCalendarAlt className="marquee-icon" />
-              Event Date: 9th & 10th January 2026
+              Event Date: 30th & 31th January 2026
             </span>
             <span className="marquee-text">
               <FaMapMarkerAlt className="marquee-icon" />

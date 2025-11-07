@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   User, 
   Mail, 
   Phone, 
   Building2, 
   Send, 
-  ArrowLeft,
   Calendar,
   MapPin,
   GraduationCap,
@@ -18,6 +17,7 @@ import './RegistrationPage.css';
 
 const RegistrationPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [showPayment, setShowPayment] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -35,16 +35,7 @@ const RegistrationPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Registration data:', formData);
-    
-    let additionalCharges = 0;
-    if (formData.stayPreference === 'yes') additionalCharges += 500;
-    if (formData.foodPreference === 'yes') additionalCharges += 300;
-    
-    const message = additionalCharges > 0 
-      ? `Registration submitted successfully! Additional charges: ₹${additionalCharges}. We will contact you for payment.`
-      : 'Registration submitted successfully!';
-    
-    alert(message);
+    setShowPayment(true);
   };
 
   const handleChange = (e) => {
@@ -55,8 +46,8 @@ const RegistrationPage = () => {
     });
   };
 
-  const handleBack = () => {
-    window.history.back();
+  const handleLocationClick = () => {
+    window.open('https://maps.app.goo.gl/p8PJqvzm5Ug9T4LNA', '_blank');
   };
 
   const calculateAdditionalCharges = () => {
@@ -74,6 +65,11 @@ const RegistrationPage = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
+  // If payment page should be shown, render PaymentPage
+  if (showPayment) {
+    return <PaymentPage formData={formData} additionalCharges={calculateAdditionalCharges()} />;
+  }
+
   return (
     <div className="registration-container">
       {/* Background Shapes */}
@@ -86,7 +82,6 @@ const RegistrationPage = () => {
       <div className="registration-content">
         {/* Header */}
         <div className="registration-header">
-          
           <h1 className="main-heading">
             Register for <span className="gradient-text">Industry 5.0</span>
           </h1>
@@ -370,53 +365,217 @@ const RegistrationPage = () => {
 
           {/* Sidebar Info */}
           <div className="info-section">
-            {/* Event Details Card */}
+            {/* Venue Map Card */}
             <div className="info-card">
               <div className="card-header">
-                <h3 className="card-title">Event Details</h3>
+                <h3 className="card-title">Venue Location</h3>
               </div>
-              <div className="event-details">
-                <div className="event-item">
-                  <Calendar className="event-icon" size={20} />
-                  <div className="event-info">
-                    <span className="event-label">Date</span>
-                    <span className="event-value">Jan 9-10, 2026</span>
-                  </div>
+              
+              <div className="map-container">
+                <div className="map-overlay"></div>
+                <div className="map-marker" onClick={handleLocationClick} title="Click to open in Google Maps">
+                  <div className="marker-dot"></div>
                 </div>
-                <div className="event-item">
-                  <MapPin className="event-icon" size={20} />
-                  <div className="event-info">
-                    <span className="event-label">Venue</span>
-                    <span className="event-value">MBCET, Trivandrum</span>
-                  </div>
-                </div>
-                <div className="event-item">
-                  <CreditCard className="event-icon" size={20} />
-                  <div className="event-info">
-                    <span className="event-label">Registration</span>
-                    <span className="event-value">Free for ISTE Members</span>
-                  </div>
-                </div>
+              </div>
+              
+              <div className="location-info">
+                <p className="location-text">
+                  Mar Baselios College of Engineering and Technology
+                </p>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-            {/* Fee Structure Card */}
+// Payment Page Component
+const PaymentPage = ({ formData, additionalCharges }) => {
+  const [transactionId, setTransactionId] = useState('');
+  const [paymentCompleted, setPaymentCompleted] = useState(false);
+
+  const handlePaymentSubmit = (e) => {
+    e.preventDefault();
+    if (transactionId.trim()) {
+      setPaymentCompleted(true);
+      console.log('Payment completed with transaction ID:', transactionId);
+    }
+  };
+
+  // Scroll to top when payment is completed
+  useEffect(() => {
+    if (paymentCompleted) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [paymentCompleted]);
+
+  // Also scroll to top when component mounts for payment page
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  if (paymentCompleted) {
+    return (
+      <div className="registration-container">
+        <div className="bg-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+        </div>
+
+        <div className="registration-content">
+          <div className="success-container">
+            <div className="success-card">
+              <CheckCircle2 size={80} className="success-icon" />
+              <h1 className="success-title">Payment Successful!</h1>
+              <p className="success-message">
+                Hi <strong>{formData.fullName}</strong>, your registration for ISTE INDUSTRY 5.0 has been completed successfully.
+              </p>
+              <div className="success-details">
+                <p><strong>Transaction ID:</strong> {transactionId}</p>
+                <p><strong>Amount Paid:</strong> ₹{additionalCharges}</p>
+                <p><strong>Email:</strong> {formData.email}</p>
+                <p><strong>Phone:</strong> {formData.phone}</p>
+                <p><strong>College:</strong> {formData.college}</p>
+              </div>
+              <button 
+                className="success-btn"
+                onClick={() => window.location.reload()}
+              >
+                Register Another Participant
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="registration-container">
+      <div className="bg-shapes">
+        <div className="shape shape-1"></div>
+        <div className="shape shape-2"></div>
+        <div className="shape shape-3"></div>
+      </div>
+
+      <div className="registration-content">
+        <div className="registration-header">
+          <h1 className="main-heading">
+            Complete Your <span className="gradient-text">Payment</span>
+          </h1>
+          <p className="header-description">
+            Hi {formData.fullName}, please complete the payment to confirm your registration
+          </p>
+        </div>
+
+        <div className="payment-layout">
+          <div className="form-section">
+            <div className="form-card">
+              <div className="payment-header">
+                <h2 className="form-title">Payment Details</h2>
+                <p className="form-subtitle">Total Amount: <span className="payment-amount">₹{additionalCharges}</span></p>
+              </div>
+
+              <div className="payment-content">
+              <div className="qr-section">
+  <h3 className="qr-title">Scan QR Code to Pay</h3>
+  <div className="qr-container">
+    <div className="qr-code-placeholder">
+      <div className="qr-image-container">
+        <img 
+          src="iste-qr.jpg" 
+          alt="UPI Payment QR Code"
+          className="qr-image"
+        />
+        <div className="qr-amount-overlay">₹{additionalCharges}</div>
+      </div>
+    </div>
+    <p className="qr-instruction">
+      Scan this QR code with any UPI app to complete your payment
+    </p>
+  </div>
+</div>
+
+                <form onSubmit={handlePaymentSubmit} className="transaction-form">
+                  <div className="input-group">
+                    <CreditCard className="input-icon" size={20} />
+                    <input
+                      type="text"
+                      placeholder="Enter Transaction ID"
+                      value={transactionId}
+                      onChange={(e) => setTransactionId(e.target.value)}
+                      required
+                      className="modern-input"
+                    />
+                  </div>
+                  
+                  <div className="payment-instructions">
+                    <h4>Payment Instructions:</h4>
+                    <ul>
+                      <li>Scan the QR code with your UPI app</li>
+                      <li>Complete the payment of ₹{additionalCharges}</li>
+                      <li>Enter the transaction ID from your payment app</li>
+                      <li>Click "Confirm Payment" to complete registration</li>
+                    </ul>
+                  </div>
+
+                  <button type="submit" className="submit-btn payment-btn">
+                    Confirm Payment
+                    <CheckCircle2 size={18} />
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div className="info-section">
             <div className="info-card">
               <div className="card-header">
-                <h3 className="card-title">Fee Structure</h3>
+                <h3 className="card-title">Registration Summary</h3>
               </div>
-              <div className="pricing-list">
-                <div className="pricing-item">
-                  <span className="pricing-label">Base Registration</span>
-                  <span className="pricing-free">Free</span>
+              <div className="registration-summary">
+                <div className="summary-item">
+                  <span className="summary-label">Name:</span>
+                  <span className="summary-value">{formData.fullName}</span>
                 </div>
-                <div className="pricing-item">
-                  <span className="pricing-label">Accommodation</span>
-                  <span className="pricing-value">₹500</span>
+                <div className="summary-item">
+                  <span className="summary-label">Email:</span>
+                  <span className="summary-value">{formData.email}</span>
                 </div>
-                <div className="pricing-item">
-                  <span className="pricing-label">Food Facility</span>
-                  <span className="pricing-value">₹300</span>
+                <div className="summary-item">
+                  <span className="summary-label">Phone:</span>
+                  <span className="summary-value">{formData.phone}</span>
+                </div>
+                <div className="summary-item">
+                  <span className="summary-label">College:</span>
+                  <span className="summary-value">{formData.college}</span>
+                </div>
+                <div className="summary-item">
+                  <span className="summary-label">Department:</span>
+                  <span className="summary-value">{formData.department}</span>
+                </div>
+                <div className="summary-item">
+                  <span className="summary-label">Year:</span>
+                  <span className="summary-value">{formData.year}</span>
+                </div>
+                {formData.stayPreference === 'yes' && (
+                  <div className="summary-item">
+                    <span className="summary-label">Accommodation:</span>
+                    <span className="summary-value">₹500</span>
+                  </div>
+                )}
+                {formData.foodPreference === 'yes' && (
+                  <div className="summary-item">
+                    <span className="summary-label">Food Facility:</span>
+                    <span className="summary-value">₹300</span>
+                  </div>
+                )}
+                <div className="summary-total">
+                  <span className="total-label">Total Amount:</span>
+                  <span className="total-value">₹{additionalCharges}</span>
                 </div>
               </div>
             </div>

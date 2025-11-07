@@ -618,3 +618,30 @@
     font-size: 12px;
   }
 }
+/* Admin Link Styles */
+.footer-admin-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  
+  color:white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.footer-admin-link:hover {
+ 
+  transform: translateY(-1px);
+  text-decoration: none;
+  color: #7ED56F;
+}
+
+.admin-icon {
+  font-size: 0.7rem;
+}
