@@ -610,10 +610,10 @@
 }
 
 .qr-container {
-  
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   padding: 30px;
-  
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .qr-code-placeholder {
@@ -716,7 +716,7 @@
 
 .summary-item {
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   padding: 8px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -735,7 +735,7 @@
 
 .summary-total {
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   padding: 16px 0 0;
   border-top: 2px solid #7ED56F;
   margin-top: 8px;
@@ -761,6 +761,7 @@
   align-items: center;
   min-height: 60vh;
 }
+
 /* QR Code Image Styles */
 .qr-image-container {
   position: relative;
@@ -768,10 +769,11 @@
 }
 
 .qr-image {
-  width: 300px;
-  height: 400px;
+  width: 250px;
+  height: 250px;
   border-radius: 12px;
   border: 2px solid #7ED56F;
+  object-fit: cover;
 }
 
 .qr-amount-overlay {
@@ -781,13 +783,14 @@
   transform: translateX(-50%);
   background: rgba(126, 213, 111, 0.9);
   color: #0a0a0a;
-  padding: 4px 12px;
+  padding: 6px 16px;
   border-radius: 20px;
   font-weight: 700;
   font-size: 14px;
 }
 
 .success-card {
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 24px;
@@ -849,7 +852,7 @@
   box-shadow: 0 10px 30px rgba(126, 213, 111, 0.4);
 }
 
-/* Responsive Design */
+/* Mobile Responsive Design */
 @media (max-width: 1024px) {
   .payment-layout {
     grid-template-columns: 1fr;
@@ -858,21 +861,254 @@
 }
 
 @media (max-width: 768px) {
+  .payment-header {
+    margin-bottom: 30px;
+  }
+  
+  .qr-container {
+    padding: 20px;
+  }
+  
   .qr-code {
-    width: 150px;
-    height: 150px;
+    width: 180px;
+    height: 180px;
   }
   
   .qr-inner {
-    width: 130px;
-    height: 130px;
+    width: 160px;
+    height: 160px;
+  }
+  
+  .qr-image {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .qr-instruction {
+    font-size: 0.85rem;
+    padding: 0 10px;
+  }
+  
+  .payment-instructions {
+    padding: 16px;
+  }
+  
+  .payment-instructions ul {
+    padding-left: 16px;
+    font-size: 0.85rem;
   }
   
   .success-card {
-    padding: 40px 20px;
+    padding: 40px 25px;
+    margin: 20px;
   }
   
   .success-title {
     font-size: 2rem;
+  }
+  
+  .success-message {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-content {
+    gap: 20px;
+  }
+  
+  .qr-title {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+  }
+  
+  .qr-container {
+    padding: 15px;
+  }
+  
+  .qr-code {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .qr-inner {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .qr-image {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .qr-pattern {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .qr-text {
+    font-size: 11px;
+  }
+  
+  .qr-amount {
+    font-size: 12px;
+  }
+  
+  .qr-amount-overlay {
+    font-size: 12px;
+    padding: 4px 12px;
+  }
+  
+  .transaction-form {
+    gap: 15px;
+  }
+  
+  .payment-instructions {
+    padding: 12px;
+  }
+  
+  .payment-instructions h4 {
+    font-size: 0.9rem;
+  }
+  
+  .payment-instructions ul {
+    font-size: 0.8rem;
+    padding-left: 12px;
+  }
+  
+  .payment-instructions li {
+    margin-bottom: 6px;
+  }
+  
+  .success-card {
+    padding: 30px 20px;
+    margin: 15px;
+  }
+  
+  .success-title {
+    font-size: 1.8rem;
+  }
+  
+  .success-message {
+    font-size: 0.95rem;
+  }
+  
+  .success-details {
+    padding: 15px;
+  }
+  
+  .success-details p {
+    font-size: 0.9rem;
+  }
+  
+  .success-btn {
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+  
+  /* Registration Summary Mobile */
+  .registration-summary {
+    gap: 10px;
+  }
+  
+  .summary-item {
+    padding: 6px 0;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .summary-label {
+    font-size: 0.8rem;
+  }
+  
+  .summary-value {
+    font-size: 0.85rem;
+  }
+  
+  .summary-total {
+    padding: 12px 0 0;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+  }
+  
+  .total-label,
+  .total-value {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .qr-code {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .qr-inner {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .qr-image {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .qr-pattern {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .success-card {
+    padding: 25px 15px;
+  }
+  
+  .success-title {
+    font-size: 1.6rem;
+  }
+}
+
+/* Fix for very small screens */
+@media (max-width: 320px) {
+  .qr-code {
+    width: 130px;
+    height: 130px;
+  }
+  
+  .qr-inner {
+    width: 110px;
+    height: 110px;
+  }
+  
+  .qr-image {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+/* Ensure proper spacing on all mobile devices */
+.payment-content > * {
+  min-width: 0; /* Prevent overflow */
+}
+
+/* Fix for form inputs on mobile */
+@media (max-width: 768px) {
+  .transaction-form .input-group {
+    margin-bottom: 15px;
+  }
+  
+  .transaction-form .modern-input {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Touch-friendly buttons for mobile */
+@media (max-width: 768px) {
+  .payment-btn,
+  .success-btn {
+    min-height: 44px; /* Minimum touch target size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
