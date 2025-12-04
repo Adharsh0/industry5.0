@@ -15,16 +15,130 @@ body {
 .hero-container {
   margin-top: -20px;
   min-height: 100vh;
-  height: 100vh; /* Fixed height for mobile */
-  max-height: 100vh; /* Prevent overflow */
+  height: 80vh;
+  max-height: 100vh;
   position: relative;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  background-image: url(/bg.jpg);
+  /* Deep black to dark blue gradient */
+  background: 
+    radial-gradient(ellipse at top, rgba(10, 25, 47, 0.9) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(3, 7, 18, 0.9) 0%, transparent 50%),
+    linear-gradient(180deg, #000000 0%, #0a192f 50%, #020817 100%);
+  background-size: 100% 100%;
+  position: relative;
+}
 
+/* Animated mesh gradient overlay */
+.hero-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(0, 102, 204, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(0, 76, 153, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(0, 119, 182, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 64, 128, 0.07) 0%, transparent 45%),
+    radial-gradient(circle at 20% 80%, rgba(0, 89, 171, 0.06) 0%, transparent 40%);
+  
+  z-index: 0;
+}
+
+@keyframes meshMove {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(5%, -5%) scale(1.05);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(-3%, 3%) scale(0.95);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(3%, 5%) scale(1.02);
+    opacity: 0.95;
+  }
+}
+
+/* Glowing light streaks */
+.hero-container::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+ 
+  z-index: 0;
+}
+
+@keyframes lightSweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Subtle noise texture overlay */
+.center-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+ 
+  background-size: 100px 100px;
+  opacity: 0.5;
+  animation: textureShift 30s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes textureShift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100px 100px;
+  }
+}
+
+/* Ambient light effect */
+.center-content::after {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+ 
+  left: 50%;
+  transform: translate(-50%, -50%);
+  filter: blur(60px);
+
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes ambientPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 0.8;
+  }
 }
 
 .center-content {
@@ -33,7 +147,9 @@ body {
   align-items: center;
   width: 100%;
   height: 100%;
-  padding: 0 15px; /* Add padding for mobile */
+  padding: 0 15px;
+  position: relative;
+  z-index: 1;
 }
 
 .image-container {
@@ -43,6 +159,29 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2;
+}
+
+.image-container::before {
+  content: '';
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  
+  filter: blur(40px);
+  animation: imageGlow 6s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes imageGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
 }
 
 /* Bee image with dynamic positioning - MOBILE FIRST APPROACH */
@@ -55,9 +194,9 @@ body {
   pointer-events: none;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
-  /* Mobile first - smaller bee */
   width: 20%;
   max-width: 120px;
+ 
 }
 
 .bee-image {
@@ -65,24 +204,22 @@ body {
   height: auto;
   object-fit: contain;
   transition: all 0.5s ease;
-  /* Remove margin for mobile */
   margin-left: 0;
 }
 
 .center-image {
   width: 100%;
-  max-width: min(500px, 90vw); /* Responsive max width */
+  max-width: min(500px, 90vw);
   height: auto;
   object-fit: contain;
   position: relative;
-  z-index: 1;
-  /* Adjust for mobile */
+  z-index: 2;
   margin-top: 60px;
+
 }
 
 /* Different scroll positions - MOBILE OPTIMIZED */
 .bee-position-1 {
-  /* Initial position - Center top (Mobile) */
   top: 80px;
   left: 50%;
   transform: translateX(-50%);
@@ -91,7 +228,6 @@ body {
 }
 
 .bee-position-2 {
-  /* When scrolled a bit - Move to left side (Mobile) */
   top: 70px;
   left: 10%;
   transform: translateX(0);
@@ -100,7 +236,6 @@ body {
 }
 
 .bee-position-3 {
-  /* When scrolled more - Move to right side (Mobile) */
   top: 60px;
   left: 80%;
   transform: translateX(-50%);
@@ -109,7 +244,6 @@ body {
 }
 
 .bee-position-4 {
-  /* When scrolled further - Move to bottom right (Mobile) */
   top: 85%;
   left: 85%;
   transform: translateX(-100%);
@@ -119,7 +253,6 @@ body {
 }
 
 .bee-position-5 {
-  /* Final position - Small at top center (Mobile) */
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
@@ -132,7 +265,11 @@ body {
 @media (min-width: 768px) {
   .hero-container {
     min-height: 110vh;
-    background-attachment: fixed; /* Only for tablets and up */
+  }
+  
+  .center-content::after {
+    width: 800px;
+    height: 800px;
   }
   
   .bee-parallax {
@@ -181,12 +318,13 @@ body {
 
 /* ========== DESKTOP (1024px and up) ========== */
 @media (min-width: 1024px) {
-  .hero-container {
-    background-size: 400% 400%; /* Animated gradient for desktop */
-  }
-  
   .center-content {
     padding: 0;
+  }
+  
+  .center-content::after {
+    width: 1000px;
+    height: 1000px;
   }
   
   .bee-parallax {
@@ -195,7 +333,7 @@ body {
   }
   
   .bee-image {
-    margin-left: -500px; /* Only for desktop */
+    margin-left: -500px;
   }
   
   .center-image {
@@ -380,12 +518,19 @@ body {
   body {
     scroll-behavior: auto;
   }
+  
+  .hero-container::before,
+  .hero-container::after,
+  .center-content::before,
+  .center-content::after,
+  .image-container::before {
+    animation: none;
+  }
 }
 
 /* ========== FIX for iOS Safari ========== */
 @supports (-webkit-touch-callout: none) {
   .hero-container {
-    /* iOS needs explicit height */
     height: -webkit-fill-available;
     min-height: -webkit-fill-available;
   }
@@ -394,8 +539,6 @@ body {
 /* ========== FIX for Android Chrome ========== */
 @media screen and (max-width: 768px) and (orientation: portrait) {
   .hero-container {
-    background-attachment: scroll;
-    background-size: cover;
-    background-position: top center;
+    background-size: 100% 100%;
   }
 }
