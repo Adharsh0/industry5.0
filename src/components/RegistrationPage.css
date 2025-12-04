@@ -6,7 +6,7 @@
   overflow: hidden;
   font-family: 'Inter', sans-serif;
   padding-top: calc(80px + env(safe-area-inset-top));
-  background: #0a0a0a;
+  
 }
 
 /* Background Shapes */

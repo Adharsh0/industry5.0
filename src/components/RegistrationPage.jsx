@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  User, 
-  Mail, 
-  Phone, 
-  Building2, 
-  Send, 
-  Calendar,
-  MapPin,
-  GraduationCap,
-  CreditCard,
-  Utensils,
-  BedDouble,
-  CheckCircle2
+  User, Mail, Phone, Building2, Send, Calendar,
+  MapPin, GraduationCap, CreditCard, BedDouble, 
+  CheckCircle2, Loader2, AlertCircle, Clock, Download, ExternalLink
 } from 'lucide-react';
 import './RegistrationPage.css';
 
 const RegistrationPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showPayment, setShowPayment] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -28,13 +21,15 @@ const RegistrationPage = () => {
     isIsteMember: '',
     isteRegistrationNumber: '',
     stayPreference: '',
-    foodPreference: '',
     acknowledgement: false
   });
 
+  // Direct API URL - Change this when deploying to production
+  const API_BASE_URL = 'https://iste-backend-fcd3.onrender.com/api';
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Registration data:', formData);
+    setFormError('');
     setShowPayment(true);
   };
 
@@ -44,17 +39,13 @@ const RegistrationPage = () => {
       ...formData,
       [name]: type === 'checkbox' ? checked : value
     });
+    setFormError('');
   };
 
-  const handleLocationClick = () => {
-    window.open('https://maps.app.goo.gl/p8PJqvzm5Ug9T4LNA', '_blank');
-  };
-
-  const calculateAdditionalCharges = () => {
-    let charges = 0;
-    if (formData.stayPreference === 'yes') charges += 500;
-    if (formData.foodPreference === 'yes') charges += 300;
-    return charges;
+  const calculateTotalAmount = () => {
+    let total = 500; // Base registration fee
+    if (formData.stayPreference === 'With Stay') total += 150;
+    return total;
   };
 
   const nextStep = () => {
@@ -67,7 +58,13 @@ const RegistrationPage = () => {
 
   // If payment page should be shown, render PaymentPage
   if (showPayment) {
-    return <PaymentPage formData={formData} additionalCharges={calculateAdditionalCharges()} />;
+    return <PaymentPage 
+      formData={formData} 
+      totalAmount={calculateTotalAmount()} 
+      setIsSubmitting={setIsSubmitting}
+      setFormError={setFormError}
+      apiBaseUrl={API_BASE_URL}
+    />;
   }
 
   return (
@@ -89,6 +86,13 @@ const RegistrationPage = () => {
             Join Kerala's premier technical convention. Limited seats available.
           </p>
         </div>
+
+        {formError && (
+          <div className="error-alert">
+            <AlertCircle size={20} />
+            <span>{formError}</span>
+          </div>
+        )}
 
         <div className="registration-layout">
           {/* Main Form */}
@@ -131,6 +135,7 @@ const RegistrationPage = () => {
                         onChange={handleChange}
                         required
                         className="modern-input"
+                        minLength={3}
                       />
                     </div>
 
@@ -145,6 +150,7 @@ const RegistrationPage = () => {
                           onChange={handleChange}
                           required
                           className="modern-input"
+                          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                         />
                       </div>
 
@@ -158,6 +164,8 @@ const RegistrationPage = () => {
                           onChange={handleChange}
                           required
                           className="modern-input"
+                          pattern="[0-9]{10}"
+                          title="Please enter a valid 10-digit phone number"
                         />
                       </div>
                     </div>
@@ -222,11 +230,11 @@ const RegistrationPage = () => {
                           className="modern-input"
                         >
                           <option value="">Academic Year</option>
-                          <option value="1st Year">First Year</option>
-                          <option value="2nd Year">Second Year</option>
-                          <option value="3rd Year">Third Year</option>
-                          <option value="4th Year">Fourth Year</option>
-                          <option value="Post Graduate">Post Graduate</option>
+                          <option value="First">First Year</option>
+                          <option value="Second">Second Year</option>
+                          <option value="Third">Third Year</option>
+                          <option value="Fourth">Fourth Year</option>
+                          <option value="Final">Final Year</option>
                         </select>
                       </div>
                     </div>
@@ -241,12 +249,12 @@ const RegistrationPage = () => {
                         className="modern-input"
                       >
                         <option value="">Are you an ISTE member?</option>
-                        <option value="yes">Yes, I am an ISTE member</option>
-                        <option value="no">No, I am not an ISTE member</option>
+                        <option value="Yes">Yes, I am an ISTE member</option>
+                        <option value="No">No, I am not an ISTE member</option>
                       </select>
                     </div>
 
-                    {formData.isIsteMember === 'yes' && (
+                    {formData.isIsteMember === 'Yes' && (
                       <div className="input-group">
                         <CreditCard className="input-icon" size={20} />
                         <input
@@ -255,7 +263,7 @@ const RegistrationPage = () => {
                           placeholder="ISTE Registration Number"
                           value={formData.isteRegistrationNumber}
                           onChange={handleChange}
-                          required={formData.isIsteMember === 'yes'}
+                          required={formData.isIsteMember === 'Yes'}
                           className="modern-input"
                         />
                       </div>
@@ -295,35 +303,33 @@ const RegistrationPage = () => {
                         className="modern-input"
                       >
                         <option value="">Do you require accommodation?</option>
-                        <option value="yes">Yes, I need accommodation (₹500)</option>
-                        <option value="no">No, I don't need accommodation</option>
+                        <option value="With Stay">Yes, I need accommodation (₹150)</option>
+                        <option value="Without Stay">No, I don't need accommodation</option>
                       </select>
                     </div>
 
-                    <div className="input-group">
-                      <Utensils className="input-icon" size={20} />
-                      <select
-                        name="foodPreference"
-                        value={formData.foodPreference}
-                        onChange={handleChange}
-                        required
-                        className="modern-input"
-                      >
-                        <option value="">Do you require food facility?</option>
-                        <option value="yes">Yes, I need food facility (₹300)</option>
-                        <option value="no">No, I don't need food facility</option>
-                      </select>
-                    </div>
-
-                    {calculateAdditionalCharges() > 0 && (
-                      <div className="charges-summary">
-                        <div className="charges-content">
-                          <h4>Additional Charges</h4>
-                          <p>Total: <span className="charges-amount">₹{calculateAdditionalCharges()}</span></p>
-                          <small>Payable during event registration</small>
+                    <div className="charges-summary">
+                      <div className="charges-content">
+                        <h4>Payment Summary</h4>
+                        <div className="charges-breakdown">
+                          <div className="charge-item">
+                            <span>Registration Fee:</span>
+                            <span>₹500</span>
+                          </div>
+                          {formData.stayPreference === 'With Stay' && (
+                            <div className="charge-item">
+                              <span>Accommodation:</span>
+                              <span>₹150</span>
+                            </div>
+                          )}
+                          <div className="charge-total">
+                            <span>Total Amount:</span>
+                            <span className="total-amount">₹{calculateTotalAmount()}</span>
+                          </div>
                         </div>
+                        <small className="charges-note">Payment details will be shown on next page</small>
                       </div>
-                    )}
+                    </div>
 
                     <label className="checkbox-group">
                       <input
@@ -336,7 +342,7 @@ const RegistrationPage = () => {
                       />
                       <span className="checkmark"></span>
                       <span className="checkbox-text">
-                        I confirm that all information provided is accurate and agree to the terms.
+                        I confirm that all information provided is accurate and agree to pay ₹{calculateTotalAmount()} for registration.
                       </span>
                     </label>
 
@@ -350,11 +356,20 @@ const RegistrationPage = () => {
                       </button>
                       <button
                         type="submit"
-                        disabled={!formData.acknowledgement}
+                        disabled={!formData.acknowledgement || isSubmitting}
                         className="submit-btn"
                       >
-                        Complete Registration
-                        <Send size={18} />
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="animate-spin" size={18} />
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            Proceed to Payment
+                            <Send size={18} />
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
@@ -373,7 +388,7 @@ const RegistrationPage = () => {
               
               <div className="map-container">
                 <div className="map-overlay"></div>
-                <div className="map-marker" onClick={handleLocationClick} title="Click to open in Google Maps">
+                <div className="map-marker" onClick={() => window.open('https://maps.app.goo.gl/p8PJqvzm5Ug9T4LNA', '_blank')} title="Click to open in Google Maps">
                   <div className="marker-dot"></div>
                 </div>
               </div>
@@ -384,6 +399,27 @@ const RegistrationPage = () => {
                 </p>
               </div>
             </div>
+
+            {/* Pricing Info Card */}
+            <div className="info-card pricing-card">
+              <div className="card-header">
+                <h3 className="card-title">Registration Fee</h3>
+              </div>
+              <div className="pricing-details">
+                <div className="price-item">
+                  <span className="price-label">Normal Registration</span>
+                  <span className="price-value">₹500</span>
+                </div>
+                <div className="price-item">
+                  <span className="price-label">Accommodation (Optional)</span>
+                  <span className="price-value">₹150</span>
+                </div>
+                <div className="price-total">
+                  <span className="total-label">Total (with accommodation)</span>
+                  <span className="total-value">₹650</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -392,15 +428,80 @@ const RegistrationPage = () => {
 };
 
 // Payment Page Component
-const PaymentPage = ({ formData, additionalCharges }) => {
+const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, apiBaseUrl }) => {
   const [transactionId, setTransactionId] = useState('');
   const [paymentCompleted, setPaymentCompleted] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentError, setPaymentError] = useState('');
+  const [registrationId, setRegistrationId] = useState('');
 
-  const handlePaymentSubmit = (e) => {
+  const handlePaymentSubmit = async (e) => {
     e.preventDefault();
-    if (transactionId.trim()) {
-      setPaymentCompleted(true);
-      console.log('Payment completed with transaction ID:', transactionId);
+    
+    if (!transactionId.trim()) {
+      setPaymentError('Please enter your transaction ID');
+      return;
+    }
+
+    if (transactionId.length < 3) {
+      setPaymentError('Transaction ID must be at least 3 characters');
+      return;
+    }
+
+    setIsProcessing(true);
+    setPaymentError('');
+
+    try {
+      // Prepare data for database - Match backend expectations
+      const registrationData = {
+        fullName: formData.fullName,
+        email: formData.email.toLowerCase().trim(),
+        phone: formData.phone,
+        college: formData.college,
+        department: formData.department,
+        year: formData.year,
+        isIsteMember: formData.isIsteMember,
+        isteRegistrationNumber: formData.isteRegistrationNumber || '',
+        stayPreference: formData.stayPreference,
+        totalAmount: totalAmount,
+        transactionId: transactionId.trim()
+      };
+
+      console.log('Sending registration data to server:', registrationData);
+
+      // Send to backend
+      const response = await fetch(`${apiBaseUrl}/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(registrationData),
+      });
+
+      const result = await response.json();
+
+      console.log('Server response:', result);
+
+      if (response.ok && result.success) {
+        // Registration submitted successfully
+        setPaymentCompleted(true);
+        setRegistrationId(result.data.id);
+        console.log('✅ Registration submitted with ID:', result.data.id);
+        
+      } else {
+        // Handle server errors
+        const errorMessage = result.message || 'Registration failed. Please try again.';
+        setPaymentError(errorMessage);
+        
+        if (result.errors) {
+          console.error('Validation errors:', result.errors);
+        }
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      setPaymentError('Network error. Please check your internet connection and try again.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -428,24 +529,115 @@ const PaymentPage = ({ formData, additionalCharges }) => {
         <div className="registration-content">
           <div className="success-container">
             <div className="success-card">
-              <CheckCircle2 size={80} className="success-icon" />
-              <h1 className="success-title">Payment Successful!</h1>
-              <p className="success-message">
-                Hi <strong>{formData.fullName}</strong>, your registration for ISTE INDUSTRY 5.0 has been completed successfully.
-              </p>
-              <div className="success-details">
-                <p><strong>Transaction ID:</strong> {transactionId}</p>
-                <p><strong>Amount Paid:</strong> ₹{additionalCharges}</p>
-                <p><strong>Email:</strong> {formData.email}</p>
-                <p><strong>Phone:</strong> {formData.phone}</p>
-                <p><strong>College:</strong> {formData.college}</p>
+              <div className="success-icon-container">
+                <div className="success-icon-pending">
+                  <Clock size={60} />
+                </div>
               </div>
-              <button 
-                className="success-btn"
-                onClick={() => window.location.reload()}
-              >
-                Register Another Participant
-              </button>
+              <h1 className="success-title">Registration Submitted!</h1>
+              <p className="success-message">
+                Hi <strong>{formData.fullName}</strong>, your registration for ISTE INDUSTRY 5.0 has been submitted successfully!
+              </p>
+              
+              <div className="status-container">
+                <div className="status-card pending">
+                  <div className="status-icon">
+                    <Clock size={24} />
+                  </div>
+                  <div className="status-content">
+                    <h3>Status: Pending Approval</h3>
+                    <p>Your registration is pending admin review. We'll notify you via email once approved.</p>
+                    <small>Approval usually takes 24-48 hours</small>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="success-details">
+                <h3>Registration Details</h3>
+                <div className="details-grid">
+                  <div className="detail-item">
+                    <span className="detail-label">Transaction ID:</span>
+                    <span className="detail-value">{transactionId}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Amount Paid:</span>
+                    <span className="detail-value">₹{totalAmount}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Registration ID:</span>
+                    <span className="detail-value">{registrationId || 'Pending...'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Email:</span>
+                    <span className="detail-value">{formData.email}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Phone:</span>
+                    <span className="detail-value">{formData.phone}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">College:</span>
+                    <span className="detail-value">{formData.college}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Department:</span>
+                    <span className="detail-value">{formData.department}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Year:</span>
+                    <span className="detail-value">{formData.year}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">ISTE Member:</span>
+                    <span className="detail-value">{formData.isIsteMember}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Accommodation:</span>
+                    <span className="detail-value">{formData.stayPreference === 'With Stay' ? 'Yes (₹150)' : 'No'}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="success-actions">
+                <button 
+                  className="success-btn primary"
+                  onClick={() => window.location.reload()}
+                >
+                  Register Another Participant
+                </button>
+                <button 
+                  className="success-btn secondary"
+                  onClick={() => window.print()}
+                >
+                  <Download size={18} />
+                  Save Receipt
+                </button>
+                <button 
+                  className="success-btn outline"
+                  onClick={() => {
+                    if (transactionId) {
+                      window.open(`${apiBaseUrl}/check-status/${transactionId}`, '_blank');
+                    }
+                  }}
+                >
+                  <ExternalLink size={18} />
+                  Check Status
+                </button>
+              </div>
+              
+              <div className="success-instructions">
+                <h4>What happens next?</h4>
+                <ol>
+                  <li><strong>Admin Review:</strong> Our team will verify your payment and details</li>
+                  <li><strong>Approval:</strong> You'll receive an email confirmation once approved</li>
+                  <li><strong>Event Access:</strong> Approved registrations get access to all event activities</li>
+                  <li><strong>Check Status:</strong> Use your Transaction ID to check approval status anytime</li>
+                </ol>
+                
+                <div className="contact-info">
+                  <p><strong>Need help?</strong> Contact: istembcet@example.com | Phone: +91 9876543210</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -467,64 +659,101 @@ const PaymentPage = ({ formData, additionalCharges }) => {
             Complete Your <span className="gradient-text">Payment</span>
           </h1>
           <p className="header-description">
-            Hi {formData.fullName}, please complete the payment to confirm your registration
+            Hi {formData.fullName}, please complete the payment to submit your registration
           </p>
+          <div className="registration-note">
+            <AlertCircle size={16} />
+            <span>Note: Registration requires admin approval after payment</span>
+          </div>
         </div>
+
+        {paymentError && (
+          <div className="error-alert">
+            <AlertCircle size={20} />
+            <span>{paymentError}</span>
+          </div>
+        )}
 
         <div className="payment-layout">
           <div className="form-section">
             <div className="form-card">
               <div className="payment-header">
                 <h2 className="form-title">Payment Details</h2>
-                <p className="form-subtitle">Total Amount: <span className="payment-amount">₹{additionalCharges}</span></p>
+                <p className="form-subtitle">Total Amount: <span className="payment-amount">₹{totalAmount}</span></p>
               </div>
 
               <div className="payment-content">
-              <div className="qr-section">
-  <h3 className="qr-title">Scan QR Code to Pay</h3>
-  <div className="qr-container">
-    <div className="qr-code-placeholder">
-      <div className="qr-image-container">
-        <img 
-          src="iste-qr.jpg" 
-          alt="UPI Payment QR Code"
-          className="qr-image"
-        />
-        <div className="qr-amount-overlay">₹{additionalCharges}</div>
-      </div>
-    </div>
-    <p className="qr-instruction">
-      Scan this QR code with any UPI app to complete your payment
-    </p>
-  </div>
-</div>
+                <div className="qr-section">
+                  <h3 className="qr-title">Scan QR Code to Pay</h3>
+                  <div className="qr-container">
+                    <div className="qr-code-placeholder">
+                      <div className="qr-image-container">
+                        <img 
+                          src="/iste-qr.jpg" 
+                          alt="UPI Payment QR Code"
+                          className="qr-image"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMyRjJGMkYiIHJ4PSIxMCIvPjxwYXRoIGQ9Ik01MCA1MEgxNTBWMTUwSDUwVjUwWiIgZmlsbD0iIzQ5NDk0OSIvPjxwYXRoIGQ9Ik03MCA5MEg5MFYxMTBINzBWOTBaIiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==';
+                          }}
+                        />
+                        <div className="qr-amount-overlay">₹{totalAmount}</div>
+                      </div>
+                    </div>
+                    <p className="qr-instruction">
+                      Scan this QR code with any UPI app to complete your payment
+                    </p>
+                  </div>
+                </div>
 
                 <form onSubmit={handlePaymentSubmit} className="transaction-form">
                   <div className="input-group">
                     <CreditCard className="input-icon" size={20} />
                     <input
                       type="text"
-                      placeholder="Enter Transaction ID"
+                      placeholder="Enter Transaction ID (from your payment app)"
                       value={transactionId}
-                      onChange={(e) => setTransactionId(e.target.value)}
+                      onChange={(e) => {
+                        setTransactionId(e.target.value);
+                        setPaymentError('');
+                      }}
                       required
                       className="modern-input"
+                      minLength={3}
+                      maxLength={50}
                     />
                   </div>
                   
                   <div className="payment-instructions">
                     <h4>Payment Instructions:</h4>
                     <ul>
-                      <li>Scan the QR code with your UPI app</li>
-                      <li>Complete the payment of ₹{additionalCharges}</li>
-                      <li>Enter the transaction ID from your payment app</li>
-                      <li>Click "Confirm Payment" to complete registration</li>
+                      <li>Scan the QR code with your UPI app (Google Pay, PhonePe, Paytm, etc.)</li>
+                      <li>Complete the payment of <strong>₹{totalAmount}</strong></li>
+                      <li>Copy the transaction ID from your payment app</li>
+                      <li>Paste the transaction ID in the field above</li>
+                      <li>Click "Submit Registration" to complete your submission</li>
                     </ul>
+                    <div className="payment-tip">
+                      <strong>Important:</strong> Your registration will be <strong>pending admin approval</strong> after submission. You'll be notified via email once approved.
+                    </div>
                   </div>
 
-                  <button type="submit" className="submit-btn payment-btn">
-                    Confirm Payment
-                    <CheckCircle2 size={18} />
+                  <button 
+                    type="submit" 
+                    className="submit-btn payment-btn"
+                    disabled={isProcessing}
+                  >
+                    {isProcessing ? (
+                      <>
+                        <Loader2 className="animate-spin" size={18} />
+                        Submitting Registration...
+                      </>
+                    ) : (
+                      <>
+                        Submit Registration
+                        <Send size={18} />
+                      </>
+                    )}
                   </button>
                 </form>
               </div>
@@ -561,21 +790,61 @@ const PaymentPage = ({ formData, additionalCharges }) => {
                   <span className="summary-label">Year:</span>
                   <span className="summary-value">{formData.year}</span>
                 </div>
-                {formData.stayPreference === 'yes' && (
+                <div className="summary-item">
+                  <span className="summary-label">ISTE Member:</span>
+                  <span className="summary-value">{formData.isIsteMember}</span>
+                </div>
+                {formData.isteRegistrationNumber && (
                   <div className="summary-item">
-                    <span className="summary-label">Accommodation:</span>
-                    <span className="summary-value">₹500</span>
+                    <span className="summary-label">ISTE Reg. No:</span>
+                    <span className="summary-value">{formData.isteRegistrationNumber}</span>
                   </div>
                 )}
-                {formData.foodPreference === 'yes' && (
-                  <div className="summary-item">
-                    <span className="summary-label">Food Facility:</span>
-                    <span className="summary-value">₹300</span>
-                  </div>
-                )}
+                <div className="summary-item">
+                  <span className="summary-label">Accommodation:</span>
+                  <span className="summary-value">
+                    {formData.stayPreference === 'With Stay' ? 'Yes' : 'No'}
+                  </span>
+                </div>
                 <div className="summary-total">
                   <span className="total-label">Total Amount:</span>
-                  <span className="total-value">₹{additionalCharges}</span>
+                  <span className="total-value">₹{totalAmount}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="info-card status-card">
+              <div className="card-header">
+                <h3 className="card-title">Registration Process</h3>
+              </div>
+              <div className="process-steps">
+                <div className="process-step">
+                  <div className="step-number">1</div>
+                  <div className="step-content">
+                    <h4>Complete Payment</h4>
+                    <p>Scan QR and pay ₹{totalAmount}</p>
+                  </div>
+                </div>
+                <div className="process-step">
+                  <div className="step-number">2</div>
+                  <div className="step-content">
+                    <h4>Submit Registration</h4>
+                    <p>Enter transaction ID and submit</p>
+                  </div>
+                </div>
+                <div className="process-step">
+                  <div className="step-number">3</div>
+                  <div className="step-content">
+                    <h4>Admin Review</h4>
+                    <p>Status: <span className="status-text pending">Pending Approval</span></p>
+                  </div>
+                </div>
+                <div className="process-step">
+                  <div className="step-number">4</div>
+                  <div className="step-content">
+                    <h4>Get Confirmation</h4>
+                    <p>Receive approval email within 24-48 hours</p>
+                  </div>
                 </div>
               </div>
             </div>

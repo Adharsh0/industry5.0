@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaPhone, FaFax, FaEnvelope, FaArrowRight } from 'react-icons/fa';
+import { FaPhone, FaEnvelope, FaArrowRight, FaInstagram } from 'react-icons/fa';
 import './ContactSection.css';
 
 const ContactSection = () => {
@@ -103,11 +103,11 @@ const ContactSection = () => {
 
                 <div className="contact-method">
                   <div className="method-icon">
-                    <FaFax />
+                    <FaInstagram />
                   </div>
                   <div>
-                    <div className="method-label">Fax</div>
-                    <div className="method-value">info@mbcet.ac.in</div>
+                    <div className="method-label">Instagram</div>
+                    <div className="method-value">istembcet</div>
                   </div>
                 </div>
 
@@ -117,7 +117,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <div className="method-label">Email</div>
-                    <div className="method-value">info@istekerala.org</div>
+                    <div className="method-value">istestudentchapter@mbcet.ac.in</div>
                   </div>
                 </div>
               </div>

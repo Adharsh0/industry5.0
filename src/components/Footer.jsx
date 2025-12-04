@@ -129,7 +129,7 @@ const Footer = () => {
               <div className="footer-contact-item">
                 <FaEnvelope className="footer-contact-icon" />
                 <a href="mailto:info@istekerala.org" className="footer-contact-link">
-                  info@istekerala.org
+                  istestudentchapter@mbcet.ac.in
                 </a>
               </div>
               <div className="footer-contact-item">
@@ -161,12 +161,6 @@ const Footer = () => {
             <a href="#" className="footer-credit-link">Privacy Policy</a>
             <a href="#" className="footer-credit-link">Terms of Service</a>
             <a href="#" className="footer-credit-link">Cookie Policy</a>
-            
-            {/* Admin Link */}
-            <Link to="/admin-login" className="footer-admin-link">
-              <FaUserShield className="admin-icon" />
-              Admin
-            </Link>
           </div>
         </div>
       </div>
