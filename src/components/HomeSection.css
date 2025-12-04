@@ -21,7 +21,7 @@ body {
   justify-content: center;
   align-items: center;
   background-size: 400% 400%;
-  background-image: url(bg.jpg);
+  background-image: url(/bg.jpg);
 }
 
 .center-content {
