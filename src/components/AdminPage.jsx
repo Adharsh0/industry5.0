@@ -52,7 +52,7 @@ const AdminPage = () => {
   const [authToken, setAuthToken] = useState('');
 
   // API Base URL
-  const API_BASE_URL = 'http://localhost:5000/api';
+  const API_BASE_URL = 'https://iste-backend-fcd3.onrender.com/api';
 
   // Admin login function
   const handleAdminLogin = async (e) => {
