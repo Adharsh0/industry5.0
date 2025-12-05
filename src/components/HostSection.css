@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 .host-container {
   min-height: 100vh;
@@ -8,7 +8,7 @@
   padding-top: calc(80px + env(safe-area-inset-top));
 }
 
-/* Background Shapes */
+
 .bg-shapes {
   position: absolute;
   width: 100%;
@@ -61,7 +61,7 @@
   z-index: 2;
 }
 
-/* Header Styles */
+
 .host-header {
   text-align: center;
   margin-bottom: 60px;
@@ -90,8 +90,6 @@
   max-width: 600px;
   margin: 0 auto;
 }
-
-/* Layout */
 .host-layout {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -99,7 +97,7 @@
   align-items: start;
 }
 
-/* Host Main Content */
+
 .host-main {
   position: relative;
 }
@@ -124,7 +122,7 @@
   background: linear-gradient(90deg, transparent, #7ED56F, transparent);
 }
 
-/* College Badge */
+
 .host-intro {
   margin-bottom: 40px;
 }
@@ -193,7 +191,7 @@
   text-align: justify;
 }
 
-/* Stats Grid */
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -252,7 +250,7 @@
   letter-spacing: 0.5px;
 }
 
-/* Highlights Section */
+
 .highlights-section {
   margin-bottom: 40px;
 }
@@ -319,7 +317,7 @@
   line-height: 1.5;
 }
 
-/* Location Section */
+
 .location-section {
   margin-top: 40px;
   
@@ -413,7 +411,7 @@
   font-size: 0.9rem;
 }
 
-/* Map Placeholder */
+
 .location-map {
   position: relative;
 }
@@ -478,7 +476,7 @@
   font-weight: 600;
 }
 
-/* Host Sidebar */
+
 .host-sidebar {
   display: flex;
   flex-direction: column;
@@ -509,7 +507,7 @@
   margin-bottom: 8px;
 }
 
-/* Facts List */
+
 .facts-list {
   display: flex;
   flex-direction: column;
@@ -539,7 +537,7 @@
   font-size: 0.9rem;
 }
 
-/* Departments List */
+
 .departments-list {
   display: flex;
   flex-direction: column;
@@ -562,7 +560,7 @@
   transform: translateX(5px);
 }
 
-/* Contact Info */
+
 .contact-info {
   display: flex;
   flex-direction: column;
@@ -593,7 +591,7 @@
   color: #7ED56F;
 }
 
-/* Responsive Design */
+
 @media (max-width: 1024px) {
   .host-layout {
     grid-template-columns: 1fr;
@@ -670,4 +668,4 @@
     text-align: center;
     gap: 12px;
   }
-}
+} */

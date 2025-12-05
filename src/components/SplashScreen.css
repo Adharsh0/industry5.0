@@ -1,0 +1,60 @@
+/* Fullscreen panel */
+.splash-screen {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    overflow: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s;
+  }
+  
+  /* Logo Animation */
+  .splash-logo {
+    width: min(45vw, 400px);
+    height: auto;
+    opacity: 0;
+    animation: popIn 2s ease forwards;
+  }
+  
+  /* Pop Animation */
+  @keyframes popIn {
+    0% { transform: scale(0.4); opacity: 0; }
+    70% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+  
+  /* Responsive - Tablets */
+  @media (max-width: 768px) {
+    .splash-logo {
+      width: min(55vw, 300px);
+    }
+  }
+  
+  /* Responsive - Small Mobiles */
+  @media (max-width: 480px) {
+    .splash-logo {
+      width: min(70vw, 220px);
+    }
+  }
+  
+  /* Large Screens */
+  @media (min-width: 1440px) {
+    .splash-logo {
+      width: min(30vw, 450px);
+    }
+  }
+  
+  /* Auto fade after content loads */
+  body.loaded .splash-screen {
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  /* Prevent scrolling before load */
+  body:not(.loaded) {
+    overflow: hidden;
+  }
+  

@@ -5,6 +5,7 @@ const HomeSection = () => {
   const [scrollY, setScrollY] = useState(0);
   const [positionClass, setPositionClass] = useState('bee-position-1');
   const beeRef = useRef(null);
+  const subtitleRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,6 +72,17 @@ const HomeSection = () => {
         bee.style.opacity = opacity;
         bee.style.transform = currentScrollY > 300 ? `translateX(-50%)` : 'translateX(0)';
       }
+
+      // Subtitle fade effect on scroll
+      if (subtitleRef.current) {
+        const subtitle = subtitleRef.current;
+        const subtitleProgress = Math.min(currentScrollY / 300, 1);
+        const subtitleOpacity = 1 - subtitleProgress;
+        const subtitleScale = 1 - (subtitleProgress * 0.2);
+        
+        subtitle.style.opacity = subtitleOpacity;
+        subtitle.style.transform = `translateY(${subtitleProgress * 20}px) scale(${subtitleScale})`;
+      }
     };
 
     // Smooth scrolling with requestAnimationFrame
@@ -120,6 +132,24 @@ const HomeSection = () => {
             alt="AI Robot holding Earth"
             className="center-image"
           />
+        </div>
+      </div>
+
+      {/* Animated Subtitle - Positioned below the main content */}
+      <div className="subtitle-wrapper" ref={subtitleRef}>
+        <div className="subtitle-container">
+          <div className="subtitle-line"></div>
+          <h2 className="hero-subtitle">
+            Where <span className="highlight-text">humans</span> meet <span className="highlight-text">machines</span>
+          </h2>
+          <div className="subtitle-line"></div>
+        </div>
+
+        {/* Decorative Elements */}
+        <div className="hero-decoration">
+          <div className="decoration-dot dot-1"></div>
+          <div className="decoration-dot dot-2"></div>
+          <div className="decoration-dot dot-3"></div>
         </div>
       </div>
     </div>

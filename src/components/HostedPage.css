@@ -1,0 +1,106 @@
+/* --- Theme: Modern Dark (Muted Grayscale Blue) - Inherited from About Section --- */
+
+.hosted-page {
+    /* Changed to About Section Background */
+    width: 100vw;
+    min-height: 100vh;
+   
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Add padding to ensure the whole page scrolls slightly, making the animation trigger obvious */
+    padding-bottom: 50px; 
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Add About Section Background Shapes */
+
+  
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-20px, 20px) rotate(240deg); }
+  }
+  
+  .large-title {
+    font-size: 3.5rem; 
+    font-weight: 700;
+    /* Muted light gray/blue for subtle title contrast */
+    color: #9ca3af; 
+    text-align: center;
+    padding: 40px 20px;
+    width: 100%;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: none; /* No shine */
+    position: relative;
+    z-index: 2;
+  }
+  
+  .hosted-content {
+    display: flex;
+    width: 90%; 
+    max-width: 1200px;
+    flex-grow: 1;
+    /* Darker background for the content box: #1f2937 */
+    
+    border-radius: 8px; /* Modern, smaller rounded corners */
+    overflow: hidden; 
+    /* Subtle, non-vibrant box shadow */
+    
+    margin-top: 20px;
+    min-height: 500px; 
+    position: relative;
+    z-index: 2;
+  }
+  
+  .image-container {
+    flex: 1;
+    display: flex;
+    min-width: 50%; 
+  }
+  
+  .details-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+  }
+  
+  .college-image {
+    width: 100%; 
+    height: 100%;
+    object-fit: cover; 
+  }
+  
+  .college-name {
+    font-size: 3rem; 
+    font-weight: 800;
+    /* Off-white text color: #e5e7eb */
+    color: #e5e7eb;
+    text-align: center;
+    padding: 20px 0;
+    line-height: 1.2;
+    /* Optional: Add the accent blue to a strong word if you use one in the component */
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Media Query for Responsive Stacking */
+  @media (max-width: 900px) {
+    .hosted-content {
+      flex-direction: column; /* Stacks content vertically on tablets/mobiles */
+      width: 95%;
+    }
+  
+    .large-title {
+      font-size: 2rem;
+    }
+    
+    .college-name {
+      font-size: 1.75rem;
+    }
+  }
