@@ -61,20 +61,6 @@ const Navbar = () => {
     { id: 'contact', label: 'Contact', icon: <Mail size={18} />, action: () => handleSectionClick('contact') },
   ];
 
-  // Radial menu gets all nav items + Register
-  const radialItems = [
-    ...navItems,
-    {
-      id: 'register',
-      label: 'Register',
-      icon: <Award size={18} />,
-      action: () => {
-        closeMenu();
-        navigate('/register');
-      },
-    },
-  ];
-
   return (
     <>
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
@@ -117,53 +103,14 @@ const Navbar = () => {
             <span className="btn-text">Register Now</span>
             <span className="btn-glow"></span>
           </Link>
+
+          {/* Mobile Registration Button */}
+          <Link to="/register" className="mobile-register-btn">
+            <span className="btn-text">Register</span>
+            <span className="btn-glow"></span>
+          </Link>
         </div>
       </nav>
-
-      {/* Floating Orb (Mobile Command Button) */}
-      <div className="nav-orb-wrapper">
-        <button
-          className={`nav-orb ${menuOpen ? 'active' : ''}`}
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Open navigation"
-        >
-          <div className="nav-orb-ring" />
-          <div className="nav-orb-core">
-            <Menu size={18} />
-          </div>
-          <div className="nav-orb-pulse" />
-        </button>
-      </div>
-
-      {/* Radial Command Overlay */}
-      <div
-        className={`nav-orb-overlay ${menuOpen ? 'active' : ''}`}
-        onClick={closeMenu}
-      >
-        <div
-          className="radial-menu"
-          onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
-        >
-          <div className="radial-center">
-            <span className="radial-center-main">ISTE</span>
-            <span className="radial-center-sub">Industry 5.0</span>
-          </div>
-
-          <div className="radial-items">
-            {radialItems.map((item, index) => (
-              <button
-                key={item.id}
-                className="radial-item"
-                onClick={item.action}
-                style={{ '--i': index }}
-              >
-                <div className="radial-icon">{item.icon}</div>
-                <div className="radial-label">{item.label}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
     </>
   );
 };

@@ -53,7 +53,6 @@
   width: 40px;
   height: 40px;
   object-fit: contain;
-  
 }
 
 .logo-text {
@@ -139,14 +138,14 @@
   display: none;
 }
 
-/* ================== DESKTOP REGISTER BUTTON ================== */
+/* ================== DESKTOP & MOBILE REGISTER BUTTON ================== */
 .register-btn {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 10px 24px;
-  
+ 
   border: none;
   border-radius: 999px;
   color: #ffffff;
@@ -168,7 +167,7 @@
 
 .register-btn:active {
   transform: translateY(0);
-  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.35);
+  
 }
 
 .btn-glow {
@@ -194,219 +193,194 @@
   gap: 6px;
 }
 
-/* ================== FLOATING ORB (MOBILE) - NOW TOP ================== */
-.nav-orb-wrapper {
-  position: fixed;
-  top: 1rem;   /* moved to top */
-  right: 1.4rem;
-  z-index: 950;
-  display: none; /* only mobile via media query */
-}
-
-.nav-orb {
+/* ================== MOBILE REGISTER BUTTON (SPECIAL STYLE) ================== */
+.mobile-register-btn {
+  display: none;
   position: relative;
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 22px;
+  
   border: none;
-  cursor: pointer;
-  background: radial-gradient(circle at 30% 20%, #93c5fd 0%, #1e40af 45%, #020617 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: visible;
-  transition: transform 0.2s ease, box-shadow 0.25s ease;
-}
-
-.nav-orb:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 18px 50px rgba(37, 99, 235, 0.9);
-}
-
-.nav-orb-core {
-  position: relative;
-  z-index: 2;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(15, 23, 42, 0.95);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #e5e7eb;
-}
-
-.nav-orb-ring {
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  opacity: 0.7;
-  z-index: 1;
-}
-
-.nav-orb-pulse {
-  position: absolute;
-  inset: -2px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.4), transparent 60%);
-  opacity: 0;
-  transform: scale(0.8);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.nav-orb.active .nav-orb-pulse {
-  opacity: 1;
-  transform: scale(1.2);
-}
-
-/* ================== RADIAL OVERLAY ================== */
-.nav-orb-overlay {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), #020617 75%);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 940;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(22px);
-  transition: opacity 0.3s ease;
-}
-
-.nav-orb-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Radial Menu Container */
-.radial-menu {
-  position: relative;
-  width: 280px;
-  height: 280px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.5));
-  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.3),
-    0 30px 80px rgba(15, 23, 42, 0.85);
-  overflow: visible;
-}
-
-/* Center Core */
-.radial-center {
-  position: absolute;
-  inset: 50%;
-  transform: translate(-50%, -50%);
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 20%, #60a5fa 0%, #1e3a8a 40%, #020617 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #e5e7eb;
-  text-align: center;
-  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.5),
-    0 20px 40px rgba(15, 23, 42, 0.9);
-}
-
-.radial-center-main {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.radial-center-sub {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  opacity: 0.85;
-}
-
-/* Radial Items */
-.radial-items {
-  position: absolute;
-  inset: 0;
-}
-
-.radial-item {
-  position: absolute;
-  width: 84px;
-  height: 84px;
-  border-radius: 18px;
-  background: rgba(15, 23, 42, 0.94);
-  border: 1px solid rgba(148, 163, 184, 0.45);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
-  color: #e5e7eb;
+  border-radius: 999px;
+  color: #ffffff;
   font-family: 'Inter', sans-serif;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  text-align: center;
-  padding: 10px 6px;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
-  transform: translate(-50%, -50%) scale(0.6);
-  opacity: 0;
-  transition: transform 0.35s ease,
-    opacity 0.35s ease,
-    background 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.25s ease;
+  margin-left: auto;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
 }
 
-/* Circular Placement */
-.radial-item:nth-child(1) { top: 6%; left: 50%; }
-.radial-item:nth-child(2) { top: 20%; left: 83%; }
-.radial-item:nth-child(3) { top: 50%; left: 96%; }
-.radial-item:nth-child(4) { top: 80%; left: 83%; }
-.radial-item:nth-child(5) { top: 94%; left: 50%; }
-.radial-item:nth-child(6) { top: 80%; left: 17%; }
-.radial-item:nth-child(7) { top: 50%; left: 4%; }
-.radial-item:nth-child(8) { top: 20%; left: 17%; }
-
-.nav-orb-overlay.active .radial-item {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
+.mobile-register-btn:hover {
+  transform: translateY(-2px);
+  
 }
 
-/* Stagger Animation */
-.nav-orb-overlay.active .radial-item {
-  transition-delay: calc(0.04s * var(--i));
+.mobile-register-btn:active {
+  transform: translateY(0);
 }
 
-.radial-item:hover {
-  background: rgba(30, 64, 175, 0.95);
-  border-color: rgba(191, 219, 254, 0.9);
-  box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.7),
-    0 16px 40px rgba(37, 99, 235, 0.9);
+.mobile-register-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 120%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  opacity: 0.9;
+  transition: left 0.6s ease;
 }
 
-/* Responsive */
+.mobile-register-btn:hover::before {
+  left: 120%;
+}
+
+/* ================== RESPONSIVE ================== */
 @media (max-width: 1024px) {
-  .nav-container { padding: 0 1.5rem; }
-  .nav-item { padding: 8px 14px; font-size: 0.85rem; }
-  .register-btn { padding: 9px 20px; font-size: 0.85rem; }
+  .nav-container {
+    padding: 0 1.5rem;
+  }
+  
+  .nav-item {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+  
+  .register-btn {
+    padding: 9px 20px;
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 900px) {
-  .desktop-nav { display: none; }
-  .register-btn { display: none; }
-  .nav-orb-wrapper { display: flex; }
+  .desktop-nav {
+    display: none;
+  }
+  
+  .register-btn {
+    display: none;
+  }
+  
+  .mobile-register-btn {
+    display: flex;
+  }
+  
+  /* Clean mobile layout - just logo + register button */
+  .nav-container {
+    justify-content: space-between;
+    padding: 0 1rem;
+    height: 68px;
+  }
+  
+  .logo-section {
+    flex: 1;
+    justify-content: flex-start;
+  }
+  
+  .logo-wrapper {
+    padding: 6px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .logo-image {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .logo-main {
+    font-size: 1.4rem;
+  }
+  
+  .logo-sub {
+    font-size: 0.7rem;
+  }
+  
+  .mobile-register-btn {
+    margin-left: auto;
+    margin-right: 0.75rem;
+  }
 }
 
 @media (max-width: 640px) {
-  .nav-container { padding: 0 1.1rem; height: 66px; }
-  .logo-image { width: 34px; height: 34px; }
-  .logo-main { font-size: 1.3rem; }
-  .logo-sub { font-size: 0.7rem; }
-  .radial-menu { width: 250px; height: 250px; }
-  .radial-item { width: 78px; height: 78px; font-size: 0.7rem; }
-  .nav-orb { width: 54px; height: 54px; }
+  .nav-container {
+    padding: 0 1rem;
+    height: 66px;
+  }
+  
+  .logo-image {
+    width: 34px;
+    height: 34px;
+  }
+  
+  .logo-main {
+    font-size: 1.3rem;
+  }
+  
+  .logo-sub {
+    font-size: 0.65rem;
+    letter-spacing: 0.8px;
+  }
+  
+  .mobile-register-btn {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-container {
+    height: 64px;
+    padding: 0 0.75rem;
+  }
+  
+  .logo-wrapper {
+    gap: 10px;
+    padding: 5px 8px;
+  }
+  
+  .logo-image {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .logo-main {
+    font-size: 1.2rem;
+  }
+  
+  .logo-sub {
+    font-size: 0.6rem;
+  }
+  
+  .mobile-register-btn {
+    padding: 9px 16px;
+    font-size: 0.82rem;
+    margin-right: 0.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .logo-text {
+    min-width: 80px;
+  }
+  
+  .logo-main {
+    font-size: 1.15rem;
+  }
+  
+  .logo-sub {
+    font-size: 0.55rem;
+  }
+  
+  .mobile-register-btn {
+    padding: 8px 14px;
+    font-size: 0.8rem;
+  }
 }

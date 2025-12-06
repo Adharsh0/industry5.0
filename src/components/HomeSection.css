@@ -686,3 +686,24 @@
     display: none;
   }
 }
+.hero-container {
+  margin-top: -20px;
+  width: 100vw;
+  min-width: 100vw;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(135deg,
+    #000000 0%,
+    #000000 40%,
+    #010c1a 75%,
+    #021123 120%
+  );
+  background-size: cover;
+  background-position: center;
+}
+
