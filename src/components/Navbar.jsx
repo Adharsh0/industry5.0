@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Menu, Home, Info, Calendar, Users, Award, Mail, UserCheck } from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -9,98 +10,161 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 50;
-      setScrolled(isScrolled);
+      setScrolled(window.scrollY > 20);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
+  // Lock scroll when radial menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
 
-  const closeMenu = () => {
-    setMenuOpen(false);
-  };
+  const closeMenu = () => setMenuOpen(false);
 
   const handleHomeClick = () => {
     closeMenu();
     navigate('/');
-    // Scroll to top when going home
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSectionClick = (sectionId) => {
     closeMenu();
     navigate('/');
-    // Small delay to ensure navigation happens before scrolling
     setTimeout(() => {
       const element = document.getElementById(sectionId);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        const offset = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
       }
     }, 100);
   };
 
-  const handleHostClick = () => {
-    closeMenu();
-    navigate('/host'); // Navigate to separate host page
-  };
+  const navItems = [
+    { id: 'home', label: 'Home', icon: <Home size={18} />, action: handleHomeClick },
+    { id: 'about', label: 'About', icon: <Info size={18} />, action: () => handleSectionClick('about') },
+    { id: 'events', label: 'Events', icon: <Award size={18} />, action: () => handleSectionClick('events') },
+    { id: 'schedule', label: 'Schedule', icon: <Calendar size={18} />, action: () => handleSectionClick('schedule') },
+    { id: 'host', label: 'Host', icon: <UserCheck size={18} />, action: () => { closeMenu(); navigate('/host'); } },
+    { id: 'sponsors', label: 'Sponsors', icon: <Users size={18} />, action: () => handleSectionClick('sponsors') },
+    { id: 'contact', label: 'Contact', icon: <Mail size={18} />, action: () => handleSectionClick('contact') },
+  ];
+
+  // Radial menu gets all nav items + Register
+  const radialItems = [
+    ...navItems,
+    {
+      id: 'register',
+      label: 'Register',
+      icon: <Award size={18} />,
+      action: () => {
+        closeMenu();
+        navigate('/register');
+      },
+    },
+  ];
 
   return (
-    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-      <div className="nav-content">
-        {/* Logo with Image */}
-        <div className="logo" onClick={handleHomeClick} style={{cursor: 'pointer'}}>
-          <div className="logo-container">
-            <img 
-              src="iste1.png" 
-              alt="Industry 5.0 Logo" 
-              className="logo-image1"
-            />
-            <div className="logo-text">
-              <div className="logo-tagline">Indian Society of Technical Education</div>
+    <>
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+        <div className="nav-container">
+          {/* Logo Section */}
+          <div className="logo-section" onClick={handleHomeClick}>
+            <div className="logo-wrapper">
+              <img
+                src="iste1.png"
+                alt="ISTE Logo"
+                className="logo-image"
+              />
+              <div className="logo-text">
+                <span className="logo-main">ISTE</span>
+                <span className="logo-sub">Industry 5.0</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Desktop Navigation Links */}
-        <div className="nav-links">
-          <button className="nav-link-btn" onClick={handleHomeClick}>Home</button>
-          <button className="nav-link-btn" onClick={() => handleSectionClick('about')}>About</button>
-          <button className="nav-link-btn" onClick={() => handleSectionClick('events')}>Events</button>
-          <button className="nav-link-btn" onClick={() => handleSectionClick('schedule')}>Schedule</button>
-          <button className="nav-link-btn" onClick={handleHostClick}>Host</button> {/* Updated */}
-          <button className="nav-link-btn" onClick={() => handleSectionClick('sponsors')}>Sponsors</button>
-          <button className="nav-link-btn" onClick={() => handleSectionClick('contact')}>Contact</button>
-        </div>
+          {/* Desktop Navigation */}
+          <div className="desktop-nav">
+            <div className="nav-items">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  className="nav-item"
+                  onClick={item.action}
+                  aria-label={item.label}
+                >
+                  <span className="nav-icon">{item.icon}</span>
+                  <span className="nav-label">{item.label}</span>
+                  <span className="nav-indicator"></span>
+                </button>
+              ))}
+            </div>
+          </div>
 
-        {/* Mobile Menu Button */}
-        <button 
-          className={`menu-btn ${menuOpen ? 'open' : ''}`}
-          onClick={toggleMenu}
+          {/* Desktop Registration Button */}
+          <Link to="/register" className="register-btn">
+            <span className="btn-text">Register Now</span>
+            <span className="btn-glow"></span>
+          </Link>
+        </div>
+      </nav>
+
+      {/* Floating Orb (Mobile Command Button) */}
+      <div className="nav-orb-wrapper">
+        <button
+          className={`nav-orb ${menuOpen ? 'active' : ''}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Open navigation"
         >
-          <span></span>
-          <span></span>
-          <span></span>
+          <div className="nav-orb-ring" />
+          <div className="nav-orb-core">
+            <Menu size={18} />
+          </div>
+          <div className="nav-orb-pulse" />
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
-        <div className="mobile-menu-content">
-          <button className="mobile-link-btn" onClick={handleHomeClick}>Home</button>
-          <button className="mobile-link-btn" onClick={() => handleSectionClick('about')}>About</button>
-          <button className="mobile-link-btn" onClick={() => handleSectionClick('events')}>Events</button>
-          <button className="mobile-link-btn" onClick={() => handleSectionClick('schedule')}>Schedule</button>
-          <button className="mobile-link-btn" onClick={handleHostClick}>Host</button> {/* Updated */}
-          <button className="mobile-link-btn" onClick={() => handleSectionClick('sponsors')}>Sponsors</button>
-          <button className="mobile-link-btn" onClick={() => handleSectionClick('contact')}>Contact</button>
+      {/* Radial Command Overlay */}
+      <div
+        className={`nav-orb-overlay ${menuOpen ? 'active' : ''}`}
+        onClick={closeMenu}
+      >
+        <div
+          className="radial-menu"
+          onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
+        >
+          <div className="radial-center">
+            <span className="radial-center-main">ISTE</span>
+            <span className="radial-center-sub">Industry 5.0</span>
+          </div>
+
+          <div className="radial-items">
+            {radialItems.map((item, index) => (
+              <button
+                key={item.id}
+                className="radial-item"
+                onClick={item.action}
+                style={{ '--i': index }}
+              >
+                <div className="radial-icon">{item.icon}</div>
+                <div className="radial-label">{item.label}</div>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-    </nav>
+    </>
   );
 };
 

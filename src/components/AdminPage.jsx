@@ -14,13 +14,13 @@ import {
   Calendar,
   Shield,
   Users,
-  DollarSign,
   Home,
   RefreshCw,
   AlertCircle,
   LogIn,
   Lock,
-  LogOut
+  LogOut,
+  IndianRupeeIcon
 } from 'lucide-react';
 import './AdminPage.css';
 
@@ -473,12 +473,6 @@ const AdminPage = () => {
                     </>
                   )}
                 </button>
-
-                <div className="login-note">
-                  <p><strong>Default Credentials:</strong></p>
-                  <p>Username: <code>admin</code></p>
-                  <p>Password: <code>iste@2024</code></p>
-                </div>
               </form>
             </div>
           </div>
@@ -521,23 +515,23 @@ const AdminPage = () => {
           
           <div className="header-stats">
             <div className="stat-card">
-              <Users size={24} className="stat-icon" />
+             
               <div className="stat-number">{stats.total}</div>
               <div className="stat-label">Total Registrations</div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon pending">⏳</div>
+             
               <div className="stat-number">{stats.pending}</div>
               <div className="stat-label">Pending Approval</div>
             </div>
             <div className="stat-card">
-              <Home size={24} className="stat-icon" />
+             
               <div className="stat-number">{stats.withAccommodation}</div>
               <div className="stat-label">With Accommodation</div>
             </div>
             <div className="stat-card">
-              <DollarSign size={24} className="stat-icon" />
-              <div className="stat-number">₹{stats.totalRevenue}</div>
+             
+              <div className="stat-number">Rs{stats.totalRevenue}</div>
               <div className="stat-label">Total Revenue</div>
             </div>
           </div>

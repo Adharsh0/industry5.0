@@ -6,15 +6,6 @@ const HostedPage = () => {
     // The main container can also have an animation
     <div className="hosted-page" data-aos="fade-in"> 
       
-      {/* Title fades in from the top */}
-      <div 
-        className="hosted-text large-title" 
-        data-aos="fade-down" 
-        data-aos-duration="800"
-      >
-        Hosted by
-      </div>
-      
       <div className="hosted-content"> 
         
         {/* Image slides in from the left */}
@@ -33,6 +24,15 @@ const HostedPage = () => {
           data-aos-duration="1000"
           data-aos-delay="300" // Starts 300ms after the image
         >
+          {/* Title fades in from the top - NOW INSIDE THE CARD */}
+          <div 
+            className="hosted-text large-title" 
+            data-aos="fade-down" 
+            data-aos-duration="800"
+          >
+            Hosted <span className="highlight-text">By</span>
+          </div>
+          
           <div className="college-name">
             Mar Baselios College of Engineering and Technology
           </div>

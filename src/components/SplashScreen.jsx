@@ -13,7 +13,7 @@ export default function SplashScreen() {
   return (
     <div className="splash-screen">
       <img
-        src="nexa.jpg"
+        src="logosp.png"
         alt="Logo"
         className="splash-logo"
       />

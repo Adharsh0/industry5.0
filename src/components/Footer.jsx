@@ -51,15 +51,15 @@ const Footer = () => {
               Be part of the revolution in human-centric smart engineering. Register now for Industry 5.0 Convention 2026.
             </p>
           </div>
-          <div className="cta-buttons">
+          <div className="cta-buttons1">
             <button 
-              className="cta-button btn-primary"
+              className="cta-button1 btn-primaryy1"
               onClick={handleRegisterClick}
             >
               Register Now <FaArrowRight className="btn-icon" />
             </button>
             <button 
-              className="cta-button btn-secondary"
+              className="cta-button1 btn-secondary1"
               onClick={handleLearnMoreClick}
             >
               Learn More <FaInfoCircle className="btn-icon" />
@@ -145,7 +145,7 @@ const Footer = () => {
         {/* Mobile CTA - Only visible on mobile */}
         <div className="mobile-cta">
           <button 
-            className="mobile-cta-button btn-primary"
+            className="mobile-cta-button btn-primary1"
             onClick={handleRegisterClick}
           >
             Register Now <FaArrowRight className="btn-icon" />

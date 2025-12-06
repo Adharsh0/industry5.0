@@ -118,11 +118,7 @@ const LoginPage = () => {
               </div>
             )}
 
-            <div className="login-note">
-              <p><strong>Demo Credentials:</strong></p>
-              <p>Username: <code>admin</code></p>
-              <p>Password: <code>iste2026</code></p>
-            </div>
+           
 
             <button 
               type="submit" 

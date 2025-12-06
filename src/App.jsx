@@ -7,7 +7,7 @@ import AboutSection from './components/AboutSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import RegistrationPage from './components/RegistrationPage';
-import LoginPage from './components/LoginPage';
+
 import AdminPage from './components/AdminPage';
 import HostSection from './components/HostSection';
 import HostedPage from './components/HostedPage';
@@ -44,10 +44,10 @@ function App() {
               </>
             } />
             <Route path="/register" element={<RegistrationPage />} />
-            <Route path="/admin-login" element={<LoginPage />} />
+            
             <Route path="/host" element={<HostSection />} />
             <Route 
-              path="/admin" 
+              path="/admin-iste" 
               element={
                 <ProtectedRoute>
                   <AdminPage />

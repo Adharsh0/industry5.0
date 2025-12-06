@@ -10,7 +10,9 @@ const RegistrationPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showPayment, setShowPayment] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const [formError, setFormError] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -27,19 +29,107 @@ const RegistrationPage = () => {
   // Direct API URL - Change this when deploying to production
   const API_BASE_URL = 'https://iste-backend-fcd3.onrender.com/api';
 
-  const handleSubmit = (e) => {
+  // Function to check if email already exists
+  const checkEmailExists = async (email) => {
+    if (!email || email.length < 5) {
+      console.log('Email too short, skipping check');
+      return false;
+    }
+    
+    try {
+      console.log(`Checking email: ${email}`);
+      const cleanEmail = email.toLowerCase().trim();
+      
+      const response = await fetch(`${API_BASE_URL}/check-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: cleanEmail }),
+      });
+      
+      console.log('Response status:', response.status);
+      
+      const result = await response.json();
+      console.log('Check email response:', result);
+      
+      if (!response.ok) {
+        console.error('API error:', result.message);
+        return false; // Don't block on API errors
+      }
+      
+      return result.exists || false;
+    } catch (error) {
+      console.error('Network error checking email:', error);
+      return false; // Don't block on network error
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError('');
+    setEmailError('');
+
+    // Validate email doesn't already exist
+    if (formData.email) {
+      setIsCheckingEmail(true);
+      const emailExists = await checkEmailExists(formData.email);
+      setIsCheckingEmail(false);
+
+      if (emailExists) {
+        setEmailError('This email is already registered. Please use a different email address.');
+        return;
+      }
+    }
+
     setShowPayment(true);
   };
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
       [name]: type === 'checkbox' ? checked : value
     });
     setFormError('');
+    
+    // Clear email error when user starts typing
+    if (name === 'email') {
+      setEmailError('');
+    }
+  };
+
+  // Validate email when user leaves the field (on blur)
+  const handleEmailBlur = async () => {
+    const email = formData.email;
+    if (!email || email.length < 5) return;
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError('Please enter a valid email address');
+      return;
+    }
+    
+    setIsCheckingEmail(true);
+    console.log('Starting email check...');
+    
+    try {
+      const emailExists = await checkEmailExists(email);
+      console.log('Email exists result:', emailExists);
+      
+      if (emailExists) {
+        setEmailError('This email is already registered. Please use a different email address.');
+      } else {
+        // Clear any previous error if email is available
+        setEmailError('');
+      }
+    } catch (error) {
+      console.error('Error in email validation:', error);
+      // Don't show error for network issues, just let user proceed
+    } finally {
+      setIsCheckingEmail(false);
+    }
   };
 
   const calculateTotalAmount = () => {
@@ -64,6 +154,8 @@ const RegistrationPage = () => {
       setIsSubmitting={setIsSubmitting}
       setFormError={setFormError}
       apiBaseUrl={API_BASE_URL}
+      emailError={emailError}
+      setEmailError={setEmailError}
     />;
   }
 
@@ -80,11 +172,15 @@ const RegistrationPage = () => {
         {/* Header */}
         <div className="registration-header">
           <h1 className="main-heading">
-            Register for <span className="gradient-text">Industry 5.0</span>
+            Register for <span className="gradient-text">NEXANORA</span>
           </h1>
           <p className="header-description">
             Join Kerala's premier technical convention. Limited seats available.
           </p>
+          <div className="registration-note">
+            <AlertCircle size={16} />
+            <span>Each email can only be used for one registration</span>
+          </div>
         </div>
 
         {formError && (
@@ -142,16 +238,25 @@ const RegistrationPage = () => {
                     <div className="input-row">
                       <div className="input-group">
                         <Mail className="input-icon" size={20} />
-                        <input
-                          type="email"
-                          name="email"
-                          placeholder="Email Address"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          className="modern-input"
-                          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                        />
+                        <div className="email-input-container">
+                          <input
+                            type="email"
+                            name="email"
+                            placeholder="Email Address"
+                            value={formData.email}
+                            onChange={handleChange}
+                            onBlur={handleEmailBlur}
+                            required
+                            className={`modern-input ${emailError ? 'error' : ''}`}
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                          />
+                          {isCheckingEmail && (
+                            <div className="email-checking">
+                              <Loader2 className="animate-spin" size={16} />
+                              <span>Checking availability...</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       <div className="input-group">
@@ -170,13 +275,21 @@ const RegistrationPage = () => {
                       </div>
                     </div>
 
+                    {emailError && (
+                      <div className="email-error-alert">
+                        <AlertCircle size={16} />
+                        <span>{emailError}</span>
+                      </div>
+                    )}
+
                     <div className="button-group justify-end">
                       <button
                         type="button"
                         onClick={nextStep}
                         className="btn-primary"
+                        disabled={!!emailError || isCheckingEmail}
                       >
-                        Continue
+                        {isCheckingEmail ? 'Checking...' : 'Continue'}
                       </button>
                     </div>
                   </div>
@@ -281,6 +394,7 @@ const RegistrationPage = () => {
                         type="button"
                         onClick={nextStep}
                         className="btn-primary"
+                        disabled={!!emailError}
                       >
                         Continue
                       </button>
@@ -331,6 +445,16 @@ const RegistrationPage = () => {
                       </div>
                     </div>
 
+                    {emailError && (
+                      <div className="email-error-alert">
+                        <AlertCircle size={16} />
+                        <span>{emailError}</span>
+                        <p className="email-error-hint">
+                          Please go back to Step 1 and enter a different email address
+                        </p>
+                      </div>
+                    )}
+
                     <label className="checkbox-group">
                       <input
                         type="checkbox"
@@ -339,6 +463,7 @@ const RegistrationPage = () => {
                         onChange={handleChange}
                         required
                         className="checkbox-input"
+                        disabled={!!emailError}
                       />
                       <span className="checkmark"></span>
                       <span className="checkbox-text">
@@ -356,7 +481,7 @@ const RegistrationPage = () => {
                       </button>
                       <button
                         type="submit"
-                        disabled={!formData.acknowledgement || isSubmitting}
+                        disabled={!formData.acknowledgement || isSubmitting || !!emailError}
                         className="submit-btn"
                       >
                         {isSubmitting ? (
@@ -364,6 +489,8 @@ const RegistrationPage = () => {
                             <Loader2 className="animate-spin" size={18} />
                             Processing...
                           </>
+                        ) : emailError ? (
+                          'Email Already Registered'
                         ) : (
                           <>
                             Proceed to Payment
@@ -427,17 +554,76 @@ const RegistrationPage = () => {
   );
 };
 
-// Payment Page Component
-const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, apiBaseUrl }) => {
+// Payment Page Component - Add duplicate check here too
+const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, apiBaseUrl, emailError, setEmailError }) => {
   const [transactionId, setTransactionId] = useState('');
   const [paymentCompleted, setPaymentCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState('');
   const [registrationId, setRegistrationId] = useState('');
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
+
+  // Check email again on payment page load
+  useEffect(() => {
+    const checkEmailOnLoad = async () => {
+      if (!formData.email) return;
+      
+      setIsCheckingEmail(true);
+      try {
+        const cleanEmail = formData.email.toLowerCase().trim();
+        console.log('Payment page: Checking email on load:', cleanEmail);
+        
+        const response = await fetch(`${apiBaseUrl}/check-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: cleanEmail }),
+        });
+        
+        const result = await response.json();
+        console.log('Payment page email check result:', result);
+        
+        if (result.exists) {
+          setPaymentError('This email is already registered. Please go back and use a different email.');
+        }
+      } catch (error) {
+        console.error('Error checking email in payment page:', error);
+      } finally {
+        setIsCheckingEmail(false);
+      }
+    };
+
+    checkEmailOnLoad();
+  }, [formData.email, apiBaseUrl]);
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     
+    // Check email again before submitting
+    setIsCheckingEmail(true);
+    try {
+      const cleanEmail = formData.email.toLowerCase().trim();
+      console.log('Final email check before submission:', cleanEmail);
+      
+      const emailCheckResponse = await fetch(`${apiBaseUrl}/check-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: cleanEmail }),
+      });
+      
+      const emailCheckResult = await emailCheckResponse.json();
+      console.log('Final email check result:', emailCheckResult);
+      
+      if (emailCheckResult.exists) {
+        setPaymentError('This email is already registered. Please go back and use a different email.');
+        setIsCheckingEmail(false);
+        return;
+      }
+    } catch (error) {
+      console.error('Error in final email check:', error);
+      // Continue with submission if check fails (fail-safe)
+    }
+    setIsCheckingEmail(false);
+
     if (!transactionId.trim()) {
       setPaymentError('Please enter your transaction ID');
       return;
@@ -452,7 +638,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
     setPaymentError('');
 
     try {
-      // Prepare data for database - Match backend expectations
       const registrationData = {
         fullName: formData.fullName,
         email: formData.email.toLowerCase().trim(),
@@ -467,34 +652,30 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
         transactionId: transactionId.trim()
       };
 
-      console.log('Sending registration data to server:', registrationData);
+      console.log('Submitting registration:', registrationData);
 
-      // Send to backend
       const response = await fetch(`${apiBaseUrl}/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(registrationData),
       });
 
       const result = await response.json();
-
-      console.log('Server response:', result);
+      console.log('Registration response:', result);
 
       if (response.ok && result.success) {
-        // Registration submitted successfully
         setPaymentCompleted(true);
-        setRegistrationId(result.data.id);
-        console.log('✅ Registration submitted with ID:', result.data.id);
+        setRegistrationId(result.data.registrationId || result.data.id);
         
       } else {
-        // Handle server errors
-        const errorMessage = result.message || 'Registration failed. Please try again.';
-        setPaymentError(errorMessage);
-        
-        if (result.errors) {
-          console.error('Validation errors:', result.errors);
+        // Check if error is due to duplicate email
+        if (result.message?.toLowerCase().includes('already exists') || 
+            result.message?.toLowerCase().includes('duplicate') ||
+            result.message?.toLowerCase().includes('already registered')) {
+          setPaymentError('This email is already registered. Please use a different email.');
+        } else {
+          const errorMessage = result.message || 'Registration failed. Please try again.';
+          setPaymentError(errorMessage);
         }
       }
     } catch (error) {
@@ -667,10 +848,10 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
           </div>
         </div>
 
-        {paymentError && (
+        {(paymentError || emailError) && (
           <div className="error-alert">
             <AlertCircle size={20} />
-            <span>{paymentError}</span>
+            <span>{paymentError || emailError}</span>
           </div>
         )}
 
@@ -741,12 +922,12 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                   <button 
                     type="submit" 
                     className="submit-btn payment-btn"
-                    disabled={isProcessing}
+                    disabled={isProcessing || isCheckingEmail || !!paymentError || !!emailError}
                   >
-                    {isProcessing ? (
+                    {isProcessing || isCheckingEmail ? (
                       <>
                         <Loader2 className="animate-spin" size={18} />
-                        Submitting Registration...
+                        {isCheckingEmail ? 'Checking email...' : 'Submitting Registration...'}
                       </>
                     ) : (
                       <>
@@ -754,6 +935,14 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                         <Send size={18} />
                       </>
                     )}
+                  </button>
+                  
+                  <button 
+                    type="button" 
+                    className="btn-secondary back-btn"
+                    onClick={() => window.history.back()}
+                  >
+                    Go Back to Form
                   </button>
                 </form>
               </div>
