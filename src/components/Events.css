@@ -1055,3 +1055,16 @@ body {
     opacity: 0.05 !important;
   }
 }
+@media (max-width: 768px) {
+    .events-hero {
+      height: 60vh;
+      min-height: 500px;
+    }
+  
+    .hero-title {
+      font-size: 3.5rem;
+      min-height: 120px;
+      flex-direction: column;
+      gap: 5px;
+    }
+}

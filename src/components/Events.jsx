@@ -546,8 +546,8 @@ const Events = () => {
                   rel="noopener noreferrer"
                 >
                   <span>
-                    {selectedEvent.id === 1 ? 'Register Your Squad Now' : 
-                     selectedEvent.id === 4 ? 'Register Your Team Now' : 
+                    {selectedEvent.id === 1 ? 'Register Now' : 
+                     selectedEvent.id === 4 ? 'Register Now' : 
                      'Register Now'}
                   </span>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
