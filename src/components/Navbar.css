@@ -252,7 +252,7 @@
   left: 0;
   width: 100%;
   height: calc(100% - 70px);
-  background: rgba(0, 5, 10, 0.98);
+  
   backdrop-filter: blur(20px);
   border-top: 1px solid rgba(96, 165, 250, 0.15);
   transform: translateY(-100%);
@@ -400,8 +400,7 @@
   .logo-wrapper {
     padding: 6px 10px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+   
   }
   
   .logo-image {
