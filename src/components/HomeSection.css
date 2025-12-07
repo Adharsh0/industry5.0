@@ -498,7 +498,7 @@
   justify-content: center;
 }
 
-.subtitle-container {
+.subtitle-container1 {
   display: flex;
   align-items: center;
   gap: 30px;
@@ -518,14 +518,14 @@
   }
 }
 
-.subtitle-line {
+.subtitle-line1 {
   width: 80px;
   height: 1px;
   background: linear-gradient(90deg, transparent, #4A90E2, transparent);
   opacity: 0.6;
 }
 
-.hero-subtitle {
+.hero-subtitle1 {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1.75rem;
   font-weight: 600;
@@ -629,15 +629,15 @@
     bottom: 50px;
   }
   
-  .subtitle-container {
+  .subtitle-container1 {
     gap: 25px;
   }
   
-  .subtitle-line {
+  .subtitle-line1 {
     width: 60px;
   }
   
-  .hero-subtitle {
+  .hero-subtitle1 {
     font-size: 1.5rem;
   }
 }
@@ -647,7 +647,7 @@
     bottom: 40px;
   }
   
-  .hero-subtitle {
+  .hero-subtitle1 {
     font-size: 1.25rem;
     letter-spacing: 1px;
     padding: 8px 15px;
@@ -657,7 +657,7 @@
     gap: 20px;
   }
   
-  .subtitle-line {
+  .subtitle-line1 {
     width: 40px;
   }
 }
@@ -667,18 +667,18 @@
     bottom: 30px;
   }
   
-  .hero-subtitle {
+  .hero-subtitle1 {
     font-size: 1rem;
     letter-spacing: 0.5px;
     padding: 6px 12px;
   }
   
-  .subtitle-container {
+  .subtitle-container1 {
     gap: 15px;
     flex-direction: column;
   }
   
-  .subtitle-line {
+  .subtitle-line1 {
     width: 100px;
   }
   

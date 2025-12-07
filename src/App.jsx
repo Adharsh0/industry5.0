@@ -7,11 +7,11 @@ import AboutSection from './components/AboutSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import RegistrationPage from './components/RegistrationPage';
-
 import AdminPage from './components/AdminPage';
 import HostSection from './components/HostSection';
 import HostedPage from './components/HostedPage';
-import SplashScreen from './components/SplashScreen'; // ⬅ Add this import
+import SplashScreen from './components/SplashScreen';
+import Events from './components/Events'; // Keep this import
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -23,7 +23,7 @@ function App() {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 2500); // Duration of Splash Screen
+    const timer = setTimeout(() => setShowSplash(false), 2500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -43,8 +43,8 @@ function App() {
                 <ContactSection />
               </>
             } />
+            <Route path="/events" element={<Events />} /> {/* Add Events as separate page */}
             <Route path="/register" element={<RegistrationPage />} />
-            
             <Route path="/host" element={<HostSection />} />
             <Route 
               path="/admin-iste" 

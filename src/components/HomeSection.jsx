@@ -137,12 +137,12 @@ const HomeSection = () => {
 
       {/* Animated Subtitle - Positioned below the main content */}
       <div className="subtitle-wrapper" ref={subtitleRef}>
-        <div className="subtitle-container">
-          <div className="subtitle-line"></div>
-          <h2 className="hero-subtitle">
+        <div className="subtitle-container1">
+          <div className="subtitle-line1"></div>
+          <h2 className="hero-subtitle1">
             Where <span className="highlight-text">humans</span> meet <span className="highlight-text">machines</span>
           </h2>
-          <div className="subtitle-line"></div>
+          <div className="subtitle-line1"></div>
         </div>
 
         {/* Decorative Elements */}

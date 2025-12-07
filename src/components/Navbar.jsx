@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, Home, Info, Calendar, Users, Award, Mail, UserCheck } from 'lucide-react';
+import { Menu, Home, Info, Calendar, Users, Award, Mail, UserCheck, X } from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -17,7 +17,7 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock scroll when radial menu is open
+  // Lock scroll when menu is open
   useEffect(() => {
     if (menuOpen) {
       document.body.style.overflow = 'hidden';
@@ -54,7 +54,16 @@ const Navbar = () => {
   const navItems = [
     { id: 'home', label: 'Home', icon: <Home size={18} />, action: handleHomeClick },
     { id: 'about', label: 'About', icon: <Info size={18} />, action: () => handleSectionClick('about') },
-    { id: 'events', label: 'Events', icon: <Award size={18} />, action: () => handleSectionClick('events') },
+    { 
+      id: 'events', 
+      label: 'Events', 
+      icon: <Award size={18} />, 
+      action: () => { 
+        closeMenu(); 
+        navigate('/events');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } 
+    },
     { id: 'schedule', label: 'Schedule', icon: <Calendar size={18} />, action: () => handleSectionClick('schedule') },
     { id: 'host', label: 'Host', icon: <UserCheck size={18} />, action: () => { closeMenu(); navigate('/host'); } },
     { id: 'sponsors', label: 'Sponsors', icon: <Users size={18} />, action: () => handleSectionClick('sponsors') },
@@ -69,14 +78,10 @@ const Navbar = () => {
           <div className="logo-section" onClick={handleHomeClick}>
             <div className="logo-wrapper">
               <img
-                src="iste1.png"
+                src="logosp.png"
                 alt="ISTE Logo"
                 className="logo-image"
               />
-              <div className="logo-text">
-                <span className="logo-main">ISTE</span>
-                <span className="logo-sub">Industry 5.0</span>
-              </div>
             </div>
           </div>
 
@@ -104,13 +109,50 @@ const Navbar = () => {
             <span className="btn-glow"></span>
           </Link>
 
-          {/* Mobile Registration Button */}
-          <Link to="/register" className="mobile-register-btn">
-            <span className="btn-text">Register</span>
-            <span className="btn-glow"></span>
-          </Link>
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="mobile-menu-toggle"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={`hamburger ${menuOpen ? 'active' : ''}`}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </button>
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`mobile-menu-overlay ${menuOpen ? 'active' : ''}`} onClick={closeMenu} />
+
+      {/* Mobile Menu */}
+      <div className={`mobile-menu ${menuOpen ? 'active' : ''}`}>
+        <div className="mobile-menu-content">
+          <div className="mobile-menu-items">
+            {navItems.map((item, index) => (
+              <button
+                key={item.id}
+                className="mobile-menu-item"
+                onClick={item.action}
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                <span className="mobile-item-icon">{item.icon}</span>
+                <span className="mobile-item-label">{item.label}</span>
+              </button>
+            ))}
+          </div>
+          
+          <Link 
+            to="/register" 
+            className="mobile-menu-register"
+            onClick={closeMenu}
+          >
+            <span>Register Now</span>
+          </Link>
+        </div>
+      </div>
     </>
   );
 };

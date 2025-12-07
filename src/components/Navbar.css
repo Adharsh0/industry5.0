@@ -39,45 +39,29 @@
 }
 
 .logo-wrapper {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  transition: transform 0.25s ease;
+  justify-content: center;
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
 
 .logo-wrapper:hover {
-  transform: translateX(-2px);
+  transform: translateY(-2px);
+  filter: drop-shadow(0 0 12px rgba(86, 144, 255, 0.35));
 }
 
 .logo-image {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+  filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.35));
+  transition: filter 0.25s ease, transform 0.25s ease;
 }
 
-.logo-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.logo-main {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #60a5fa 0%, #1e40af 40%, #0f172a 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 0.5px;
-}
-
-.logo-sub {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
-  font-weight: 500;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+.logo-wrapper:hover .logo-image {
+  filter: drop-shadow(0 0 18px rgba(86, 144, 255, 0.55));
+  transform: scale(1.05);
 }
 
 /* ================== DESKTOP NAVIGATION ================== */
@@ -138,17 +122,16 @@
   display: none;
 }
 
-/* ================== DESKTOP & MOBILE REGISTER BUTTON ================== */
+/* ================== DESKTOP REGISTER BUTTON ================== */
 .register-btn {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 10px 24px;
- 
   border: none;
   border-radius: 999px;
-  color: #ffffff;
+  color: #60a5fa;
   font-family: 'Inter', sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
@@ -162,12 +145,10 @@
 
 .register-btn:hover {
   transform: translateY(-2px);
-  
 }
 
 .register-btn:active {
   transform: translateY(0);
-  
 }
 
 .btn-glow {
@@ -193,52 +174,187 @@
   gap: 6px;
 }
 
-/* ================== MOBILE REGISTER BUTTON (SPECIAL STYLE) ================== */
+/* ================== MOBILE REGISTER BUTTON (HIDDEN) ================== */
 .mobile-register-btn {
   display: none;
-  position: relative;
+}
+
+/* ================== MOBILE MENU TOGGLE ================== */
+.mobile-menu-toggle {
+  display: none;
   align-items: center;
   justify-content: center;
-  padding: 11px 22px;
-  
+  width: 48px;
+  height: 48px;
+  background: transparent;
   border: none;
-  border-radius: 999px;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  z-index: 1000;
+}
+
+.hamburger {
+  position: relative;
+  width: 28px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger span {
+  width: 100%;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(8.5px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-8.5px) rotate(-45deg);
+}
+
+/* ================== MOBILE MENU OVERLAY ================== */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 70px);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 898;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ================== MOBILE MENU ================== */
+.mobile-menu {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 70px);
+  background: rgba(0, 5, 10, 0.98);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(96, 165, 250, 0.15);
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+  z-index: 899;
+  overflow-y: auto;
+}
+
+.mobile-menu.active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.mobile-menu-content {
+  display: flex;
+  flex-direction: column;
+  padding: 32px 24px;
+  min-height: 100%;
+}
+
+.mobile-menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+}
+
+.mobile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideInMobile 0.4s ease forwards;
+}
+
+@keyframes slideInMobile {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-menu-item:hover {
+  background: rgba(96, 165, 250, 0.08);
+  padding-left: 32px;
+}
+
+.mobile-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #60a5fa;
+  transition: all 0.25s ease;
+}
+
+.mobile-menu-item:hover .mobile-item-icon {
+  transform: scale(1.15);
+}
+
+.mobile-item-label {
+  font-size: 1.05rem;
+  letter-spacing: 0.3px;
+}
+
+.mobile-menu-register {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 28px;
+  margin-top: 32px;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  border: none;
+  border-radius: 12px;
   color: #ffffff;
   font-family: 'Inter', sans-serif;
-  font-size: 0.88rem;
+  font-size: 1.05rem;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.25s ease;
-  margin-left: auto;
-  margin-right: 0.5rem;
-  flex-shrink: 0;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
 }
 
-.mobile-register-btn:hover {
+.mobile-menu-register:hover {
   transform: translateY(-2px);
-  
+  box-shadow: 0 6px 30px rgba(37, 99, 235, 0.5);
 }
 
-.mobile-register-btn:active {
+.mobile-menu-register:active {
   transform: translateY(0);
-}
-
-.mobile-register-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -120%;
-  width: 120%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-  opacity: 0.9;
-  transition: left 0.6s ease;
-}
-
-.mobile-register-btn:hover::before {
-  left: 120%;
 }
 
 /* ================== RESPONSIVE ================== */
@@ -267,11 +383,10 @@
     display: none;
   }
   
-  .mobile-register-btn {
+  .mobile-menu-toggle {
     display: flex;
   }
   
-  /* Clean mobile layout - just logo + register button */
   .nav-container {
     justify-content: space-between;
     padding: 0 1rem;
@@ -280,7 +395,6 @@
   
   .logo-section {
     flex: 1;
-    justify-content: flex-start;
   }
   
   .logo-wrapper {
@@ -291,21 +405,8 @@
   }
   
   .logo-image {
-    width: 36px;
-    height: 36px;
-  }
-  
-  .logo-main {
-    font-size: 1.4rem;
-  }
-  
-  .logo-sub {
-    font-size: 0.7rem;
-  }
-  
-  .mobile-register-btn {
-    margin-left: auto;
-    margin-right: 0.75rem;
+    width: 38px;
+    height: 38px;
   }
 }
 
@@ -320,18 +421,14 @@
     height: 34px;
   }
   
-  .logo-main {
-    font-size: 1.3rem;
+  .mobile-menu {
+    top: 66px;
+    height: calc(100% - 66px);
   }
   
-  .logo-sub {
-    font-size: 0.65rem;
-    letter-spacing: 0.8px;
-  }
-  
-  .mobile-register-btn {
-    padding: 10px 20px;
-    font-size: 0.85rem;
+  .mobile-menu-overlay {
+    top: 66px;
+    height: calc(100% - 66px);
   }
 }
 
@@ -351,36 +448,38 @@
     height: 32px;
   }
   
-  .logo-main {
-    font-size: 1.2rem;
+  .hamburger {
+    width: 26px;
+    height: 18px;
   }
   
-  .logo-sub {
-    font-size: 0.6rem;
+  .hamburger span {
+    height: 2.5px;
   }
   
-  .mobile-register-btn {
-    padding: 9px 16px;
-    font-size: 0.82rem;
-    margin-right: 0.5rem;
+  .mobile-menu {
+    top: 64px;
+    height: calc(100% - 64px);
+  }
+  
+  .mobile-menu-overlay {
+    top: 64px;
+    height: calc(100% - 64px);
+  }
+  
+  .mobile-menu-content {
+    padding: 24px 20px;
+  }
+  
+  .mobile-menu-item {
+    padding: 18px 20px;
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 380px) {
-  .logo-text {
-    min-width: 80px;
-  }
-  
-  .logo-main {
-    font-size: 1.15rem;
-  }
-  
-  .logo-sub {
-    font-size: 0.55rem;
-  }
-  
-  .mobile-register-btn {
-    padding: 8px 14px;
-    font-size: 0.8rem;
+  .hamburger {
+    width: 24px;
+    height: 17px;
   }
 }

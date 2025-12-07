@@ -203,10 +203,7 @@ const AboutSection = () => {
                   Shape the future of Industry 5.0 with Kerala's brightest minds
                 </p>
                 
-                <button className="cta-button" onClick={handleRegisterInterest}>
-                  <span>Register Interest</span>
-                  <FaArrowRight className="button-icon" />
-                </button>
+                
               </div>
             </div>
           </div>
