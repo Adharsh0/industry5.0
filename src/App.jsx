@@ -12,6 +12,9 @@ import HostSection from './components/HostSection';
 import HostedPage from './components/HostedPage';
 import SplashScreen from './components/SplashScreen';
 import Events from './components/Events'; // Keep this import
+import EventTimeline from './components/EventTimeline';
+
+
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -40,6 +43,7 @@ function App() {
                 <HomeSection />
                 <HostedPage />
                 <AboutSection />
+                <EventTimeline />
                 <ContactSection />
               </>
             } />

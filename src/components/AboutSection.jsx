@@ -57,7 +57,7 @@ const AboutSection = () => {
   return (
     <section 
       className="about-section" 
-      id="about-section" 
+      id="about" 
       aria-labelledby="about-main-title"
       ref={sectionRef}
     >

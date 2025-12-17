@@ -253,7 +253,7 @@
   left: 0;
   width: 100%;
   height: calc(100% - 70px);
-  
+  background-color: black;
   backdrop-filter: blur(20px);
   border-top: 1px solid rgba(96, 165, 250, 0.15);
   transform: translateY(-100%);

@@ -110,39 +110,39 @@ const Events = () => {
         phone2: "95671 82239"
       }
     },
-    {
-      id: 5,
-      title: "Workshop on AI/ML",
-      poster: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=1000&fit=crop",
-      date: "March 10, 2024",
-      time: "10:00 AM - 4:00 PM",
-      venue: "Tech Hall A",
-      description: "Deep dive into artificial intelligence and machine learning fundamentals with industry experts.",
-      registerLink: "#register-ai-workshop",
-      category: "Workshop"
-    },
-    {
-      id: 6,
-      title: "Code Sprint Championship",
-      poster: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=1000&fit=crop",
-      date: "March 22, 2024",
-      time: "10:00 AM - 10:00 PM",
-      venue: "Computer Center",
-      description: "24-hour coding marathon to solve real-world problems and win exciting prizes.",
-      registerLink: "#register-code-sprint",
-      category: "Competition"
-    },
-    {
-      id: 7,
-      title: "Innovation Expo",
-      poster: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&h=1000&fit=crop",
-      date: "March 25, 2024",
-      time: "11:00 AM - 5:00 PM",
-      venue: "Exhibition Hall",
-      description: "Showcase your projects and innovations to industry leaders and venture capitalists.",
-      registerLink: "#register-innovation-expo",
-      category: "Exhibition"
-    }
+    // {
+    //   id: 5,
+    //   title: "Workshop on AI/ML",
+    //   poster: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=1000&fit=crop",
+    //   date: "March 10, 2024",
+    //   time: "10:00 AM - 4:00 PM",
+    //   venue: "Tech Hall A",
+    //   description: "Deep dive into artificial intelligence and machine learning fundamentals with industry experts.",
+    //   registerLink: "#register-ai-workshop",
+    //   category: "Workshop"
+    // },
+    // {
+    //   id: 6,
+    //   title: "Code Sprint Championship",
+    //   poster: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=1000&fit=crop",
+    //   date: "March 22, 2024",
+    //   time: "10:00 AM - 10:00 PM",
+    //   venue: "Computer Center",
+    //   description: "24-hour coding marathon to solve real-world problems and win exciting prizes.",
+    //   registerLink: "#register-code-sprint",
+    //   category: "Competition"
+    // },
+    // {
+    //   id: 7,
+    //   title: "Innovation Expo",
+    //   poster: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&h=1000&fit=crop",
+    //   date: "March 25, 2024",
+    //   time: "11:00 AM - 5:00 PM",
+    //   venue: "Exhibition Hall",
+    //   description: "Showcase your projects and innovations to industry leaders and venture capitalists.",
+    //   registerLink: "#register-innovation-expo",
+    //   category: "Exhibition"
+    // }
   ];
 
   const preEvents = allEvents.slice(0, 4);
