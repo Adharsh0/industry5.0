@@ -172,7 +172,7 @@ const RegistrationPage = () => {
         {/* Header */}
         <div className="registration-header">
           <h1 className="main-heading">
-            Register for <span className="gradient-text">NEXANORA</span>
+            Register for <span className="gradient-text">NEXORA</span>
           </h1>
           <p className="header-description">
             Join Kerala's premier technical convention. Limited seats available.

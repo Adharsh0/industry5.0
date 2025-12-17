@@ -294,7 +294,7 @@ const Events = () => {
         >
           <div className="section-header">
             <div className="section-badge">Featured Events</div>
-            <h2 className="section-title">Upcoming Attractions</h2>
+            <h2 className="section-title">PRE EVENTS</h2>
             <p className="section-subtitle">Experience the pinnacle of technology and innovation</p>
           </div>
           <div className="events-grid">

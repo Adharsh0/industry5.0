@@ -58,12 +58,7 @@ const Footer = () => {
             >
               Register Now <FaArrowRight className="btn-icon" />
             </button>
-            <button 
-              className="cta-button1 btn-secondary1"
-              onClick={handleLearnMoreClick}
-            >
-              Learn More <FaInfoCircle className="btn-icon" />
-            </button>
+           
           </div>
         </div>
       </div>
@@ -75,12 +70,12 @@ const Footer = () => {
           <div className="footer-brand">
             <div className="footer-logo">
               <img 
-                src="iste1.png" 
+                src="logosp.png" 
                 alt="ISTE Logo" 
                 className="footer-logo-image"
               />
               <div className="footer-logo-text">
-                <div className="footer-logo-title">INDUSTRY 5.0</div>
+                <div className="footer-logo-title">Nexora</div>
                 <div className="footer-logo-subtitle">ISTE Kerala Section</div>
               </div>
             </div>
@@ -88,21 +83,11 @@ const Footer = () => {
               Empowering the next generation of engineers and innovators through cutting-edge technology and sustainable innovation.
             </p>
             <div className="footer-social">
-              <a href="#" className="social-link" aria-label="Facebook">
-                <FaFacebookF />
-              </a>
-              <a href="#" className="social-link" aria-label="Twitter">
-                <FaTwitter />
-              </a>
-              <a href="#" className="social-link" aria-label="LinkedIn">
-                <FaLinkedinIn />
-              </a>
+             
               <a href="#" className="social-link" aria-label="Instagram">
                 <FaInstagram />
               </a>
-              <a href="#" className="social-link" aria-label="YouTube">
-                <FaYoutube />
-              </a>
+             
             </div>
           </div>
 

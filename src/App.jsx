@@ -13,6 +13,7 @@ import HostedPage from './components/HostedPage';
 import SplashScreen from './components/SplashScreen';
 import Events from './components/Events';
 import EventTimeline from './components/EventTimeline';
+import CountdownTimer from './components/CountdownTimer';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -33,17 +34,18 @@ function App() {
             <Route path="/" element={
               <>
                 <HomeSection />
+                <CountdownTimer />
                 <HostedPage />
                 <AboutSection />
                 <EventTimeline />
                 <ContactSection />
+                
               </>
             } />
             <Route path="/events" element={<Events />} />
             <Route path="/register" element={<RegistrationPage />} />
             <Route path="/host" element={<HostSection />} />
-            {/* Admin page is publicly accessible - handles auth internally */}
-            <Route path="/admin-iste" element={<AdminPage />} />
+            <Route path="/admin-iste-qwert" element={<AdminPage />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
           <Footer />
