@@ -11,16 +11,8 @@ import AdminPage from './components/AdminPage';
 import HostSection from './components/HostSection';
 import HostedPage from './components/HostedPage';
 import SplashScreen from './components/SplashScreen';
-import Events from './components/Events'; // Keep this import
+import Events from './components/Events';
 import EventTimeline from './components/EventTimeline';
-
-
-
-// Protected Route Component
-const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem('adminLoggedIn') === 'true';
-  return isAuthenticated ? children : <Navigate to="/admin-login" />;
-};
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -47,17 +39,11 @@ function App() {
                 <ContactSection />
               </>
             } />
-            <Route path="/events" element={<Events />} /> {/* Add Events as separate page */}
+            <Route path="/events" element={<Events />} />
             <Route path="/register" element={<RegistrationPage />} />
             <Route path="/host" element={<HostSection />} />
-            <Route 
-              path="/admin-iste" 
-              element={
-                <ProtectedRoute>
-                  <AdminPage />
-                </ProtectedRoute>
-              } 
-            />
+            {/* Admin page is publicly accessible - handles auth internally */}
+            <Route path="/admin-iste" element={<AdminPage />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
           <Footer />

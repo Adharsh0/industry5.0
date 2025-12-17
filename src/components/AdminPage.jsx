@@ -13,14 +13,11 @@ import {
   CreditCard,
   Calendar,
   Shield,
-  Users,
-  Home,
   RefreshCw,
   AlertCircle,
   LogIn,
   Lock,
-  LogOut,
-  IndianRupeeIcon
+  LogOut
 } from 'lucide-react';
 import './AdminPage.css';
 
@@ -54,6 +51,31 @@ const AdminPage = () => {
   // API Base URL
   const API_BASE_URL = 'https://api.istembcet-nexora.in/api';
 
+  // Check authentication status on component mount
+  useEffect(() => {
+    const checkAuth = () => {
+      const storedToken = localStorage.getItem('adminToken');
+      const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+      
+      if (storedToken && isLoggedIn) {
+        // User is already logged in
+        setAuthToken(storedToken);
+        setIsAuthenticated(true);
+        fetchRegistrations(storedToken);
+      } else {
+        // User needs to log in
+        setIsAuthenticated(false);
+        setLoading(false);
+        
+        // Clear any stale/invalid tokens
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminLoggedIn');
+      }
+    };
+
+    checkAuth();
+  }, []);
+
   // Admin login function
   const handleAdminLogin = async (e) => {
     e.preventDefault();
@@ -75,14 +97,15 @@ const AdminPage = () => {
         setAuthToken(result.token);
         setIsAuthenticated(true);
         localStorage.setItem('adminToken', result.token);
+        localStorage.setItem('adminLoggedIn', 'true');
         console.log('✅ Admin login successful');
         fetchRegistrations(result.token);
       } else {
-        setError(result.message || 'Login failed');
+        setError(result.message || 'Login failed. Check your credentials.');
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError('Network error. Please try again.');
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setIsLoggingIn(false);
     }
@@ -93,19 +116,20 @@ const AdminPage = () => {
     setIsAuthenticated(false);
     setAuthToken('');
     localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminLoggedIn');
     setUsers([]);
     setFilteredUsers([]);
+    setStats({
+      total: 0,
+      totalRevenue: 0,
+      withAccommodation: 0,
+      pending: 0,
+      approved: 0,
+      rejected: 0
+    });
+    setError('');
+    setLoginData({ username: '', password: '' });
   };
-
-  // Check for existing token on mount
-  useEffect(() => {
-    const storedToken = localStorage.getItem('adminToken');
-    if (storedToken) {
-      setAuthToken(storedToken);
-      setIsAuthenticated(true);
-      fetchRegistrations(storedToken);
-    }
-  }, []);
 
   // Fetch all registrations with admin authentication
   const fetchRegistrations = async (token = authToken) => {
@@ -122,7 +146,7 @@ const AdminPage = () => {
       if (response.status === 401) {
         // Token expired or invalid
         handleLogout();
-        setError('Session expired. Please login again.');
+        setError('Your session has expired. Please login again.');
         return;
       }
       
@@ -145,10 +169,10 @@ const AdminPage = () => {
           isIsteMember: user.isIsteMember,
           isteRegistrationNumber: user.isteRegistrationNumber || '',
           stayPreference: user.stayPreference,
-          foodPreference: 'no', // Not in current schema, set default
+          foodPreference: 'no',
           transactionId: user.transactionId,
           amount: user.totalAmount,
-          status: user.registrationStatus || 'pending', // Use registrationStatus from backend
+          status: user.registrationStatus || 'pending',
           registrationStatus: user.registrationStatus,
           paymentStatus: user.paymentStatus,
           registrationDate: new Date(user.registrationDate).toLocaleDateString('en-IN', {
@@ -219,7 +243,7 @@ const AdminPage = () => {
           'Authorization': `Bearer ${authToken}`
         },
         body: JSON.stringify({
-          approvedBy: 'Admin' // In production, use actual admin name
+          approvedBy: 'Admin'
         })
       });
 
@@ -405,7 +429,9 @@ const AdminPage = () => {
     );
   };
 
-  // Login Form
+  // ==================== RENDER LOGIC ====================
+
+  // Login Form (shown when not authenticated)
   if (!isAuthenticated) {
     return (
       <div className="admin-container">
@@ -441,6 +467,7 @@ const AdminPage = () => {
                     onChange={(e) => setLoginData({...loginData, username: e.target.value})}
                     required
                     className="modern-input"
+                    autoComplete="username"
                   />
                 </div>
 
@@ -453,6 +480,7 @@ const AdminPage = () => {
                     onChange={(e) => setLoginData({...loginData, password: e.target.value})}
                     required
                     className="modern-input"
+                    autoComplete="current-password"
                   />
                 </div>
 
@@ -474,6 +502,8 @@ const AdminPage = () => {
                   )}
                 </button>
               </form>
+
+             
             </div>
           </div>
         </div>
@@ -481,7 +511,7 @@ const AdminPage = () => {
     );
   }
 
-  // Main Admin Dashboard
+  // Main Admin Dashboard (shown when authenticated)
   return (
     <div className="admin-container">
       {/* Background Shapes */}
@@ -515,23 +545,19 @@ const AdminPage = () => {
           
           <div className="header-stats">
             <div className="stat-card">
-             
               <div className="stat-number">{stats.total}</div>
               <div className="stat-label">Total Registrations</div>
             </div>
             <div className="stat-card">
-             
               <div className="stat-number">{stats.pending}</div>
               <div className="stat-label">Pending Approval</div>
             </div>
             <div className="stat-card">
-             
               <div className="stat-number">{stats.withAccommodation}</div>
               <div className="stat-label">With Accommodation</div>
             </div>
             <div className="stat-card">
-             
-              <div className="stat-number">Rs{stats.totalRevenue}</div>
+              <div className="stat-number">₹{stats.totalRevenue}</div>
               <div className="stat-label">Total Revenue</div>
             </div>
           </div>
