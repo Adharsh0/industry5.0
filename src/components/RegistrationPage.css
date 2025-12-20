@@ -1838,3 +1838,857 @@
     color: #000;
   }
 }
+/* Add these styles to your existing RegistrationPage.css */
+
+/* Email checking indicator */
+.email-checking {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Email error styling */
+.email-error-alert {
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #f87171;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 15px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.email-error-hint {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 5px;
+}
+
+/* Input error state */
+.modern-input.error {
+  border-color: rgba(220, 38, 38, 0.5);
+  background: rgba(220, 38, 38, 0.05);
+}
+
+/* Department input styling */
+.input-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Stay days input styling */
+.stay-days-info {
+  margin-top: 8px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: right;
+}
+
+/* Pricing card updates */
+.price-item.highlight {
+  background: rgba(74, 144, 226, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  margin: 5px 0;
+}
+
+.price-item.highlight .price-label {
+  font-weight: 600;
+  color: #4A90E2;
+}
+
+.price-item.highlight .price-value {
+  font-weight: 700;
+  color: #4A90E2;
+  font-size: 1.1rem;
+}
+
+/* Registration summary updates */
+.summary-item.highlight {
+  background: rgba(74, 144, 226, 0.05);
+  padding: 10px;
+  border-radius: 6px;
+  margin: 5px 0;
+}
+
+.summary-item.highlight .summary-label {
+  font-weight: 600;
+  color: #4A90E2;
+}
+
+.summary-item.highlight .summary-value {
+  font-weight: 700;
+  color: #4A90E2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .email-checking {
+    font-size: 13px;
+  }
+  
+  .email-error-alert {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+  
+  .stay-days-info {
+    font-size: 13px;
+  }
+}
+/* Section Selection Styles */
+.section-selection {
+  width: 100%;
+}
+
+.section-label {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.section-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.section-option {
+  display: block;
+  cursor: pointer;
+}
+
+.section-option input {
+  display: none;
+}
+
+.section-card {
+  padding: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.section-option input:checked + .section-card {
+  border-color: #4A90E2;
+  background: rgba(74, 144, 226, 0.1);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.section-title {
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.25rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.section-amount {
+  font-size: 0.875rem;
+  color: #60a5fa;
+  font-weight: 500;
+}
+
+.section-card:hover {
+  border-color: #60a5fa;
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Price Sections in Info Card */
+.price-section {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.price-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.price-section-title {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+}
+
+.price-note {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+  font-style: italic;
+}
+
+/* Summary Breakdown in Payment Page */
+.summary-breakdown {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin: 0.75rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  padding: 4px 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.breakdown-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Other Department Input Animation */
+.other-department-input {
+  animation: slideDown 0.3s ease;
+  margin-top: 10px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stay Days Selection */
+.stay-days-info {
+  font-size: 0.875rem;
+  color: #60a5fa;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(74, 144, 226, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #4A90E2;
+}
+
+/* Highlighted items in summary */
+.summary-item.highlight {
+  background: rgba(74, 144, 226, 0.05);
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin: 4px 0;
+}
+
+.summary-item.highlight .summary-label {
+  color: #4A90E2;
+  font-weight: 600;
+}
+
+.summary-item.highlight .summary-value {
+  color: #4A90E2;
+  font-weight: 600;
+}
+
+/* Department-specific styling */
+.input-group.department-group {
+  margin-bottom: 15px;
+}
+
+/* Email checking styles */
+.email-checking {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.email-error-alert {
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #f87171;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 15px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.email-error-hint {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 5px;
+  font-style: italic;
+}
+
+/* Input error state */
+.modern-input.error {
+  border-color: rgba(220, 38, 38, 0.5);
+  background: rgba(220, 38, 38, 0.05);
+}
+
+.modern-input.error:focus {
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .section-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-card {
+    padding: 0.875rem;
+  }
+  
+  .price-section {
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .breakdown-item {
+    font-size: 0.8125rem;
+  }
+  
+  .stay-days-info {
+    font-size: 0.8125rem;
+    padding: 0.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 0.9rem;
+  }
+  
+  .section-amount {
+    font-size: 0.8rem;
+  }
+  
+  .price-section-title {
+    font-size: 0.8rem;
+  }
+}
+
+/* Additional styles for form layout */
+.input-group.section-group {
+  margin-bottom: 25px;
+}
+
+.input-group.section-group .section-selection {
+  margin-top: 5px;
+}
+
+/* Back button in payment page */
+.back-btn {
+  margin-top: 20px;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Success page updates for new fields */
+.details-grid .detail-item:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+/* Animation for new form elements */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-option, 
+.stay-days-info,
+.other-department-input {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Pricing card specific updates */
+.pricing-card .price-section:last-of-type {
+  background: rgba(74, 144, 226, 0.05);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+/* Process steps updates for new system */
+.process-step .step-content p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* Status badge for sections */
+.section-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background: rgba(74, 144, 226, 0.1);
+  color: #4A90E2;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* Form validation improvements */
+.input-group.valid .input-icon {
+  color: #10b981;
+}
+
+.input-group.invalid .input-icon {
+  color: #ef4444;
+}
+
+/* Loading state for sections */
+.section-card.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.section-card.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Accessibility improvements for new components */
+.section-option input:focus + .section-card {
+  outline: 2px solid #4A90E2;
+  outline-offset: 2px;
+}
+
+/* Print styles for new sections */
+@media print {
+  .section-card {
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+  }
+  
+  .section-option input:checked + .section-card {
+    background: #f0f0f0;
+    border-color: #000;
+  }
+  
+  .breakdown-item {
+    color: #000;
+  }
+  
+  .stay-days-info {
+    background: #f5f5f5;
+    color: #000;
+    border-left-color: #000;
+  }
+}
+/* Stay Days Container */
+.stay-days-container {
+  position: relative;
+  width: 100%;
+}
+
+.stay-days-hint {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: right;
+  padding-right: 8px;
+}
+
+/* Email Input Container */
+.email-input-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Form validation improvements */
+.modern-input:invalid:not(:placeholder-shown) {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.modern-input:valid:not(:placeholder-shown) {
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+/* Payment form specific styles */
+.back-btn {
+  margin-top: 20px;
+  width: 100%;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* QR Code Placeholder */
+.qr-code-placeholder {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Process Steps */
+.process-steps {
+  margin: 30px 0;
+}
+
+.process-step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+}
+
+.step-number {
+  background: #4A90E2;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  margin: 0 0 5px 0;
+  color: white;
+}
+
+.step-content p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+
+/* Success Instructions */
+.success-instructions {
+  background: rgba(74, 144, 226, 0.08);
+  border-radius: 12px;
+  padding: 25px;
+  margin-top: 30px;
+}
+
+.success-instructions h4 {
+  color: #4A90E2;
+  margin-bottom: 15px;
+}
+
+.success-instructions ol {
+  margin-left: 20px;
+  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.success-instructions li {
+  margin-bottom: 10px;
+}
+
+.contact-info {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 3px solid #4A90E2;
+}
+
+.contact-info p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Form Card Refinements */
+.form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  
+}
+
+/* Input Focus Animation */
+.modern-input:focus {
+  animation: inputFocus 0.3s ease;
+}
+
+@keyframes inputFocus {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Button Loading States */
+.btn-primary:disabled,
+.submit-btn:disabled,
+.payment-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .stay-days-hint {
+    font-size: 12px;
+  }
+  
+  .process-step {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .step-number {
+    margin-bottom: 10px;
+  }
+  
+  .success-instructions {
+    padding: 20px;
+  }
+}
+
+/* Dark Mode Refinements */
+@media (prefers-color-scheme: dark) {
+  .form-card {
+    background: rgba(15, 23, 42, 0.7);
+  }
+  
+  .info-card {
+    background: rgba(15, 23, 42, 0.7);
+  }
+  
+  .success-card {
+    background: rgba(15, 23, 42, 0.8);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .bg-shapes {
+    display: none;
+  }
+  
+  .registration-container {
+    background: white;
+  }
+  
+  .form-card,
+  .info-card,
+  .success-card {
+    background: white;
+    border: 1px solid #ddd;
+    color: black;
+  }
+  
+  .modern-input,
+  .summary-value,
+  .detail-value {
+    color: black;
+    border-color: #ddd;
+  }
+  
+  .btn-primary,
+  .btn-secondary,
+  .submit-btn,
+  .success-btn {
+    display: none;
+  }
+}
+
+/* Accessibility Improvements */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus Styles for Accessibility */
+.modern-input:focus,
+.btn-primary:focus,
+.btn-secondary:focus,
+.submit-btn:focus,
+.success-btn:focus {
+  outline: 2px solid #4A90E2;
+  outline-offset: 2px;
+}
+
+/* Custom Scrollbar for Form Card */
+.form-card {
+  scrollbar-width: thin;
+
+}
+
+.form-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-card::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.form-card::-webkit-scrollbar-thumb {
+  
+  border-radius: 3px;
+}
+
+/* Loading Animation for Submit */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.submit-btn:disabled {
+  animation: pulse 2s infinite;
+}
+
+/* Form Step Transitions */
+.form-step {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Radio and Checkbox Custom Styles */
+input[type="radio"],
+input[type="checkbox"] {
+  accent-color: #4A90E2;
+}
+
+/* Selection Dropdown Styling */
+select.modern-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234A90E2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 20px;
+  padding-right: 50px;
+}
+
+/* Error State Animations */
+.error-alert,
+.email-error-alert {
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+/* Success Icon Animation */
+
+
+/* Responsive Grid for Details */
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+}
+
+@media (max-width: 768px) {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card Hover Effects */
+.info-card:hover,
+.pricing-card:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Gradient Border Effect */
+.form-card {
+  position: relative;
+}
+
+.form-card::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+ 
+  border-radius: 21px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.form-card:hover::after {
+  opacity: 0.1;
+}

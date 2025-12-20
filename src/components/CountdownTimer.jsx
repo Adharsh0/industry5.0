@@ -13,7 +13,7 @@ const CountdownTimer = () => {
   const containerRef = useRef(null);
 
   const startDate = new Date('December 1, 2025 00:00:00').getTime();
-  const endDate = new Date('January 10, 2026 00:00:00').getTime();
+  const endDate = new Date('January 30, 2026 00:00:00').getTime();
   const totalDuration = endDate - startDate;
 
   /* TIMER LOGIC */

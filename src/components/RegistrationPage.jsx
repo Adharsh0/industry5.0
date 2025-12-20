@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   User, Mail, Phone, Building2, Send, Calendar,
   MapPin, GraduationCap, CreditCard, BedDouble, 
-  CheckCircle2, Loader2, AlertCircle, Clock, Download, ExternalLink
+  CheckCircle2, Loader2, AlertCircle, Clock, Download, ExternalLink, School
 } from 'lucide-react';
 import './RegistrationPage.css';
 
@@ -17,27 +17,28 @@ const RegistrationPage = () => {
     fullName: '',
     email: '',
     phone: '',
+    institution: '',
     college: '',
     department: '',
+    otherDepartment: '',
     year: '',
     isIsteMember: '',
     isteRegistrationNumber: '',
     stayPreference: '',
+    stayDays: 0, // Changed from 1 to 0
     acknowledgement: false
   });
 
-  // Direct API URL - Change this when deploying to production
+  // API URL - Use your Render backend URL
   const API_BASE_URL = 'https://iste-backend-fcd3.onrender.com/api';
 
   // Function to check if email already exists
   const checkEmailExists = async (email) => {
     if (!email || email.length < 5) {
-      console.log('Email too short, skipping check');
       return false;
     }
     
     try {
-      console.log(`Checking email: ${email}`);
       const cleanEmail = email.toLowerCase().trim();
       
       const response = await fetch(`${API_BASE_URL}/check-email`, {
@@ -48,20 +49,17 @@ const RegistrationPage = () => {
         body: JSON.stringify({ email: cleanEmail }),
       });
       
-      console.log('Response status:', response.status);
-      
       const result = await response.json();
-      console.log('Check email response:', result);
       
       if (!response.ok) {
         console.error('API error:', result.message);
-        return false; // Don't block on API errors
+        return false;
       }
       
       return result.exists || false;
     } catch (error) {
       console.error('Network error checking email:', error);
-      return false; // Don't block on network error
+      return false;
     }
   };
 
@@ -70,7 +68,38 @@ const RegistrationPage = () => {
     setFormError('');
     setEmailError('');
 
-    // Validate email doesn't already exist
+    // Validate all required fields
+    const requiredFields = [
+      'fullName', 'email', 'phone', 'institution', 'college', 
+      'department', 'year', 'isIsteMember', 'stayPreference'
+    ];
+    
+    const missingFields = requiredFields.filter(field => !formData[field]);
+    
+    if (missingFields.length > 0) {
+      setFormError(`Please fill all required fields`);
+      return;
+    }
+
+    // Validate institution
+    if (!formData.institution) {
+      setFormError('Please select institution type');
+      return;
+    }
+
+    // Validate department - if "Other" is selected, check otherDepartment
+    if (formData.department === 'Other' && !formData.otherDepartment.trim()) {
+      setFormError('Please specify your department name when selecting "Other"');
+      return;
+    }
+
+    // Validate stayDays only if With Stay is selected
+    if (formData.stayPreference === 'With Stay' && (!formData.stayDays || formData.stayDays < 1)) {
+      setFormError('Please enter number of stay days (minimum 1)');
+      return;
+    }
+
+    // Validate email
     if (formData.email) {
       setIsCheckingEmail(true);
       const emailExists = await checkEmailExists(formData.email);
@@ -87,24 +116,52 @@ const RegistrationPage = () => {
 
   const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value
+    const newValue = type === 'checkbox' ? checked : value;
+    
+    setFormData(prev => {
+      const updated = { ...prev, [name]: newValue };
+      
+      // Reset stayDays when stayPreference changes
+      if (name === 'stayPreference') {
+        if (value === 'Without Stay') {
+          updated.stayDays = 0; // Explicitly set to 0
+        } else if (value === 'With Stay' && prev.stayDays === 0) {
+          updated.stayDays = 1; // Set to 1 when switching to With Stay
+        }
+      }
+      
+      // Reset otherDepartment when department changes from "Other"
+      if (name === 'department' && value !== 'Other') {
+        updated.otherDepartment = '';
+      }
+      
+      // Validate stayDays input (only for With Stay)
+      if (name === 'stayDays' && formData.stayPreference === 'With Stay') {
+        const numValue = parseInt(value) || 0;
+        if (numValue < 1) {
+          updated.stayDays = 1;
+        } else if (numValue > 10) {
+          updated.stayDays = 10;
+        } else {
+          updated.stayDays = numValue;
+        }
+      }
+      
+      return updated;
     });
+    
     setFormError('');
     
-    // Clear email error when user starts typing
     if (name === 'email') {
       setEmailError('');
     }
   };
 
-  // Validate email when user leaves the field (on blur)
+  // Validate email when user leaves the field
   const handleEmailBlur = async () => {
     const email = formData.email;
     if (!email || email.length < 5) return;
     
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setEmailError('Please enter a valid email address');
@@ -112,33 +169,87 @@ const RegistrationPage = () => {
     }
     
     setIsCheckingEmail(true);
-    console.log('Starting email check...');
     
     try {
       const emailExists = await checkEmailExists(email);
-      console.log('Email exists result:', emailExists);
       
       if (emailExists) {
         setEmailError('This email is already registered. Please use a different email address.');
       } else {
-        // Clear any previous error if email is available
         setEmailError('');
       }
     } catch (error) {
       console.error('Error in email validation:', error);
-      // Don't show error for network issues, just let user proceed
     } finally {
       setIsCheckingEmail(false);
     }
   };
 
   const calculateTotalAmount = () => {
-    let total = 500; // Base registration fee
-    if (formData.stayPreference === 'With Stay') total += 150;
+    // Base registration fee based on institution
+    let total = formData.institution === 'Polytechnic' ? 350 : 500;
+    
+    // Add accommodation cost (₹150 per day) only if With Stay is selected
+    if (formData.stayPreference === 'With Stay' && formData.stayDays > 0) {
+      total += (150 * formData.stayDays);
+    }
+    
     return total;
   };
 
   const nextStep = () => {
+    // Validate current step before proceeding
+    if (currentStep === 1) {
+      if (!formData.fullName.trim()) {
+        setFormError('Please enter your full name');
+        return;
+      }
+      if (!formData.email.trim()) {
+        setFormError('Please enter your email address');
+        return;
+      }
+      if (!formData.phone.trim()) {
+        setFormError('Please enter your phone number');
+        return;
+      }
+      if (emailError) {
+        setFormError('Please fix the email error before continuing');
+        return;
+      }
+    }
+    
+    if (currentStep === 2) {
+      if (!formData.institution) {
+        setFormError('Please select institution type');
+        return;
+      }
+      if (!formData.college.trim()) {
+        setFormError('Please enter college name');
+        return;
+      }
+      if (!formData.department) {
+        setFormError('Please select department');
+        return;
+      }
+      // Validate other department if "Other" is selected
+      if (formData.department === 'Other' && !formData.otherDepartment.trim()) {
+        setFormError('Please specify your department name');
+        return;
+      }
+      if (!formData.year) {
+        setFormError('Please select academic year');
+        return;
+      }
+      if (!formData.isIsteMember) {
+        setFormError('Please select ISTE membership status');
+        return;
+      }
+      if (formData.isIsteMember === 'Yes' && !formData.isteRegistrationNumber.trim()) {
+        setFormError('Please enter ISTE registration number');
+        return;
+      }
+    }
+    
     if (currentStep < 3) setCurrentStep(currentStep + 1);
   };
 
@@ -146,7 +257,6 @@ const RegistrationPage = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
-  // If payment page should be shown, render PaymentPage
   if (showPayment) {
     return <PaymentPage 
       formData={formData} 
@@ -161,7 +271,6 @@ const RegistrationPage = () => {
 
   return (
     <div className="registration-container">
-      {/* Background Shapes */}
       <div className="bg-shapes">
         <div className="shape shape-1"></div>
         <div className="shape shape-2"></div>
@@ -169,7 +278,6 @@ const RegistrationPage = () => {
       </div>
 
       <div className="registration-content">
-        {/* Header */}
         <div className="registration-header">
           <h1 className="main-heading">
             Register for <span className="gradient-text">NEXORA</span>
@@ -191,10 +299,8 @@ const RegistrationPage = () => {
         )}
 
         <div className="registration-layout">
-          {/* Main Form */}
           <div className="form-section">
             <div className="form-card">
-              {/* Progress Steps */}
               <div className="progress-steps">
                 {[1, 2, 3].map((step) => (
                   <React.Fragment key={step}>
@@ -216,7 +322,6 @@ const RegistrationPage = () => {
               </div>
 
               <form onSubmit={handleSubmit}>
-                {/* Step 1: Personal Information */}
                 {currentStep === 1 && (
                   <div className="form-step">
                     <h3 className="step-title">Personal Information</h3>
@@ -226,7 +331,7 @@ const RegistrationPage = () => {
                       <input
                         type="text"
                         name="fullName"
-                        placeholder="Full Name"
+                        placeholder="Full Name *"
                         value={formData.fullName}
                         onChange={handleChange}
                         required
@@ -242,13 +347,12 @@ const RegistrationPage = () => {
                           <input
                             type="email"
                             name="email"
-                            placeholder="Email Address"
+                            placeholder="Email Address *"
                             value={formData.email}
                             onChange={handleChange}
                             onBlur={handleEmailBlur}
                             required
                             className={`modern-input ${emailError ? 'error' : ''}`}
-                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                           />
                           {isCheckingEmail && (
                             <div className="email-checking">
@@ -264,7 +368,7 @@ const RegistrationPage = () => {
                         <input
                           type="tel"
                           name="phone"
-                          placeholder="Phone Number"
+                          placeholder="Phone Number *"
                           value={formData.phone}
                           onChange={handleChange}
                           required
@@ -287,7 +391,7 @@ const RegistrationPage = () => {
                         type="button"
                         onClick={nextStep}
                         className="btn-primary"
-                        disabled={!!emailError || isCheckingEmail}
+                        disabled={!!emailError || isCheckingEmail || !formData.fullName || !formData.email || !formData.phone}
                       >
                         {isCheckingEmail ? 'Checking...' : 'Continue'}
                       </button>
@@ -295,17 +399,31 @@ const RegistrationPage = () => {
                   </div>
                 )}
 
-                {/* Step 2: Academic Information */}
                 {currentStep === 2 && (
                   <div className="form-step">
                     <h3 className="step-title">Academic Information</h3>
                     
                     <div className="input-group">
+                      <School className="input-icon" size={20} />
+                      <select
+                        name="institution"
+                        value={formData.institution}
+                        onChange={handleChange}
+                        required
+                        className="modern-input"
+                      >
+                        <option value="">Select Institution Type *</option>
+                        <option value="Engineering">Engineering College (₹500 base fee)</option>
+                        <option value="Polytechnic">Polytechnic College (₹350 base fee)</option>
+                      </select>
+                    </div>
+
+                    <div className="input-group">
                       <Building2 className="input-icon" size={20} />
                       <input
                         type="text"
                         name="college"
-                        placeholder="College/University"
+                        placeholder="College/University Name *"
                         value={formData.college}
                         onChange={handleChange}
                         required
@@ -323,7 +441,7 @@ const RegistrationPage = () => {
                           required
                           className="modern-input"
                         >
-                          <option value="">Select Department</option>
+                          <option value="">Select Department *</option>
                           <option value="Computer Science">Computer Science & Engineering</option>
                           <option value="Electronics">Electronics & Communication</option>
                           <option value="Mechanical">Mechanical Engineering</option>
@@ -342,7 +460,7 @@ const RegistrationPage = () => {
                           required
                           className="modern-input"
                         >
-                          <option value="">Academic Year</option>
+                          <option value="">Academic Year *</option>
                           <option value="First">First Year</option>
                           <option value="Second">Second Year</option>
                           <option value="Third">Third Year</option>
@@ -351,6 +469,22 @@ const RegistrationPage = () => {
                         </select>
                       </div>
                     </div>
+
+                    {/* Other Department Input - Only shown when "Other" is selected */}
+                    {formData.department === 'Other' && (
+                      <div className="input-group">
+                        <GraduationCap className="input-icon" size={20} />
+                        <input
+                          type="text"
+                          name="otherDepartment"
+                          placeholder="Please specify your department name *"
+                          value={formData.otherDepartment}
+                          onChange={handleChange}
+                          required={formData.department === 'Other'}
+                          className="modern-input"
+                        />
+                      </div>
+                    )}
 
                     <div className="input-group">
                       <CreditCard className="input-icon" size={20} />
@@ -361,7 +495,7 @@ const RegistrationPage = () => {
                         required
                         className="modern-input"
                       >
-                        <option value="">Are you an ISTE member?</option>
+                        <option value="">Are you an ISTE member? *</option>
                         <option value="Yes">Yes, I am an ISTE member</option>
                         <option value="No">No, I am not an ISTE member</option>
                       </select>
@@ -373,7 +507,7 @@ const RegistrationPage = () => {
                         <input
                           type="text"
                           name="isteRegistrationNumber"
-                          placeholder="ISTE Registration Number"
+                          placeholder="ISTE Registration Number *"
                           value={formData.isteRegistrationNumber}
                           onChange={handleChange}
                           required={formData.isIsteMember === 'Yes'}
@@ -394,7 +528,15 @@ const RegistrationPage = () => {
                         type="button"
                         onClick={nextStep}
                         className="btn-primary"
-                        disabled={!!emailError}
+                        disabled={
+                          !!emailError || 
+                          !formData.institution || 
+                          !formData.college || 
+                          !formData.department || 
+                          (formData.department === 'Other' && !formData.otherDepartment.trim()) ||
+                          !formData.year || 
+                          !formData.isIsteMember
+                        }
                       >
                         Continue
                       </button>
@@ -402,7 +544,6 @@ const RegistrationPage = () => {
                   </div>
                 )}
 
-                {/* Step 3: Services & Submission */}
                 {currentStep === 3 && (
                   <div className="form-step">
                     <h3 className="step-title">Additional Services</h3>
@@ -416,24 +557,46 @@ const RegistrationPage = () => {
                         required
                         className="modern-input"
                       >
-                        <option value="">Do you require accommodation?</option>
-                        <option value="With Stay">Yes, I need accommodation (₹150)</option>
+                        <option value="">Do you require accommodation? *</option>
+                        <option value="With Stay">Yes, I need accommodation (₹150/day)</option>
                         <option value="Without Stay">No, I don't need accommodation</option>
                       </select>
                     </div>
+
+                    {formData.stayPreference === 'With Stay' && (
+                      <div className="input-group">
+                        <BedDouble className="input-icon" size={20} />
+                        <div className="stay-days-container">
+                          <input
+                            type="number"
+                            name="stayDays"
+                            placeholder="Number of Stay Days *"
+                            value={formData.stayDays}
+                            onChange={handleChange}
+                            required={formData.stayPreference === 'With Stay'}
+                            min="1"
+                            max="10"
+                            className="modern-input"
+                          />
+                          <span className="stay-days-hint">
+                            ₹150 per day × {formData.stayDays} day(s) = ₹{150 * formData.stayDays}
+                          </span>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="charges-summary">
                       <div className="charges-content">
                         <h4>Payment Summary</h4>
                         <div className="charges-breakdown">
                           <div className="charge-item">
-                            <span>Registration Fee:</span>
-                            <span>₹500</span>
+                            <span>Registration Fee ({formData.institution}):</span>
+                            <span>₹{formData.institution === 'Polytechnic' ? 350 : 500}</span>
                           </div>
-                          {formData.stayPreference === 'With Stay' && (
+                          {formData.stayPreference === 'With Stay' && formData.stayDays > 0 && (
                             <div className="charge-item">
-                              <span>Accommodation:</span>
-                              <span>₹150</span>
+                              <span>Accommodation ({formData.stayDays} day{formData.stayDays > 1 ? 's' : ''}):</span>
+                              <span>₹{150 * formData.stayDays}</span>
                             </div>
                           )}
                           <div className="charge-total">
@@ -444,16 +607,6 @@ const RegistrationPage = () => {
                         <small className="charges-note">Payment details will be shown on next page</small>
                       </div>
                     </div>
-
-                    {emailError && (
-                      <div className="email-error-alert">
-                        <AlertCircle size={16} />
-                        <span>{emailError}</span>
-                        <p className="email-error-hint">
-                          Please go back to Step 1 and enter a different email address
-                        </p>
-                      </div>
-                    )}
 
                     <label className="checkbox-group">
                       <input
@@ -481,7 +634,13 @@ const RegistrationPage = () => {
                       </button>
                       <button
                         type="submit"
-                        disabled={!formData.acknowledgement || isSubmitting || !!emailError}
+                        disabled={
+                          !formData.acknowledgement || 
+                          isSubmitting || 
+                          !!emailError || 
+                          !formData.stayPreference || 
+                          (formData.stayPreference === 'With Stay' && (!formData.stayDays || formData.stayDays < 1))
+                        }
                         className="submit-btn"
                       >
                         {isSubmitting ? (
@@ -505,9 +664,7 @@ const RegistrationPage = () => {
             </div>
           </div>
 
-          {/* Sidebar Info */}
           <div className="info-section">
-            {/* Venue Map Card */}
             <div className="info-card">
               <div className="card-header">
                 <h3 className="card-title">Venue Location</h3>
@@ -527,23 +684,26 @@ const RegistrationPage = () => {
               </div>
             </div>
 
-            {/* Pricing Info Card */}
             <div className="info-card pricing-card">
               <div className="card-header">
                 <h3 className="card-title">Registration Fee</h3>
               </div>
               <div className="pricing-details">
                 <div className="price-item">
-                  <span className="price-label">Normal Registration</span>
+                  <span className="price-label">Engineering College</span>
                   <span className="price-value">₹500</span>
                 </div>
                 <div className="price-item">
-                  <span className="price-label">Accommodation (Optional)</span>
+                  <span className="price-label">Polytechnic College</span>
+                  <span className="price-value">₹350</span>
+                </div>
+                <div className="price-item">
+                  <span className="price-label">Accommodation (per day)</span>
                   <span className="price-value">₹150</span>
                 </div>
                 <div className="price-total">
-                  <span className="total-label">Total (with accommodation)</span>
-                  <span className="total-value">₹650</span>
+                  <span className="total-label">Max Total (Engineering + 10 days)</span>
+                  <span className="total-value">₹2000</span>
                 </div>
               </div>
             </div>
@@ -554,7 +714,6 @@ const RegistrationPage = () => {
   );
 };
 
-// Payment Page Component - Add duplicate check here too
 const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, apiBaseUrl, emailError, setEmailError }) => {
   const [transactionId, setTransactionId] = useState('');
   const [paymentCompleted, setPaymentCompleted] = useState(false);
@@ -563,46 +722,23 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
   const [registrationId, setRegistrationId] = useState('');
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
 
-  // Check email again on payment page load
   useEffect(() => {
-    const checkEmailOnLoad = async () => {
-      if (!formData.email) return;
-      
-      setIsCheckingEmail(true);
-      try {
-        const cleanEmail = formData.email.toLowerCase().trim();
-        console.log('Payment page: Checking email on load:', cleanEmail);
-        
-        const response = await fetch(`${apiBaseUrl}/check-email`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: cleanEmail }),
-        });
-        
-        const result = await response.json();
-        console.log('Payment page email check result:', result);
-        
-        if (result.exists) {
-          setPaymentError('This email is already registered. Please go back and use a different email.');
-        }
-      } catch (error) {
-        console.error('Error checking email in payment page:', error);
-      } finally {
-        setIsCheckingEmail(false);
-      }
-    };
-
-    checkEmailOnLoad();
-  }, [formData.email, apiBaseUrl]);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     
-    // Check email again before submitting
+    // Validate stayDays based on stayPreference
+    if (formData.stayPreference === 'With Stay' && (!formData.stayDays || formData.stayDays < 1)) {
+      setPaymentError('Please enter number of stay days (minimum 1)');
+      return;
+    }
+
+    // Final email check
     setIsCheckingEmail(true);
     try {
       const cleanEmail = formData.email.toLowerCase().trim();
-      console.log('Final email check before submission:', cleanEmail);
       
       const emailCheckResponse = await fetch(`${apiBaseUrl}/check-email`, {
         method: 'POST',
@@ -611,7 +747,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
       });
       
       const emailCheckResult = await emailCheckResponse.json();
-      console.log('Final email check result:', emailCheckResult);
       
       if (emailCheckResult.exists) {
         setPaymentError('This email is already registered. Please go back and use a different email.');
@@ -620,7 +755,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
       }
     } catch (error) {
       console.error('Error in final email check:', error);
-      // Continue with submission if check fails (fail-safe)
     }
     setIsCheckingEmail(false);
 
@@ -634,25 +768,41 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
       return;
     }
 
+    // Validate all required fields
+    if (!formData.institution) {
+      setPaymentError('Institution type is required');
+      return;
+    }
+
+    // Validate department
+    if (formData.department === 'Other' && !formData.otherDepartment.trim()) {
+      setPaymentError('Please specify your department name');
+      return;
+    }
+
     setIsProcessing(true);
     setPaymentError('');
 
     try {
+      // Prepare registration data
       const registrationData = {
-        fullName: formData.fullName,
+        fullName: formData.fullName.trim(),
         email: formData.email.toLowerCase().trim(),
-        phone: formData.phone,
-        college: formData.college,
+        phone: formData.phone.trim(),
+        institution: formData.institution.trim(),
+        college: formData.college.trim(),
         department: formData.department,
+        otherDepartment: formData.department === 'Other' ? formData.otherDepartment.trim() : '',
         year: formData.year,
         isIsteMember: formData.isIsteMember,
-        isteRegistrationNumber: formData.isteRegistrationNumber || '',
+        isteRegistrationNumber: formData.isteRegistrationNumber ? formData.isteRegistrationNumber.trim() : '',
         stayPreference: formData.stayPreference,
+        stayDays: formData.stayPreference === 'With Stay' ? Number(formData.stayDays) : 0,
         totalAmount: totalAmount,
         transactionId: transactionId.trim()
       };
 
-      console.log('Submitting registration:', registrationData);
+      console.log('Registration data being sent:', registrationData);
 
       const response = await fetch(`${apiBaseUrl}/register`, {
         method: 'POST',
@@ -661,22 +811,16 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
       });
 
       const result = await response.json();
-      console.log('Registration response:', result);
 
       if (response.ok && result.success) {
         setPaymentCompleted(true);
         setRegistrationId(result.data.registrationId || result.data.id);
-        
       } else {
-        // Check if error is due to duplicate email
-        if (result.message?.toLowerCase().includes('already exists') || 
-            result.message?.toLowerCase().includes('duplicate') ||
-            result.message?.toLowerCase().includes('already registered')) {
-          setPaymentError('This email is already registered. Please use a different email.');
-        } else {
-          const errorMessage = result.message || 'Registration failed. Please try again.';
-          setPaymentError(errorMessage);
-        }
+        const errorMessage = result.message || 'Registration failed. Please try again.';
+        setPaymentError(errorMessage);
+        
+        // Log detailed error for debugging
+        console.error('Registration failed:', result);
       }
     } catch (error) {
       console.error('Network error:', error);
@@ -685,18 +829,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
       setIsProcessing(false);
     }
   };
-
-  // Scroll to top when payment is completed
-  useEffect(() => {
-    if (paymentCompleted) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [paymentCompleted]);
-
-  // Also scroll to top when component mounts for payment page
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
 
   if (paymentCompleted) {
     return (
@@ -757,12 +889,18 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                     <span className="detail-value">{formData.phone}</span>
                   </div>
                   <div className="detail-item">
+                    <span className="detail-label">Institution:</span>
+                    <span className="detail-value">{formData.institution}</span>
+                  </div>
+                  <div className="detail-item">
                     <span className="detail-label">College:</span>
                     <span className="detail-value">{formData.college}</span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Department:</span>
-                    <span className="detail-value">{formData.department}</span>
+                    <span className="detail-value">
+                      {formData.department === 'Other' ? formData.otherDepartment : formData.department}
+                    </span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Year:</span>
@@ -774,7 +912,11 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Accommodation:</span>
-                    <span className="detail-value">{formData.stayPreference === 'With Stay' ? 'Yes (₹150)' : 'No'}</span>
+                    <span className="detail-value">
+                      {formData.stayPreference === 'With Stay' 
+                        ? `Yes (${formData.stayDays} day${formData.stayDays > 1 ? 's' : ''})` 
+                        : 'No'}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -804,20 +946,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                   <ExternalLink size={18} />
                   Check Status
                 </button>
-              </div>
-              
-              <div className="success-instructions">
-                <h4>What happens next?</h4>
-                <ol>
-                  <li><strong>Admin Review:</strong> Our team will verify your payment and details</li>
-                  <li><strong>Approval:</strong> You'll receive an email confirmation once approved</li>
-                  <li><strong>Event Access:</strong> Approved registrations get access to all event activities</li>
-                  <li><strong>Check Status:</strong> Use your Transaction ID to check approval status anytime</li>
-                </ol>
-                
-                <div className="contact-info">
-                  <p><strong>Need help?</strong> Contact: istembcet@example.com | Phone: +91 9876543210</p>
-                </div>
               </div>
             </div>
           </div>
@@ -892,7 +1020,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                     <CreditCard className="input-icon" size={20} />
                     <input
                       type="text"
-                      placeholder="Enter Transaction ID (from your payment app)"
+                      placeholder="Enter Transaction ID (from your payment app) *"
                       value={transactionId}
                       onChange={(e) => {
                         setTransactionId(e.target.value);
@@ -908,21 +1036,18 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                   <div className="payment-instructions">
                     <h4>Payment Instructions:</h4>
                     <ul>
-                      <li>Scan the QR code with your UPI app (Google Pay, PhonePe, Paytm, etc.)</li>
+                      <li>Scan the QR code with your UPI app</li>
                       <li>Complete the payment of <strong>₹{totalAmount}</strong></li>
                       <li>Copy the transaction ID from your payment app</li>
                       <li>Paste the transaction ID in the field above</li>
-                      <li>Click "Submit Registration" to complete your submission</li>
+                      <li>Click "Submit Registration" to complete</li>
                     </ul>
-                    <div className="payment-tip">
-                      <strong>Important:</strong> Your registration will be <strong>pending admin approval</strong> after submission. You'll be notified via email once approved.
-                    </div>
                   </div>
 
                   <button 
                     type="submit" 
                     className="submit-btn payment-btn"
-                    disabled={isProcessing || isCheckingEmail || !!paymentError || !!emailError}
+                    disabled={isProcessing || isCheckingEmail || !!paymentError}
                   >
                     {isProcessing || isCheckingEmail ? (
                       <>
@@ -968,12 +1093,18 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                   <span className="summary-value">{formData.phone}</span>
                 </div>
                 <div className="summary-item">
+                  <span className="summary-label">Institution:</span>
+                  <span className="summary-value">{formData.institution}</span>
+                </div>
+                <div className="summary-item">
                   <span className="summary-label">College:</span>
                   <span className="summary-value">{formData.college}</span>
                 </div>
                 <div className="summary-item">
                   <span className="summary-label">Department:</span>
-                  <span className="summary-value">{formData.department}</span>
+                  <span className="summary-value">
+                    {formData.department === 'Other' ? formData.otherDepartment : formData.department}
+                  </span>
                 </div>
                 <div className="summary-item">
                   <span className="summary-label">Year:</span>
@@ -992,48 +1123,14 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                 <div className="summary-item">
                   <span className="summary-label">Accommodation:</span>
                   <span className="summary-value">
-                    {formData.stayPreference === 'With Stay' ? 'Yes' : 'No'}
+                    {formData.stayPreference === 'With Stay' 
+                      ? `${formData.stayDays} day${formData.stayDays > 1 ? 's' : ''}` 
+                      : 'No'}
                   </span>
                 </div>
                 <div className="summary-total">
                   <span className="total-label">Total Amount:</span>
                   <span className="total-value">₹{totalAmount}</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="info-card status-card">
-              <div className="card-header">
-                <h3 className="card-title">Registration Process</h3>
-              </div>
-              <div className="process-steps">
-                <div className="process-step">
-                  <div className="step-number">1</div>
-                  <div className="step-content">
-                    <h4>Complete Payment</h4>
-                    <p>Scan QR and pay ₹{totalAmount}</p>
-                  </div>
-                </div>
-                <div className="process-step">
-                  <div className="step-number">2</div>
-                  <div className="step-content">
-                    <h4>Submit Registration</h4>
-                    <p>Enter transaction ID and submit</p>
-                  </div>
-                </div>
-                <div className="process-step">
-                  <div className="step-number">3</div>
-                  <div className="step-content">
-                    <h4>Admin Review</h4>
-                    <p>Status: <span className="status-text pending">Pending Approval</span></p>
-                  </div>
-                </div>
-                <div className="process-step">
-                  <div className="step-number">4</div>
-                  <div className="step-content">
-                    <h4>Get Confirmation</h4>
-                    <p>Receive approval email within 24-48 hours</p>
-                  </div>
                 </div>
               </div>
             </div>

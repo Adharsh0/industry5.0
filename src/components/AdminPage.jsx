@@ -17,7 +17,9 @@ import {
   AlertCircle,
   LogIn,
   Lock,
-  LogOut
+  LogOut,
+  GraduationCap,
+  BedDouble
 } from 'lucide-react';
 import './AdminPage.css';
 
@@ -36,7 +38,9 @@ const AdminPage = () => {
     withAccommodation: 0,
     pending: 0,
     approved: 0,
-    rejected: 0
+    rejected: 0,
+    engineering: 0,
+    polytechnic: 0
   });
 
   // Admin authentication state
@@ -49,7 +53,7 @@ const AdminPage = () => {
   const [authToken, setAuthToken] = useState('');
 
   // API Base URL
-  const API_BASE_URL = 'https://api.istembcet-nexora.in/api';
+  const API_BASE_URL = 'https://iste-backend-fcd3.onrender.com/api';
 
   // Check authentication status on component mount
   useEffect(() => {
@@ -125,7 +129,9 @@ const AdminPage = () => {
       withAccommodation: 0,
       pending: 0,
       approved: 0,
-      rejected: 0
+      rejected: 0,
+      engineering: 0,
+      polytechnic: 0
     });
     setError('');
     setLoginData({ username: '', password: '' });
@@ -155,40 +161,67 @@ const AdminPage = () => {
       }
       
       const result = await response.json();
+      console.log('📊 API Response:', result);
       
       if (result.success) {
-        // Map backend data to match our frontend structure
-        const mappedUsers = result.data.map(user => ({
-          id: user._id,
-          fullName: user.fullName,
-          email: user.email,
-          phone: user.phone,
-          college: user.college,
-          department: user.department,
-          year: user.year,
-          isIsteMember: user.isIsteMember,
-          isteRegistrationNumber: user.isteRegistrationNumber || '',
-          stayPreference: user.stayPreference,
-          foodPreference: 'no',
-          transactionId: user.transactionId,
-          amount: user.totalAmount,
-          status: user.registrationStatus || 'pending',
-          registrationStatus: user.registrationStatus,
-          paymentStatus: user.paymentStatus,
-          registrationDate: new Date(user.registrationDate).toLocaleDateString('en-IN', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
-          }),
-          paymentDate: new Date(user.registrationDate).toLocaleDateString('en-IN', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
-          }),
-          approvedBy: user.approvedBy || '',
-          approvedAt: user.approvedAt ? new Date(user.approvedAt).toLocaleDateString('en-IN') : '',
-          rejectionReason: user.rejectionReason || ''
-        }));
+        // CORRECTED MAPPING with better field handling
+        const mappedUsers = result.data.map(user => {
+          const institution = user.institution || 'Engineering';
+          const stayPreference = user.stayPreference || 'Without Stay';
+          const stayDays = user.stayDays || (stayPreference === 'With Stay' ? 1 : 0);
+          
+          return {
+            id: user._id,
+            fullName: user.fullName || '',
+            email: user.email || '',
+            phone: user.phone || '',
+            institution: institution,
+            college: user.college || '',
+            department: user.department || '',
+            year: user.year || '',
+            isIsteMember: user.isIsteMember || 'No',
+            isteRegistrationNumber: user.isteRegistrationNumber || '',
+            stayPreference: stayPreference,
+            stayDays: stayDays,
+            transactionId: user.transactionId || '',
+            amount: user.totalAmount || 0,
+            status: user.registrationStatus || 'pending',
+            registrationStatus: user.registrationStatus || 'pending',
+            paymentStatus: user.paymentStatus || 'pending',
+            registrationDate: new Date(user.registrationDate || user.createdAt).toLocaleDateString('en-IN', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            }),
+            paymentDate: new Date(user.registrationDate || user.createdAt).toLocaleDateString('en-IN', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            }),
+            approvedBy: user.approvedBy || '',
+            approvedAt: user.approvedAt ? new Date(user.approvedAt).toLocaleDateString('en-IN', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            }) : '',
+            rejectedAt: user.rejectedAt ? new Date(user.rejectedAt).toLocaleDateString('en-IN', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            }) : '',
+            rejectionReason: user.rejectionReason || ''
+          };
+        });
+        
+        console.log('✅ Mapped users (first 2):', mappedUsers.slice(0, 2));
         
         setUsers(mappedUsers);
         setFilteredUsers(mappedUsers);
@@ -199,7 +232,7 @@ const AdminPage = () => {
         throw new Error(result.message || 'Failed to fetch registrations');
       }
     } catch (err) {
-      console.error('Error fetching registrations:', err);
+      console.error('❌ Error fetching registrations:', err);
       setError(err.message || 'Failed to load registrations. Please check your connection.');
     } finally {
       setLoading(false);
@@ -218,13 +251,22 @@ const AdminPage = () => {
       if (response.ok) {
         const result = await response.json();
         if (result.success) {
+          const institutionStats = result.data.institutionStats || [];
+          const engineering = institutionStats.find(s => s._id === 'Engineering')?.count || 0;
+          const polytechnic = institutionStats.find(s => s._id === 'Polytechnic')?.count || 0;
+          
+          const stayStats = result.data.stayPreferenceStats || [];
+          const withStay = stayStats.find(s => s._id === 'With Stay')?.count || 0;
+          
           setStats({
-            total: result.data.totalRegistrations,
-            totalRevenue: result.data.totalRevenue,
-            withAccommodation: result.data.stayPreferenceStats?.find(s => s._id === 'yes')?.count || 0,
-            pending: result.data.pendingRegistrations,
-            approved: result.data.approvedRegistrations,
-            rejected: result.data.rejectedRegistrations
+            total: result.data.totalRegistrations || 0,
+            totalRevenue: result.data.totalRevenue || 0,
+            withAccommodation: withStay,
+            pending: result.data.pendingRegistrations || 0,
+            approved: result.data.approvedRegistrations || 0,
+            rejected: result.data.rejectedRegistrations || 0,
+            engineering: engineering,
+            polytechnic: polytechnic
           });
         }
       }
@@ -257,7 +299,15 @@ const AdminPage = () => {
               status: 'approved',
               registrationStatus: 'approved',
               approvedBy: 'Admin',
-              approvedAt: new Date().toLocaleDateString('en-IN')
+              approvedAt: new Date().toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }),
+              rejectedAt: '',
+              rejectionReason: ''
             } : user
           );
           
@@ -276,7 +326,15 @@ const AdminPage = () => {
               status: 'approved',
               registrationStatus: 'approved',
               approvedBy: 'Admin',
-              approvedAt: new Date().toLocaleDateString('en-IN')
+              approvedAt: new Date().toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }),
+              rejectedAt: '',
+              rejectionReason: ''
             });
           }
           
@@ -314,7 +372,16 @@ const AdminPage = () => {
               ...user, 
               status: 'rejected',
               registrationStatus: 'rejected',
-              rejectionReason: reason || 'Registration rejected by admin'
+              rejectionReason: reason || 'Registration rejected by admin',
+              rejectedAt: new Date().toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }),
+              approvedBy: '',
+              approvedAt: ''
             } : user
           );
           
@@ -332,7 +399,16 @@ const AdminPage = () => {
               ...selectedUser, 
               status: 'rejected',
               registrationStatus: 'rejected',
-              rejectionReason: reason || 'Registration rejected by admin'
+              rejectionReason: reason || 'Registration rejected by admin',
+              rejectedAt: new Date().toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }),
+              approvedBy: '',
+              approvedAt: ''
             });
           }
           
@@ -357,7 +433,8 @@ const AdminPage = () => {
         user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.college.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.transactionId.toLowerCase().includes(searchTerm.toLowerCase())
+        user.transactionId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.institution.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -376,28 +453,31 @@ const AdminPage = () => {
 
   const exportToCSV = () => {
     const headers = [
-      'Name', 'Email', 'Phone', 'College', 'Department', 'Year', 
-      'ISTE Member', 'ISTE Reg No', 'Accommodation', 'Transaction ID', 
-      'Amount', 'Status', 'Registration Date', 'Payment Status', 'Approved By', 'Approval Date'
+      'Name', 'Email', 'Phone', 'Institution Type', 'College', 'Department', 'Year', 
+      'ISTE Member', 'ISTE Reg No', 'Accommodation', 'Stay Days', 'Transaction ID', 
+      'Amount', 'Status', 'Registration Date', 'Payment Status', 'Approved By', 'Approval Date', 'Rejection Reason'
     ];
     
     const csvData = filteredUsers.map(user => [
       user.fullName,
       user.email,
       user.phone,
+      user.institution,
       user.college,
       user.department,
       user.year,
       user.isIsteMember,
       user.isteRegistrationNumber || '',
       user.stayPreference,
+      user.stayDays,
       user.transactionId,
       `₹${user.amount}`,
       user.status,
       user.registrationDate,
       user.paymentStatus,
       user.approvedBy || '',
-      user.approvedAt || ''
+      user.approvedAt || '',
+      user.rejectionReason || ''
     ]);
 
     const csvContent = [headers, ...csvData]
@@ -427,6 +507,39 @@ const AdminPage = () => {
         <span className="badge-text">{config.text}</span>
       </span>
     );
+  };
+
+  const getInstitutionBadge = (institution) => {
+    const config = {
+      Engineering: { color: 'institution-engineering', text: 'Engineering', icon: '🎓' },
+      Polytechnic: { color: 'institution-polytechnic', text: 'Polytechnic', icon: '🏫' }
+    };
+    
+    const institutionConfig = config[institution] || { color: 'institution-unknown', text: institution, icon: '🏛️' };
+    return (
+      <span className={`institution-badge ${institutionConfig.color}`}>
+        <span className="badge-icon">{institutionConfig.icon}</span>
+        <span className="badge-text">{institutionConfig.text}</span>
+      </span>
+    );
+  };
+
+  const getStayBadge = (stayPreference, stayDays) => {
+    if (stayPreference === 'With Stay' && stayDays > 0) {
+      return (
+        <span className="stay-badge with-stay">
+          <span className="badge-icon">🏨</span>
+          <span className="badge-text">{stayDays} day{stayDays !== 1 ? 's' : ''}</span>
+        </span>
+      );
+    } else {
+      return (
+        <span className="stay-badge without-stay">
+          <span className="badge-icon">🏠</span>
+          <span className="badge-text">No Stay</span>
+        </span>
+      );
+    }
   };
 
   // ==================== RENDER LOGIC ====================
@@ -502,8 +615,6 @@ const AdminPage = () => {
                   )}
                 </button>
               </form>
-
-             
             </div>
           </div>
         </div>
@@ -560,6 +671,14 @@ const AdminPage = () => {
               <div className="stat-number">₹{stats.totalRevenue}</div>
               <div className="stat-label">Total Revenue</div>
             </div>
+            <div className="stat-card">
+              <div className="stat-number">{stats.engineering}</div>
+              <div className="stat-label">Engineering</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-number">{stats.polytechnic}</div>
+              <div className="stat-label">Polytechnic</div>
+            </div>
           </div>
         </div>
 
@@ -578,7 +697,7 @@ const AdminPage = () => {
               <Search size={20} className="search-icon" />
               <input
                 type="text"
-                placeholder="Search by name, email, college or transaction ID..."
+                placeholder="Search by name, email, college, institution or transaction ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="search-input"
@@ -640,9 +759,9 @@ const AdminPage = () => {
                 <thead>
                   <tr>
                     <th>Name</th>
+                    <th>Institution</th>
                     <th>College</th>
-                    <th>Department</th>
-                    <th>ISTE Member</th>
+                    <th>Accommodation</th>
                     <th>Transaction ID</th>
                     <th>Amount</th>
                     <th>Status</th>
@@ -659,18 +778,18 @@ const AdminPage = () => {
                         </div>
                       </td>
                       <td>
+                        {getInstitutionBadge(user.institution)}
+                      </td>
+                      <td>
                         <div className="college-info">
                           {user.college}
+                          <div className="college-details-small">
+                            {user.department} • {user.year}
+                          </div>
                         </div>
                       </td>
-                      <td>{user.department}</td>
                       <td>
-                        <span className={`member-badge ${user.isIsteMember === 'yes' ? 'member-yes' : 'member-no'}`}>
-                          {user.isIsteMember === 'yes' ? 'Yes' : 'No'}
-                          {user.isIsteMember === 'yes' && user.isteRegistrationNumber && (
-                            <span className="iste-number">({user.isteRegistrationNumber})</span>
-                          )}
-                        </span>
+                        {getStayBadge(user.stayPreference, user.stayDays)}
                       </td>
                       <td className="transaction-id">{user.transactionId}</td>
                       <td className="amount">₹{user.amount}</td>
@@ -756,6 +875,19 @@ const AdminPage = () => {
                 </div>
 
                 <div className="detail-group">
+                  <GraduationCap size={18} className="detail-icon" />
+                  <div>
+                    <label>Institution Type</label>
+                    <div className="detail-value">
+                      {getInstitutionBadge(selectedUser.institution)}
+                      <span className="institution-note">
+                        Base Fee: {selectedUser.institution === 'Polytechnic' ? '₹350' : '₹500'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="detail-group">
                   <Building2 size={18} className="detail-icon" />
                   <div>
                     <label>College</label>
@@ -776,7 +908,26 @@ const AdminPage = () => {
                   <div>
                     <label>ISTE Member</label>
                     <p className="detail-value">
-                      {selectedUser.isIsteMember === 'yes' ? `Yes (${selectedUser.isteRegistrationNumber || 'No ID'})` : 'No'}
+                      {selectedUser.isIsteMember === 'Yes' ? 
+                        `Yes ${selectedUser.isteRegistrationNumber ? `(${selectedUser.isteRegistrationNumber})` : ''}` 
+                        : 'No'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="detail-group">
+                  <BedDouble size={18} className="detail-icon" />
+                  <div>
+                    <label>Accommodation</label>
+                    <p className="detail-value">
+                      {selectedUser.stayPreference === 'With Stay' ? 
+                        `Yes (${selectedUser.stayDays} day${selectedUser.stayDays !== 1 ? 's' : ''})` 
+                        : 'No'}
+                      {selectedUser.stayPreference === 'With Stay' && selectedUser.stayDays > 0 && (
+                        <span className="stay-cost">
+                          • Cost: ₹{150 * selectedUser.stayDays}
+                        </span>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -798,25 +949,16 @@ const AdminPage = () => {
                 </div>
 
                 <div className="detail-group full-width">
-                  <label>Services</label>
-                  <div className="services-list">
-                    <span className={`service-badge ${selectedUser.stayPreference === 'yes' ? 'active' : ''}`}>
-                      Accommodation: {selectedUser.stayPreference === 'yes' ? 'Yes (₹150)' : 'No'}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="detail-group full-width">
                   <label>Payment Details</label>
                   <div className="payment-details">
                     <div className="payment-item">
-                      <span>Registration Fee:</span>
-                      <span>₹500</span>
+                      <span>Base Fee ({selectedUser.institution}):</span>
+                      <span>₹{selectedUser.institution === 'Polytechnic' ? '350' : '500'}</span>
                     </div>
-                    {selectedUser.stayPreference === 'yes' && (
+                    {selectedUser.stayPreference === 'With Stay' && selectedUser.stayDays > 0 && (
                       <div className="payment-item">
-                        <span>Accommodation:</span>
-                        <span>₹150</span>
+                        <span>Accommodation ({selectedUser.stayDays} day{selectedUser.stayDays !== 1 ? 's' : ''}):</span>
+                        <span>₹{150 * selectedUser.stayDays}</span>
                       </div>
                     )}
                     <div className="payment-total">
