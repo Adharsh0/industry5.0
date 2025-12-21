@@ -628,8 +628,8 @@
 /* Responsive Design for Subtitle */
 @media (max-width: 1024px) {
   .bee-image{
-    margin-top: 235px;
-    margin-left: -180px;
+    margin-top: 50px;
+    
   }
   .subtitle-wrapper {
     bottom: 50px;
