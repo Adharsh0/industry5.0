@@ -10,9 +10,7 @@ const RegistrationPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showPayment, setShowPayment] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const [formError, setFormError] = useState('');
-  const [emailError, setEmailError] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -25,48 +23,15 @@ const RegistrationPage = () => {
     isIsteMember: '',
     isteRegistrationNumber: '',
     stayPreference: '',
-    stayDays: 0, // Changed from 1 to 0
+    stayDays: 0,
     acknowledgement: false
   });
 
-  // API URL - Use your Render backend URL
   const API_BASE_URL = 'https://iste-backend-fcd3.onrender.com/api';
-
-  // Function to check if email already exists
-  const checkEmailExists = async (email) => {
-    if (!email || email.length < 5) {
-      return false;
-    }
-    
-    try {
-      const cleanEmail = email.toLowerCase().trim();
-      
-      const response = await fetch(`${API_BASE_URL}/check-email`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: cleanEmail }),
-      });
-      
-      const result = await response.json();
-      
-      if (!response.ok) {
-        console.error('API error:', result.message);
-        return false;
-      }
-      
-      return result.exists || false;
-    } catch (error) {
-      console.error('Network error checking email:', error);
-      return false;
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError('');
-    setEmailError('');
 
     // Validate all required fields
     const requiredFields = [
@@ -99,14 +64,11 @@ const RegistrationPage = () => {
       return;
     }
 
-    // Validate email
+    // Validate email format only (no duplication check here)
     if (formData.email) {
-      setIsCheckingEmail(true);
-      const emailExists = await checkEmailExists(formData.email);
-      setIsCheckingEmail(false);
-
-      if (emailExists) {
-        setEmailError('This email is already registered. Please use a different email address.');
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email.toLowerCase().trim())) {
+        setFormError('Please enter a valid email address');
         return;
       }
     }
@@ -124,9 +86,9 @@ const RegistrationPage = () => {
       // Reset stayDays when stayPreference changes
       if (name === 'stayPreference') {
         if (value === 'Without Stay') {
-          updated.stayDays = 0; // Explicitly set to 0
+          updated.stayDays = 0;
         } else if (value === 'With Stay' && prev.stayDays === 0) {
-          updated.stayDays = 1; // Set to 1 when switching to With Stay
+          updated.stayDays = 1;
         }
       }
       
@@ -151,45 +113,11 @@ const RegistrationPage = () => {
     });
     
     setFormError('');
-    
-    if (name === 'email') {
-      setEmailError('');
-    }
-  };
-
-  // Validate email when user leaves the field
-  const handleEmailBlur = async () => {
-    const email = formData.email;
-    if (!email || email.length < 5) return;
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setEmailError('Please enter a valid email address');
-      return;
-    }
-    
-    setIsCheckingEmail(true);
-    
-    try {
-      const emailExists = await checkEmailExists(email);
-      
-      if (emailExists) {
-        setEmailError('This email is already registered. Please use a different email address.');
-      } else {
-        setEmailError('');
-      }
-    } catch (error) {
-      console.error('Error in email validation:', error);
-    } finally {
-      setIsCheckingEmail(false);
-    }
   };
 
   const calculateTotalAmount = () => {
-    // Base registration fee based on institution
     let total = formData.institution === 'Polytechnic' ? 350 : 500;
     
-    // Add accommodation cost (₹150 per day) only if With Stay is selected
     if (formData.stayPreference === 'With Stay' && formData.stayDays > 0) {
       total += (150 * formData.stayDays);
     }
@@ -198,7 +126,6 @@ const RegistrationPage = () => {
   };
 
   const nextStep = () => {
-    // Validate current step before proceeding
     if (currentStep === 1) {
       if (!formData.fullName.trim()) {
         setFormError('Please enter your full name');
@@ -210,10 +137,6 @@ const RegistrationPage = () => {
       }
       if (!formData.phone.trim()) {
         setFormError('Please enter your phone number');
-        return;
-      }
-      if (emailError) {
-        setFormError('Please fix the email error before continuing');
         return;
       }
     }
@@ -231,7 +154,6 @@ const RegistrationPage = () => {
         setFormError('Please select department');
         return;
       }
-      // Validate other department if "Other" is selected
       if (formData.department === 'Other' && !formData.otherDepartment.trim()) {
         setFormError('Please specify your department name');
         return;
@@ -264,8 +186,6 @@ const RegistrationPage = () => {
       setIsSubmitting={setIsSubmitting}
       setFormError={setFormError}
       apiBaseUrl={API_BASE_URL}
-      emailError={emailError}
-      setEmailError={setEmailError}
     />;
   }
 
@@ -343,24 +263,15 @@ const RegistrationPage = () => {
                     <div className="input-row">
                       <div className="input-group">
                         <Mail className="input-icon" size={20} />
-                        <div className="email-input-container">
-                          <input
-                            type="email"
-                            name="email"
-                            placeholder="Email Address *"
-                            value={formData.email}
-                            onChange={handleChange}
-                            onBlur={handleEmailBlur}
-                            required
-                            className={`modern-input ${emailError ? 'error' : ''}`}
-                          />
-                          {isCheckingEmail && (
-                            <div className="email-checking">
-                              <Loader2 className="animate-spin" size={16} />
-                              <span>Checking availability...</span>
-                            </div>
-                          )}
-                        </div>
+                        <input
+                          type="email"
+                          name="email"
+                          placeholder="Email Address *"
+                          value={formData.email}
+                          onChange={handleChange}
+                          required
+                          className="modern-input"
+                        />
                       </div>
 
                       <div className="input-group">
@@ -379,21 +290,14 @@ const RegistrationPage = () => {
                       </div>
                     </div>
 
-                    {emailError && (
-                      <div className="email-error-alert">
-                        <AlertCircle size={16} />
-                        <span>{emailError}</span>
-                      </div>
-                    )}
-
                     <div className="button-group justify-end">
                       <button
                         type="button"
                         onClick={nextStep}
                         className="btn-primary"
-                        disabled={!!emailError || isCheckingEmail || !formData.fullName || !formData.email || !formData.phone}
+                        disabled={!formData.fullName || !formData.email || !formData.phone}
                       >
-                        {isCheckingEmail ? 'Checking...' : 'Continue'}
+                        Continue
                       </button>
                     </div>
                   </div>
@@ -470,7 +374,6 @@ const RegistrationPage = () => {
                       </div>
                     </div>
 
-                    {/* Other Department Input - Only shown when "Other" is selected */}
                     {formData.department === 'Other' && (
                       <div className="input-group">
                         <GraduationCap className="input-icon" size={20} />
@@ -529,7 +432,6 @@ const RegistrationPage = () => {
                         onClick={nextStep}
                         className="btn-primary"
                         disabled={
-                          !!emailError || 
                           !formData.institution || 
                           !formData.college || 
                           !formData.department || 
@@ -565,22 +467,52 @@ const RegistrationPage = () => {
 
                     {formData.stayPreference === 'With Stay' && (
                       <div className="input-group">
-                        <BedDouble className="input-icon" size={20} />
                         <div className="stay-days-container">
+                          <div className="stay-counter-wrapper">
+                            <span className="counter-label">Number of Stay Days *</span>
+                            <div className="counter-controls">
+                              <button
+                                type="button"
+                                className="counter-btn"
+                                onClick={() => {
+                                  const newValue = Math.max(1, formData.stayDays - 1);
+                                  setFormData(prev => ({ ...prev, stayDays: newValue }));
+                                }}
+                                disabled={formData.stayDays <= 1}
+                                aria-label="Decrease days"
+                              >
+                                −
+                              </button>
+                              <span className="counter-value">{formData.stayDays}</span>
+                              <button
+                                type="button"
+                                className="counter-btn"
+                                onClick={() => {
+                                  const newValue = Math.min(10, formData.stayDays + 1);
+                                  setFormData(prev => ({ ...prev, stayDays: newValue }));
+                                }}
+                                disabled={formData.stayDays >= 10}
+                                aria-label="Increase days"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
                           <input
                             type="number"
                             name="stayDays"
-                            placeholder="Number of Stay Days *"
                             value={formData.stayDays}
                             onChange={handleChange}
                             required={formData.stayPreference === 'With Stay'}
                             min="1"
                             max="10"
                             className="modern-input"
+                            tabIndex={-1}
                           />
-                          <span className="stay-days-hint">
-                            ₹150 per day × {formData.stayDays} day(s) = ₹{150 * formData.stayDays}
-                          </span>
+                          <div className="stay-days-hint">
+                            <span>₹150 per day × {formData.stayDays} day(s)</span>
+                            <span className="stay-calculation">= ₹{150 * formData.stayDays}</span>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -616,7 +548,6 @@ const RegistrationPage = () => {
                         onChange={handleChange}
                         required
                         className="checkbox-input"
-                        disabled={!!emailError}
                       />
                       <span className="checkmark"></span>
                       <span className="checkbox-text">
@@ -637,7 +568,6 @@ const RegistrationPage = () => {
                         disabled={
                           !formData.acknowledgement || 
                           isSubmitting || 
-                          !!emailError || 
                           !formData.stayPreference || 
                           (formData.stayPreference === 'With Stay' && (!formData.stayDays || formData.stayDays < 1))
                         }
@@ -648,8 +578,6 @@ const RegistrationPage = () => {
                             <Loader2 className="animate-spin" size={18} />
                             Processing...
                           </>
-                        ) : emailError ? (
-                          'Email Already Registered'
                         ) : (
                           <>
                             Proceed to Payment
@@ -701,10 +629,6 @@ const RegistrationPage = () => {
                   <span className="price-label">Accommodation (per day)</span>
                   <span className="price-value">₹150</span>
                 </div>
-                <div className="price-total">
-                  <span className="total-label">Max Total (Engineering + 10 days)</span>
-                  <span className="total-value">₹2000</span>
-                </div>
               </div>
             </div>
           </div>
@@ -714,13 +638,12 @@ const RegistrationPage = () => {
   );
 };
 
-const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, apiBaseUrl, emailError, setEmailError }) => {
+const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, apiBaseUrl }) => {
   const [transactionId, setTransactionId] = useState('');
   const [paymentCompleted, setPaymentCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState('');
   const [registrationId, setRegistrationId] = useState('');
-  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -729,34 +652,10 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate stayDays based on stayPreference
     if (formData.stayPreference === 'With Stay' && (!formData.stayDays || formData.stayDays < 1)) {
       setPaymentError('Please enter number of stay days (minimum 1)');
       return;
     }
-
-    // Final email check
-    setIsCheckingEmail(true);
-    try {
-      const cleanEmail = formData.email.toLowerCase().trim();
-      
-      const emailCheckResponse = await fetch(`${apiBaseUrl}/check-email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: cleanEmail }),
-      });
-      
-      const emailCheckResult = await emailCheckResponse.json();
-      
-      if (emailCheckResult.exists) {
-        setPaymentError('This email is already registered. Please go back and use a different email.');
-        setIsCheckingEmail(false);
-        return;
-      }
-    } catch (error) {
-      console.error('Error in final email check:', error);
-    }
-    setIsCheckingEmail(false);
 
     if (!transactionId.trim()) {
       setPaymentError('Please enter your transaction ID');
@@ -768,13 +667,11 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
       return;
     }
 
-    // Validate all required fields
     if (!formData.institution) {
       setPaymentError('Institution type is required');
       return;
     }
 
-    // Validate department
     if (formData.department === 'Other' && !formData.otherDepartment.trim()) {
       setPaymentError('Please specify your department name');
       return;
@@ -784,6 +681,22 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
     setPaymentError('');
 
     try {
+      // EMAIL DUPLICATION CHECK HAPPENS HERE AT REGISTRATION TIME
+      // First check if email already exists
+      const emailCheckResponse = await fetch(`${apiBaseUrl}/check-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email.toLowerCase().trim() }),
+      });
+      
+      const emailCheckResult = await emailCheckResponse.json();
+      
+      if (emailCheckResult.exists) {
+        setPaymentError('This email is already registered. Please go back and use a different email address.');
+        setIsProcessing(false);
+        return;
+      }
+
       // Prepare registration data
       const registrationData = {
         fullName: formData.fullName.trim(),
@@ -819,7 +732,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
         const errorMessage = result.message || 'Registration failed. Please try again.';
         setPaymentError(errorMessage);
         
-        // Log detailed error for debugging
         console.error('Registration failed:', result);
       }
     } catch (error) {
@@ -976,10 +888,10 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
           </div>
         </div>
 
-        {(paymentError || emailError) && (
+        {paymentError && (
           <div className="error-alert">
             <AlertCircle size={20} />
-            <span>{paymentError || emailError}</span>
+            <span>{paymentError}</span>
           </div>
         )}
 
@@ -1047,12 +959,12 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                   <button 
                     type="submit" 
                     className="submit-btn payment-btn"
-                    disabled={isProcessing || isCheckingEmail || !!paymentError}
+                    disabled={isProcessing}
                   >
-                    {isProcessing || isCheckingEmail ? (
+                    {isProcessing ? (
                       <>
                         <Loader2 className="animate-spin" size={18} />
-                        {isCheckingEmail ? 'Checking email...' : 'Submitting Registration...'}
+                        Submitting Registration...
                       </>
                     ) : (
                       <>

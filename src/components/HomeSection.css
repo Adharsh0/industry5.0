@@ -164,11 +164,12 @@
 
 /* Different scroll positions - MOBILE OPTIMIZED */
 .bee-position-1 {
-  top: 80px;
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
   width: 25%;
   max-width: 150px;
+ 
 }
 
 .bee-position-2 {
@@ -356,6 +357,7 @@
   }
   
   .bee-position-1 {
+    
     top: 70px;
     width: 22%;
     max-width: 100px;
@@ -625,6 +627,10 @@
 
 /* Responsive Design for Subtitle */
 @media (max-width: 1024px) {
+  .bee-image{
+    margin-top: 235px;
+    margin-left: -180px;
+  }
   .subtitle-wrapper {
     bottom: 50px;
   }

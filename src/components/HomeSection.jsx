@@ -128,7 +128,7 @@ const HomeSection = () => {
           
           {/* Main Nova image */}
           <img 
-            src="nex.png" 
+            src="nex1.png" 
             alt="AI Robot holding Earth"
             className="center-image"
           />

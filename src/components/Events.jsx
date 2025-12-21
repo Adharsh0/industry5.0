@@ -12,6 +12,32 @@ const Events = () => {
   const eventCardRefs = useRef([]);
 
   const allEvents = [
+    
+    {
+      id: 0,
+      title: "CAMPUS AMBASSADOR PROGRAM",
+      poster: "/campus_a.jpeg", 
+      date: "Open Registration",
+      time: "Flexible",
+      venue: "Across Campuses",
+      description: "Ready to elevate your leadership and marketing skills? Become a Campus Ambassador for NEXORA 2026 - ISTE All Kerala Annual Students Convention. Join us in inspiring, connecting, and empowering our campuses, and be the vehicle for change in your community!",
+      registerLink: "https://forms.gle/BPmHy4FQx3nrJS1L9",
+      category: "Ambassador Program",
+      isHighlighted: true, // Special flag for highlighting
+      details: {
+        eligibility: "Open to ISTE Members",
+        rewards: "Fantastic prizes and premium gifts for top 3 ambassadors",
+        criteria: "Based on effort and number of registrations",
+        benefits: "Leadership experience, networking opportunities, certificates"
+      },
+      note: "The Ambassador with the strongest effort and highest returns will be rewarded for their resourcefulness and exceptional promotional work. Climb to the top! The three Ambassadors with the maximum registrations will win fantastic prizes and premium gifts.",
+      contact: {
+        name1: "Sidharth Sumitra Gireesh",
+        phone1: "8714814292",
+        name2: "Adhithya Mohan",
+        phone2: "9539066643"
+      }
+    },
     {
       id: 1,
       title: "BGMI SHOWDOWN: The Ultimate Nexora Face-Off!",
@@ -75,7 +101,7 @@ const Events = () => {
       contact: {
         name1: "Devi",
         phone1: "8891385391",
-        name2: "Aparna",
+        name2: "Aarya Ramesh",
         phone2: "7736784412"
       }
     },
@@ -110,47 +136,148 @@ const Events = () => {
         phone2: "95671 82239"
       }
     },
-    // {
-    //   id: 5,
-    //   title: "Workshop on AI/ML",
-    //   poster: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=1000&fit=crop",
-    //   date: "March 10, 2024",
-    //   time: "10:00 AM - 4:00 PM",
-    //   venue: "Tech Hall A",
-    //   description: "Deep dive into artificial intelligence and machine learning fundamentals with industry experts.",
-    //   registerLink: "#register-ai-workshop",
-    //   category: "Workshop"
-    // },
-    // {
-    //   id: 6,
-    //   title: "Code Sprint Championship",
-    //   poster: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=1000&fit=crop",
-    //   date: "March 22, 2024",
-    //   time: "10:00 AM - 10:00 PM",
-    //   venue: "Computer Center",
-    //   description: "24-hour coding marathon to solve real-world problems and win exciting prizes.",
-    //   registerLink: "#register-code-sprint",
-    //   category: "Competition"
-    // },
-    // {
-    //   id: 7,
-    //   title: "Innovation Expo",
-    //   poster: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&h=1000&fit=crop",
-    //   date: "March 25, 2024",
-    //   time: "11:00 AM - 5:00 PM",
-    //   venue: "Exhibition Hall",
-    //   description: "Showcase your projects and innovations to industry leaders and venture capitalists.",
-    //   registerLink: "#register-innovation-expo",
-    //   category: "Exhibition"
-    // }
+    {
+      id: 5,
+      title: "TECH MEME CONTEST: When Humans Meet Tech",
+      poster: "/meme.jpeg",
+      date: "Submission by January 2026",
+      time: "Online Submission",
+      venue: "Online",
+      description: "If memes are your love language ❤️😂 and you've got some hilarious tech vs human moments saved in your brain, this is your sign to finally let them out 😎💥 Show off your humor and creativity with tech-themed memes!",
+      registerLink: "https://forms.gle/3pD2Edh4NZZdzen47",
+      category: "Creative Competition",
+      details: {
+        theme: "When Humans Meet Tech 👤🤖",
+        submission: "Final meme submissions via Google Form",
+        format: "Digital Meme (Image)",
+        registrationFee: "Free",
+        prize: "Cash prizes 💸, certificates, shoutouts & bragging rights",
+        activityPoints: "Yes"
+      },
+      note: "Final meme submissions will be collected via a Google Form later, shared in the WhatsApp group after registration. Open to all students!",
+      contact: {
+        name1: "Aparna R",
+        phone1: "77367 84412",
+        name2: "Devikrishna",
+        phone2: "85901 80017"
+      }
+    },
+    {
+      id: 6,
+      title: "STATE-LEVEL OPEN CARROMS TOURNAMENT",
+      poster: "/carrom.jpeg",
+      date: "January 3rd 2026",
+      time: "9:00 AM onwards",
+      venue: "Mar Baselios College of Engineering and Technology (MBCET), Nalanchira, Trivandrum",
+      description: "Show off your skill, precision, and strategy in Kerala's exciting state-level Open Carroms Tournament! Whether you're a beginner, casual player, or seasoned striker—this event welcomes passionate players ready to compete. Aim sharp. Strike smart. Pocket your victory!",
+      registerLink: "https://forms.gle/mik89Xyvr76e7J1HA",
+      category: "Sports Tournament",
+      details: {
+        tournamentLevel: "State-level Open Tournament",
+        venue: "MBCET, Nalanchira, Trivandrum",
+        openTo: "All ages across Kerala",
+        registrationFee: "₹100 per participant",
+        format: "Knockout Tournament",
+        benefits: "Certificates to all participants + Activity Points"
+      },
+      note: "Participants from across Kerala—of any age—are welcome to join!",
+      contact: {
+        name1: "Dr. Deepak Raj",
+        phone1: "9048522229",
+        name2: "Mr. Melvin Jacob",
+        phone2: "94976 13790",
+        name3: "Vishwabala P",
+        phone3: "8590652130",
+        name4: "Aarya Ramesh",
+        phone4: "9567182239"
+      }
+    },
+    {
+      id: 7,
+      title: "SELF DEFENCE WORKSHOP: Martial Arts for Women",
+      poster: "/martial.jpeg",
+      date: "January 17th 2026",
+      time: "10:00 AM – 12:30 PM",
+      venue: "Open Air Theatre (OAT)",
+      description: "Join us for an empowering and interactive martial arts workshop designed to equip participants with essential self-defence skills and situation-specific responses. Learn practical techniques inspired by Kalaripayattu, wrestling, wushu, and other effective martial art forms.",
+      registerLink: "https://forms.gle/6XPV4Yquyw7bygYm7",
+      category: "Workshop",
+      details: {
+        duration: "2.5 Hours",
+        focus: "Practical self-defence techniques for real-world scenarios",
+        inspiration: "Kalaripayattu, wrestling, wushu, and other martial arts",
+        resourcePerson: "Vincent Peter, Founder, Ayodhana Centre for Martial Arts Study and Research",
+        registrationFee: "₹100",
+        includes: "Hands-on session, doubt clearing, practical demonstrations"
+      },
+      note: "This workshop focuses on real-world scenarios, helping women understand how to react confidently and safely in challenging situations.",
+      contact: {
+        name1: "Aishwarya Balakrishnan Menon",
+        phone1: "77365 67382",
+        name2: "Aarya Ramesh",
+        phone2: "95671 82239"
+      }
+    },
+    {
+      id: 8,
+      title: "PRODUCT PHOTOGRAPHY CONTEST",
+      poster: "/photography.jpeg",
+      date: "December 15th 2025 - January 15th 2026",
+      time: "Online Submission Window",
+      venue: "Online",
+      description: "Got an eye for detail? Love capturing aesthetic product shots? Showcase your creativity by clicking product photos and stand a chance to win exciting prizes! Let your camera turn everyday objects into stunning frames!",
+      registerLink: "https://forms.gle/9tVyXzbBVFcrEG3d7",
+      category: "Photography Competition",
+      details: {
+        theme: "Product Photography",
+        submissionPeriod: "December 15th 2025 to January 15th 2026",
+        format: "Single photograph submission",
+        equipment: "Phone or Camera",
+        requirement: "Proper editing allowed",
+        registrationFee: "₹50",
+        participants: "Individual participation only"
+      },
+      note: "Participants have to submit a photograph (via phone or camera) of any household product with proper editing within a time frame of one month. Winners will be selected based on creativity and execution.",
+      contact: {
+        name1: "Rohin",
+        phone1: "9846395097",
+        name2: "Adithya",
+        phone2: "9539066643"
+      }
+    },
+    {
+      "id": 9,
+      "title": "WEB DEVELOPMENT WORKSHOP – NEXORA ’26",
+      "poster": "/web.jpeg",
+      "date": "January 3 – January 7",
+      "time": "7:00 PM – 8:00 PM",
+      "venue": "Online",
+      "description": "Kickstart your journey into the world of web development with our 5-day hands-on online workshop! Learn the fundamentals of HTML, CSS, explore frontend development, and build real-world applications using React. Perfect for beginners and tech enthusiasts looking to upskill and build strong web foundations.",
+      "registerLink": "https://hosturl.link/tpbxYe",
+      "category": "Workshop",
+      "isHighlighted": true,
+      "details": {
+        "mode": "Online",
+        "fee": "₹200",
+        "lastDate": "December 31",
+        "certificate": "Certificates will be provided to all participants",
+        "seats": "Limited seats available"
+      },
+      "note": "Limited seats – register now and build your web presence!",
+      "contact": {
+        "name1": "Dhiya K",
+        "phone1": "9400441415",
+        "name2": "Kiran Biju",
+        "phone2": "7909208609"
+      }
+    }
   ];
 
-  const preEvents = allEvents.slice(0, 4);
-  const mainEvents = allEvents.slice(4);
+ 
 
   // Initialize section refs
   useEffect(() => {
-    sectionRefs.current = sectionRefs.current.slice(0, 2);
+    sectionRefs.current = sectionRefs.current.slice(0, 1); // Only one section now
     eventCardRefs.current = eventCardRefs.current.slice(0, allEvents.length);
   }, []);
 
@@ -288,17 +415,18 @@ const Events = () => {
       </div>
 
       <div className="events-wrapper">
+        {/* Only ONE section now with ALL events */}
         <section 
           ref={el => sectionRefs.current[0] = el}
           className="events-section"
         >
           <div className="section-header">
-            <div className="section-badge">Featured Events</div>
-            <h2 className="section-title">PRE EVENTS</h2>
-            <p className="section-subtitle">Experience the pinnacle of technology and innovation</p>
+            <div className="section-badge">All Events</div>
+            <h2 className="section-title">NEXORA EVENTS 2025-26</h2>
+            <p className="section-subtitle">Explore all our exciting events happening this season</p>
           </div>
           <div className="events-grid">
-            {preEvents.map((event, index) => (
+            {allEvents.map((event, index) => (
               <div
                 key={event.id}
                 ref={el => eventCardRefs.current[index] = el}
@@ -322,32 +450,7 @@ const Events = () => {
           </div>
         </section>
 
-        <section 
-          ref={el => sectionRefs.current[1] = el}
-          className="events-section main-events"
-        >
-          <div className="section-header">
-            <div className="section-badge featured">Main Events</div>
-            <h2 className="section-title">Festival Highlights</h2>
-            <p className="section-subtitle">Don't miss these flagship events of NEXORA 2026</p>
-          </div>
-          <div className="events-grid">
-            {mainEvents.map((event, index) => (
-              <div
-                key={event.id}
-                ref={el => eventCardRefs.current[preEvents.length + index] = el}
-                className="event-card featured"
-                onClick={() => handleEventClick(event)}
-              >
-                <div className="event-card-inner">
-                  <div className="event-image">
-                    <img src={event.poster} alt={event.title} />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* REMOVE the second section completely */}
       </div>
 
       {selectedEvent && (
@@ -467,6 +570,7 @@ const Events = () => {
                     <div className="event-extra-details">
                       <h4>Event Details:</h4>
                       <ul>
+                        {/* Event 1 */}
                         {selectedEvent.id === 1 && (
                           <>
                             <li><strong>Tournament:</strong> {selectedEvent.details.tournament}</li>
@@ -475,6 +579,8 @@ const Events = () => {
                             <li><strong>Entry Fee:</strong> {selectedEvent.details.entryFee}</li>
                           </>
                         )}
+                        
+                        {/* Event 2 */}
                         {selectedEvent.id === 2 && (
                           <>
                             <li><strong>Platform:</strong> {selectedEvent.details.platform}</li>
@@ -484,6 +590,8 @@ const Events = () => {
                             <li><strong>Features:</strong> {selectedEvent.details.features}</li>
                           </>
                         )}
+                        
+                        {/* Event 3 */}
                         {selectedEvent.id === 3 && (
                           <>
                             <li><strong>Theme:</strong> {selectedEvent.details.theme}</li>
@@ -492,6 +600,8 @@ const Events = () => {
                             <li><strong>Submission Deadline:</strong> {selectedEvent.details.submissionDeadline}</li>
                           </>
                         )}
+                        
+                        {/* Event 4 */}
                         {selectedEvent.id === 4 && (
                           <>
                             <li><strong>Theme:</strong> {selectedEvent.details.theme}</li>
@@ -500,10 +610,59 @@ const Events = () => {
                             <li><strong>Requirement:</strong> {selectedEvent.details.requirement}</li>
                           </>
                         )}
+                        
+                        {/* Event 5 */}
+                        {selectedEvent.id === 5 && (
+                          <>
+                            <li><strong>Theme:</strong> {selectedEvent.details.theme}</li>
+                            <li><strong>Format:</strong> {selectedEvent.details.format}</li>
+                            <li><strong>Registration Fee:</strong> {selectedEvent.details.registrationFee}</li>
+                            <li><strong>Prize:</strong> {selectedEvent.details.prize}</li>
+                            <li><strong>Activity Points:</strong> {selectedEvent.details.activityPoints}</li>
+                          </>
+                        )}
+                        
+                        {/* Event 6 */}
+                        {selectedEvent.id === 6 && (
+                          <>
+                            <li><strong>Tournament Level:</strong> {selectedEvent.details.tournamentLevel}</li>
+                            <li><strong>Venue:</strong> {selectedEvent.details.venue}</li>
+                            <li><strong>Open To:</strong> {selectedEvent.details.openTo}</li>
+                            <li><strong>Registration Fee:</strong> {selectedEvent.details.registrationFee}</li>
+                            <li><strong>Format:</strong> {selectedEvent.details.format}</li>
+                            <li><strong>Benefits:</strong> {selectedEvent.details.benefits}</li>
+                          </>
+                        )}
+                        
+                        {/* Event 7 */}
+                        {selectedEvent.id === 7 && (
+                          <>
+                            <li><strong>Duration:</strong> {selectedEvent.details.duration}</li>
+                            <li><strong>Focus:</strong> {selectedEvent.details.focus}</li>
+                            <li><strong>Inspiration:</strong> {selectedEvent.details.inspiration}</li>
+                            <li><strong>Resource Person:</strong> {selectedEvent.details.resourcePerson}</li>
+                            <li><strong>Registration Fee:</strong> {selectedEvent.details.registrationFee}</li>
+                            <li><strong>Includes:</strong> {selectedEvent.details.includes}</li>
+                          </>
+                        )}
+                        
+                        {/* Event 8 */}
+                        {selectedEvent.id === 8 && (
+                          <>
+                            <li><strong>Theme:</strong> {selectedEvent.details.theme}</li>
+                            <li><strong>Submission Period:</strong> {selectedEvent.details.submissionPeriod}</li>
+                            <li><strong>Format:</strong> {selectedEvent.details.format}</li>
+                            <li><strong>Equipment:</strong> {selectedEvent.details.equipment}</li>
+                            <li><strong>Requirement:</strong> {selectedEvent.details.requirement}</li>
+                            <li><strong>Registration Fee:</strong> {selectedEvent.details.registrationFee}</li>
+                            <li><strong>Participants:</strong> {selectedEvent.details.participants}</li>
+                          </>
+                        )}
                       </ul>
                     </div>
                   )}
 
+                  {/* Event 4 Fees */}
                   {selectedEvent.id === 4 && selectedEvent.fees && (
                     <div className="event-fees">
                       <h4>Registration Fees:</h4>
@@ -516,12 +675,14 @@ const Events = () => {
                     </div>
                   )}
 
+                  {/* Note for all events */}
                   {selectedEvent.note && (
                     <div className="event-note">
                       <p><strong>📝 Note:</strong> {selectedEvent.note}</p>
                     </div>
                   )}
 
+                  {/* Contact for all events */}
                   {selectedEvent.contact && (
                     <div className="event-contact">
                       <h4>Contact for Enquiries:</h4>
@@ -529,6 +690,12 @@ const Events = () => {
                         <li><strong>{selectedEvent.contact.name1}:</strong> {selectedEvent.contact.phone1}</li>
                         {selectedEvent.contact.name2 && (
                           <li><strong>{selectedEvent.contact.name2}:</strong> {selectedEvent.contact.phone2}</li>
+                        )}
+                        {selectedEvent.contact.name3 && (
+                          <li><strong>{selectedEvent.contact.name3}:</strong> {selectedEvent.contact.phone3}</li>
+                        )}
+                        {selectedEvent.contact.name4 && (
+                          <li><strong>{selectedEvent.contact.name4}:</strong> {selectedEvent.contact.phone4}</li>
                         )}
                       </ul>
                     </div>
@@ -545,11 +712,7 @@ const Events = () => {
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
-                  <span>
-                    {selectedEvent.id === 1 ? 'Register Now' : 
-                     selectedEvent.id === 4 ? 'Register Now' : 
-                     'Register Now'}
-                  </span>
+                  <span>Register Now</span>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
