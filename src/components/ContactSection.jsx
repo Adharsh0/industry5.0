@@ -136,216 +136,133 @@ const ContactSection = () => {
   ];
 
   return (
-    <section 
-      className="contact-section-container scroll-reveal-fade" 
+    <section
+      className="contact-section-container scroll-reveal-fade"
       id="contact"
       ref={sectionRef}
     >
-      {/* Background Shapes with animations */}
+      {/* Background Shapes (kept subtle) */}
       <div className="contact-bg-shapes">
-        <div className="contact-shape shape-1 scroll-reveal-scale"></div>
-        <div className="contact-shape shape-2 scroll-reveal-scale" style={{animationDelay: '0.5s'}}></div>
-        <div className="contact-shape shape-3 scroll-reveal-scale" style={{animationDelay: '1s'}}></div>
+        <div className="contact-shape shape-1"></div>
+        <div className="contact-shape shape-2"></div>
       </div>
-
+  
       <div className="contact-section-content">
-        {/* Header Section */}
+        {/* Header */}
         <div className="contact-section-header">
-          <div 
-            className="contact-header-tag scroll-reveal-up" 
-            ref={addToAnimationElements}
-          >
-            <span className="tag-line"></span>
-            <span>Get In Touch</span>
-            <span className="tag-line"></span>
-          </div>
-          
-          <h1 
-            className="contact-main-heading scroll-reveal-up" 
-            ref={addToAnimationElements}
-          >
-            Contact <span className="contact-gradient-text scroll-reveal-scale">Coordinators</span>
+          <span className="contact-pill scroll-reveal-up" ref={addToAnimationElements}>
+            Get In Touch
+          </span>
+  
+          <h1 className="contact-main-heading scroll-reveal-up" ref={addToAnimationElements}>
+            Contact <span className="contact-gradient-text">Coordinators</span>
           </h1>
-          <p 
-            className="contact-header-description scroll-reveal-up" 
+  
+          <p
+            className="contact-header-description scroll-reveal-up"
             ref={addToAnimationElements}
           >
-            Reach out to our student coordinators and faculty advisors for any queries about NEXORA 2026 events
+            Reach out to student coordinators and faculty advisors for any queries
+            related to NEXORA 2026.
           </p>
         </div>
-
+  
         <div className="contact-layout-grid">
-          {/* Left Column - Student Coordinators */}
+          {/* LEFT COLUMN */}
           <div className="contact-form-section">
-            <div 
-              className="contact-form-card scroll-reveal-left hover-glow" 
-              ref={addToAnimationElements}
-            >
-              <div className="contact-form-header">
-                <div className="form-icon hover-lift scroll-reveal-scale">
-                  <FaUserTie />
-                </div>
-                <h2 className="contact-form-title scroll-reveal-up">
-                  Student <span className="scroll-reveal-scale">Coordinators</span>
-                </h2>
-                <p className="contact-form-subtitle scroll-reveal-up">
-                  Contact our student coordinators for event registrations, queries, and general information
-                </p>
-              </div>
-
-              <div className="coordinators-grid stagger-animate" ref={addToAnimationElements}>
-                {coordinators.map((coordinator, index) => (
-                  <div 
-                    key={index}
-                    className="coordinator-card hover-lift scroll-reveal-up" 
+            {/* Student Coordinators */}
+            <div className="simple-card scroll-reveal-left" ref={addToAnimationElements}>
+              <h2 className="section-title">
+                <FaUserTie /> Student Coordinators
+              </h2>
+  
+              <div className="simple-grid">
+                {coordinators.map((c, i) => (
+                  <div
+                    key={i}
+                    className="person-card scroll-reveal-up"
                     ref={addToAnimationElements}
-                    style={{ animationDelay: `${0.1 + index * 0.1}s` }}
-                    onClick={() => handlePhoneClick(coordinator.phone)}
                   >
-                    <div className="coordinator-header">
-                      <div className="coordinator-avatar scroll-reveal-scale">
-                        <FaUserTie />
-                      </div>
-                      <div className="coordinator-info">
-                        <h3 className="coordinator-name scroll-reveal-up">{coordinator.name}</h3>
-                        <p className="coordinator-role scroll-reveal-up">{coordinator.role}</p>
+                    <div className="person-header">
+                      <FaUserTie />
+                      <div>
+                        <h3>{c.name}</h3>
+                        <span>{c.role}</span>
                       </div>
                     </div>
-                    
-                    <div className="coordinator-contact-details">
-                      <div className="contact-item scroll-reveal-up">
-                        <FaPhone className="contact-icon scroll-reveal-scale" />
-                        <span 
-                          className="contact-value clickable scroll-reveal-up"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handlePhoneClick(coordinator.phone);
-                          }}
-                        >
-                          {coordinator.phone}
-                        </span>
-                      </div>
-                      <div className="contact-item scroll-reveal-up">
-                        <FaEnvelope className="contact-icon scroll-reveal-scale" />
-                        <span 
-                          className="contact-value clickable scroll-reveal-up"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEmailClick(coordinator.email);
-                          }}
-                        >
-                          {coordinator.email}
-                        </span>
-                      </div>
+  
+                    <div className="person-actions">
+                      <button onClick={() => handlePhoneClick(c.phone)}>
+                        <FaPhone /> Call
+                      </button>
+                      <button onClick={() => handleEmailClick(c.email)}>
+                        <FaEnvelope /> Email
+                      </button>
                     </div>
                   </div>
                 ))}
               </div>
-
-              <div className="social-contact-section scroll-reveal-up" ref={addToAnimationElements}>
-                <h3 className="social-title scroll-reveal-up">Social Media</h3>
-                <div 
-                  className="social-item hover-lift scroll-reveal-up" 
-                  onClick={handleInstagramClick}
-                >
-                  <div className="social-icon scroll-reveal-scale">
-                    <FaInstagram />
-                  </div>
-                  <div className="social-info">
-                    <div className="social-label scroll-reveal-up">Instagram</div>
-                    <div className="social-value scroll-reveal-up">@nexora.live</div>
-                  </div>
-                </div>
+  
+              {/* Social */}
+              <div className="social-row" onClick={handleInstagramClick}>
+                <FaInstagram />
+                <span>@nexora.live</span>
               </div>
             </div>
-
-            {/* College Location Card - Now below Student Coordinators */}
-            <div 
-              className="contact-info-card scroll-reveal-left hover-glow" 
+  
+            {/* ✅ LOCATION CARD — UNCHANGED DESIGN */}
+            <div
+              className="contact-info-card scroll-reveal-left"
               ref={addToAnimationElements}
-              style={{ marginTop: '40px' }}
             >
               <div className="contact-card-header">
-                <div className="contact-card-glow scroll-reveal-scale"></div>
-                <h3 className="contact-card-title scroll-reveal-up">College Location</h3>
+                <h3 className="contact-card-title">College Location</h3>
               </div>
-              
-              <div 
-                className="contact-map-container scroll-reveal-scale hover-lift" 
-                ref={addToAnimationElements}
+  
+              <div
+                className="contact-map-container"
+                onClick={handleLocationClick}
               >
                 <div className="contact-map-overlay"></div>
-                <div 
-                  className="contact-map-marker scroll-reveal-scale" 
-                  onClick={handleLocationClick} 
-                  title="Click to open in Google Maps"
-                  aria-label="Open location in Google Maps"
-                >
+                <div className="contact-map-marker">
                   <div className="contact-marker-dot"></div>
                 </div>
               </div>
-              
+  
               <div className="contact-location-info">
-                <p className="contact-location-text scroll-reveal-up" ref={addToAnimationElements}>
+                <p className="contact-location-text">
                   Mar Baselios College of Engineering and Technology
                 </p>
-                <p className="contact-location-address scroll-reveal-up" ref={addToAnimationElements}>
+                <p className="contact-location-address">
                   Nalanchira, Trivandrum, Kerala
                 </p>
               </div>
             </div>
           </div>
-
-          {/* Right Column - Faculty Advisors Only */}
+  
+          {/* RIGHT COLUMN */}
           <div className="contact-info-section">
-            {/* Faculty Advisors Card */}
-            <div 
-              className="contact-info-card scroll-reveal-right hover-glow" 
-              ref={addToAnimationElements}
-            >
-              <div className="contact-card-header">
-                <div className="contact-card-glow scroll-reveal-scale"></div>
-                <div className="card-icon hover-lift scroll-reveal-scale">
-                  <FaChalkboardTeacher />
-                </div>
-                <h3 className="contact-card-title scroll-reveal-up">Faculty Advisors</h3>
-              </div>
-              
-              <div className="faculty-grid stagger-animate" ref={addToAnimationElements}>
-                {faculty.map((facultyMember, index) => (
-                  <div 
-                    key={index}
-                    className="faculty-card hover-lift scroll-reveal-up" 
+            <div className="simple-card scroll-reveal-right" ref={addToAnimationElements}>
+              <h2 className="section-title">
+                <FaChalkboardTeacher /> Faculty Advisors
+              </h2>
+  
+              <div className="simple-list">
+                {faculty.map((f, i) => (
+                  <div
+                    key={i}
+                    className="faculty-row scroll-reveal-up"
                     ref={addToAnimationElements}
-                    style={{ animationDelay: `${0.2 + index * 0.1}s` }}
-                    onClick={() => handlePhoneClick(facultyMember.phone)}
                   >
-                    <div className="faculty-avatar scroll-reveal-scale">
-                      <FaChalkboardTeacher />
+                    <FaChalkboardTeacher />
+                    <div className="faculty-text">
+                      <h4>{f.name}</h4>
+                      <span>{f.role}</span>
                     </div>
-                    <div className="faculty-info">
-                      <h4 className="faculty-name scroll-reveal-up">{facultyMember.name}</h4>
-                      <p className="faculty-role scroll-reveal-up">{facultyMember.role}</p>
-                    </div>
-                    <div className="faculty-contact">
-                      <div 
-                        className="contact-action clickable scroll-reveal-up"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handlePhoneClick(facultyMember.phone);
-                        }}
-                      >
-                        <FaPhone className="scroll-reveal-scale" /> Call
-                      </div>
-                      <div 
-                        className="contact-action clickable scroll-reveal-up"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEmailClick(facultyMember.email);
-                        }}
-                      >
-                        <FaEnvelope className="scroll-reveal-scale" /> Email
-                      </div>
+  
+                    <div className="faculty-actions">
+                      <FaPhone onClick={() => handlePhoneClick(f.phone)} />
+                      <FaEnvelope onClick={() => handleEmailClick(f.email)} />
                     </div>
                   </div>
                 ))}
@@ -356,6 +273,7 @@ const ContactSection = () => {
       </div>
     </section>
   );
+  
 };
 
 export default ContactSection;

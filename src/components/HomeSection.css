@@ -2,90 +2,25 @@
 
 .hero-container {
   margin-top: -20px;
+  width: 100vw;
+  min-width: 100vw;
   min-height: 100vh;
-  height: 80vh;
-  max-height: 100vh;
+  height: 100vh;
   position: relative;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /* Black to deep blue gradient from right corner */
-  background: linear-gradient(135deg, #000000 0%, #000000 30%, #010c1a 70%, #021123 100%);
-  background-size: 100% 100%;
+  background: radial-gradient(circle at center, #070b12, #000);
 }
 
-/* Animated mesh gradient overlay - concentrated on right */
-.hero-container::before {
-  content: '';
+.three-canvas {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    linear-gradient(135deg, transparent 0%, transparent 40%, rgba(20, 60, 120, 0.1) 70%, rgba(15, 45, 100, 0.15) 100%);
   z-index: 0;
-}
-
-/* Glowing light streaks */
-.hero-container::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  z-index: 0;
-}
-
-/* Subtle noise texture overlay */
-.center-content::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: 100px 100px;
-  opacity: 0.5;
-  animation: textureShift 30s linear infinite;
-  z-index: 0;
-  pointer-events: none;
-}
-
-@keyframes textureShift {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 100px 100px;
-  }
-}
-
-/* Ambient light effect */
-.center-content::after {
-  content: '';
-  position: absolute;
-  width: 600px;
-  height: 600px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  filter: blur(60px);
-  z-index: 0;
-  pointer-events: none;
-}
-
-@keyframes ambientPulse {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.3);
-    opacity: 0.8;
-  }
 }
 
 .center-content {
@@ -96,7 +31,7 @@
   height: 100%;
   padding: 0 15px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .image-container {
@@ -106,31 +41,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2;
+  z-index: 3;
 }
 
-.image-container::before {
-  content: '';
-  position: absolute;
-  width: 120%;
-  height: 120%;
-  filter: blur(40px);
-  animation: imageGlow 6s ease-in-out infinite;
-  z-index: -1;
-}
-
-@keyframes imageGlow {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(1.1);
-  }
-}
-
-/* Bee image with dynamic positioning - MOBILE FIRST APPROACH */
 .bee-parallax {
   position: fixed;
   z-index: 1000;
@@ -160,16 +73,15 @@
   position: relative;
   z-index: 2;
   margin-top: 60px;
+  filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.5));
 }
 
-/* Different scroll positions - MOBILE OPTIMIZED */
 .bee-position-1 {
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
   width: 25%;
   max-width: 150px;
- 
 }
 
 .bee-position-2 {
@@ -206,296 +118,12 @@
   opacity: 0.7;
 }
 
-/* ========== TABLET DEVICES (768px and up) ========== */
-@media (min-width: 768px) {
-  .hero-container {
-    min-height: 110vh;
-  }
-  
-  .center-content::after {
-    width: 800px;
-    height: 800px;
-  }
-  
-  .bee-parallax {
-    width: 25%;
-    max-width: 180px;
-  }
-  
-  .center-image {
-    max-width: min(700px, 80vw);
-    margin-top: 80px;
-  }
-  
-  .bee-position-1 {
-    top: 100px;
-    width: 30%;
-    max-width: 220px;
-  }
-  
-  .bee-position-2 {
-    top: 80px;
-    left: 8%;
-    width: 22%;
-    max-width: 160px;
-  }
-  
-  .bee-position-3 {
-    top: 70px;
-    left: 82%;
-    width: 20%;
-    max-width: 150px;
-  }
-  
-  .bee-position-4 {
-    top: 85%;
-    left: 87%;
-    width: 17%;
-    max-width: 130px;
-  }
-  
-  .bee-position-5 {
-    top: 25px;
-    width: 15%;
-    max-width: 100px;
-  }
-}
-
-/* ========== DESKTOP (1024px and up) ========== */
-@media (min-width: 1024px) {
-  .center-content {
-    padding: 0;
-  }
-  
-  .center-content::after {
-    width: 1000px;
-    height: 1000px;
-  }
-  
-  .bee-parallax {
-    width: 30%;
-    max-width: 350px;
-  }
-  
-  .bee-image {
-    margin-left: -500px;
-  }
-  
-  .center-image {
-    max-width: 1000px;
-    margin-top: 100px;
-  }
-  
-  .bee-position-1 {
-    top: 120px;
-    width: 30%;
-    max-width: 350px;
-  }
-  
-  .bee-position-2 {
-    top: 80px;
-    left: 10%;
-    width: 20%;
-    max-width: 250px;
-  }
-  
-  .bee-position-3 {
-    top: 60px;
-    left: 85%;
-    width: 15%;
-    max-width: 180px;
-  }
-  
-  .bee-position-4 {
-    top: 85%;
-    left: 90%;
-    width: 12%;
-    max-width: 150px;
-  }
-  
-  .bee-position-5 {
-    top: 20px;
-    width: 8%;
-    max-width: 100px;
-  }
-}
-
-/* ========== LARGE DESKTOP (1440px and up) ========== */
-@media (min-width: 1440px) {
-  .center-image {
-    max-width: 1200px;
-  }
-  
-  .bee-position-1 {
-    max-width: 400px;
-  }
-  
-  .bee-position-2 {
-    max-width: 300px;
-  }
-  
-  .bee-position-3 {
-    max-width: 200px;
-  }
-}
-
-/* ========== SMALL MOBILE (360px and below) ========== */
-@media (max-width: 360px) {
-  .hero-container {
-    min-height: 90vh;
-    height: 90vh;
-  }
-  
-  .bee-parallax {
-    width: 18%;
-    max-width: 100px;
-  }
-  
-  .center-image {
-    max-width: 95vw;
-    margin-top: 50px;
-  }
-  
-  .bee-position-1 {
-    
-    top: 70px;
-    width: 22%;
-    max-width: 100px;
-  }
-  
-  .bee-position-2 {
-    top: 60px;
-    left: 5%;
-    width: 18%;
-    max-width: 90px;
-  }
-  
-  .bee-position-3 {
-    top: 50px;
-    left: 75%;
-    width: 16%;
-    max-width: 85px;
-  }
-  
-  .bee-position-4 {
-    top: 80%;
-    left: 80%;
-    width: 14%;
-    max-width: 75px;
-  }
-  
-  .bee-position-5 {
-    top: 15px;
-    width: 10%;
-    max-width: 60px;
-  }
-}
-
-/* ========== LANDSCAPE MODE ========== */
-@media (max-height: 600px) and (orientation: landscape) {
-  .hero-container {
-    min-height: 120vh;
-    height: 120vh;
-  }
-  
-  .center-image {
-    max-width: 70vh;
-    margin-top: 40px;
-  }
-  
-  .bee-parallax {
-    width: 15%;
-    max-width: 100px;
-  }
-  
-  .bee-position-1 {
-    top: 60px;
-    width: 20%;
-    max-width: 120px;
-  }
-  
-  .bee-position-2 {
-    top: 50px;
-    left: 5%;
-    width: 16%;
-    max-width: 100px;
-  }
-  
-  .bee-position-3 {
-    top: 45px;
-    left: 80%;
-    width: 14%;
-    max-width: 90px;
-  }
-  
-  .bee-position-4 {
-    top: 90%;
-    left: 85%;
-    width: 12%;
-    max-width: 80px;
-  }
-  
-  .bee-position-5 {
-    top: 15px;
-    width: 8%;
-    max-width: 70px;
-  }
-}
-
-/* ========== HIGH DPI SCREENS (Retina) ========== */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .bee-image,
-  .center-image {
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-  }
-}
-
-/* ========== ACCESSIBILITY: Reduced motion ========== */
-@media (prefers-reduced-motion: reduce) {
-  .bee-parallax {
-    transition: none;
-  }
-  
-  .bee-image {
-    transition: none;
-  }
-  
-  body {
-    scroll-behavior: auto;
-  }
-  
-  .hero-container::before,
-  .hero-container::after,
-  .center-content::before,
-  .center-content::after,
-  .image-container::before {
-    animation: none;
-  }
-}
-
-/* ========== FIX for iOS Safari ========== */
-@supports (-webkit-touch-callout: none) {
-  .hero-container {
-    height: -webkit-fill-available;
-    min-height: -webkit-fill-available;
-  }
-}
-
-/* ========== FIX for Android Chrome ========== */
-@media screen and (max-width: 768px) and (orientation: portrait) {
-  .hero-container {
-    background-size: 100% 100%;
-  }
-}
-
-/* Subtitle Styles - Positioned below */
 .subtitle-wrapper {
   position: absolute;
   bottom: 60px;
   left: 0;
   width: 100%;
-  z-index: 3;
+  z-index: 4;
   display: flex;
   justify-content: center;
 }
@@ -507,6 +135,8 @@
   opacity: 0;
   transform: translateY(30px);
   animation: subtitleFadeIn 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards 1s;
+  padding: 15px 25px;
+  border-radius: 12px;
 }
 
 @keyframes subtitleFadeIn {
@@ -531,13 +161,14 @@
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1.75rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
   text-align: center;
   letter-spacing: 2px;
   text-transform: uppercase;
   margin: 0;
   padding: 10px 20px;
   position: relative;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .highlight-text {
@@ -574,7 +205,6 @@
   }
 }
 
-/* Decorative Elements */
 .hero-decoration {
   position: absolute;
   width: 100%;
@@ -625,11 +255,225 @@
   }
 }
 
-/* Responsive Design for Subtitle */
-@media (max-width: 1024px) {
-  .bee-image{
+@media (min-width: 768px) {
+  .hero-container {
+    min-height: 110vh;
+  }
+  
+  .bee-parallax {
+    width: 25%;
+    max-width: 180px;
+  }
+  
+  .center-image {
+    max-width: min(700px, 80vw);
+    margin-top: 80px;
+  }
+  
+  .bee-position-1 {
+    top: 100px;
+    width: 30%;
+    max-width: 220px;
+  }
+  
+  .bee-position-2 {
+    top: 80px;
+    left: 8%;
+    width: 22%;
+    max-width: 160px;
+  }
+  
+  .bee-position-3 {
+    top: 70px;
+    left: 82%;
+    width: 20%;
+    max-width: 150px;
+  }
+  
+  .bee-position-4 {
+    top: 85%;
+    left: 87%;
+    width: 17%;
+    max-width: 130px;
+  }
+  
+  .bee-position-5 {
+    top: 25px;
+    width: 15%;
+    max-width: 100px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bee-parallax {
+    width: 30%;
+    max-width: 350px;
+  }
+  
+  .bee-image {
+    margin-left: -500px;
+  }
+  
+  .center-image {
+    max-width: 1000px;
+    margin-top: 100px;
+  }
+  
+  .bee-position-1 {
+    top: 120px;
+    width: 30%;
+    max-width: 350px;
+  }
+  
+  .bee-position-2 {
+    top: 80px;
+    left: 10%;
+    width: 20%;
+    max-width: 250px;
+  }
+  
+  .bee-position-3 {
+    top: 60px;
+    left: 85%;
+    width: 15%;
+    max-width: 180px;
+  }
+  
+  .bee-position-4 {
+    top: 85%;
+    left: 90%;
+    width: 12%;
+    max-width: 150px;
+  }
+  
+  .bee-position-5 {
+    top: 20px;
+    width: 8%;
+    max-width: 100px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .center-image {
+    max-width: 1200px;
+  }
+  
+  .bee-position-1 {
+    max-width: 400px;
+  }
+  
+  .bee-position-2 {
+    max-width: 300px;
+  }
+  
+  .bee-position-3 {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-container {
+    min-height: 90vh;
+    height: 90vh;
+  }
+  
+  .bee-parallax {
+    width: 18%;
+    max-width: 100px;
+  }
+  
+  .center-image {
+    max-width: 95vw;
     margin-top: 50px;
-    
+  }
+  
+  .bee-position-1 {
+    top: 70px;
+    width: 22%;
+    max-width: 100px;
+  }
+  
+  .bee-position-2 {
+    top: 60px;
+    left: 5%;
+    width: 18%;
+    max-width: 90px;
+  }
+  
+  .bee-position-3 {
+    top: 50px;
+    left: 75%;
+    width: 16%;
+    max-width: 85px;
+  }
+  
+  .bee-position-4 {
+    top: 80%;
+    left: 80%;
+    width: 14%;
+    max-width: 75px;
+  }
+  
+  .bee-position-5 {
+    top: 15px;
+    width: 10%;
+    max-width: 60px;
+  }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  .hero-container {
+    min-height: 120vh;
+    height: 120vh;
+  }
+  
+  .center-image {
+    max-width: 70vh;
+    margin-top: 40px;
+  }
+  
+  .bee-parallax {
+    width: 15%;
+    max-width: 100px;
+  }
+  
+  .bee-position-1 {
+    top: 60px;
+    width: 20%;
+    max-width: 120px;
+  }
+  
+  .bee-position-2 {
+    top: 50px;
+    left: 5%;
+    width: 16%;
+    max-width: 100px;
+  }
+  
+  .bee-position-3 {
+    top: 45px;
+    left: 80%;
+    width: 14%;
+    max-width: 90px;
+  }
+  
+  .bee-position-4 {
+    top: 90%;
+    left: 85%;
+    width: 12%;
+    max-width: 80px;
+  }
+  
+  .bee-position-5 {
+    top: 15px;
+    width: 8%;
+    max-width: 70px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .bee-image {
+    margin-top: 50px;
   }
   .subtitle-wrapper {
     bottom: 50px;
@@ -659,7 +503,7 @@
     padding: 8px 15px;
   }
   
-  .subtitle-container {
+  .subtitle-container1 {
     gap: 20px;
   }
   
@@ -692,24 +536,14 @@
     display: none;
   }
 }
-.hero-container {
-  margin-top: -20px;
-  width: 100vw;
-  min-width: 100vw;
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
-  background: linear-gradient(135deg,
-    #000000 0%,
-    #000000 40%,
-    #010c1a 75%,
-    #021123 120%
-  );
-  background-size: cover;
-  background-position: center;
+@media (prefers-reduced-motion: reduce) {
+  .bee-parallax,
+  .bee-image {
+    transition: none;
+  }
+  
+  * {
+    animation: none !important;
+  }
 }
-
