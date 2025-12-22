@@ -19,7 +19,8 @@ import {
   Lock,
   LogOut,
   GraduationCap,
-  BedDouble
+  BedDouble,
+  CalendarDays
 } from 'lucide-react';
 import './AdminPage.css';
 
@@ -40,7 +41,12 @@ const AdminPage = () => {
     approved: 0,
     rejected: 0,
     engineering: 0,
-    polytechnic: 0
+    polytechnic: 0,
+    stayCapacity: {
+      total: 100,
+      used: 0,
+      remaining: 100
+    }
   });
 
   // Admin authentication state
@@ -131,7 +137,12 @@ const AdminPage = () => {
       approved: 0,
       rejected: 0,
       engineering: 0,
-      polytechnic: 0
+      polytechnic: 0,
+      stayCapacity: {
+        total: 100,
+        used: 0,
+        remaining: 100
+      }
     });
     setError('');
     setLoginData({ username: '', password: '' });
@@ -164,11 +175,23 @@ const AdminPage = () => {
       console.log('📊 API Response:', result);
       
       if (result.success) {
-        // CORRECTED MAPPING with better field handling
+        // UPDATED MAPPING with stayDates and correct calculations
         const mappedUsers = result.data.map(user => {
           const institution = user.institution || 'Engineering';
           const stayPreference = user.stayPreference || 'Without Stay';
-          const stayDays = user.stayDays || (stayPreference === 'With Stay' ? 1 : 0);
+          const stayDates = user.stayDates || [];
+          const stayDays = stayDates.length;
+          
+          // Calculate correct amounts based on new pricing
+          let baseFee;
+          if (institution === 'Polytechnic') {
+            baseFee = user.isIsteMember === 'Yes' ? 300 : 350;
+          } else {
+            baseFee = 500;
+          }
+          
+          const stayFee = stayDays * 257;
+          const totalAmount = baseFee + stayFee;
           
           return {
             id: user._id,
@@ -182,9 +205,12 @@ const AdminPage = () => {
             isIsteMember: user.isIsteMember || 'No',
             isteRegistrationNumber: user.isteRegistrationNumber || '',
             stayPreference: stayPreference,
+            stayDates: stayDates,
             stayDays: stayDays,
+            baseFee: baseFee,
+            stayFee: stayFee,
             transactionId: user.transactionId || '',
-            amount: user.totalAmount || 0,
+            amount: user.totalAmount || totalAmount,
             status: user.registrationStatus || 'pending',
             registrationStatus: user.registrationStatus || 'pending',
             paymentStatus: user.paymentStatus || 'pending',
@@ -226,7 +252,7 @@ const AdminPage = () => {
         setUsers(mappedUsers);
         setFilteredUsers(mappedUsers);
         
-        // Fetch statistics
+        // Fetch statistics and stay availability
         fetchStats(token);
       } else {
         throw new Error(result.message || 'Failed to fetch registrations');
@@ -239,34 +265,44 @@ const AdminPage = () => {
     }
   };
 
-  // Fetch statistics
+  // Fetch statistics and stay availability
   const fetchStats = async (token = authToken) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/stats`, {
+      // Fetch regular stats
+      const statsResponse = await fetch(`${API_BASE_URL}/admin/stats`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
-      if (response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          const institutionStats = result.data.institutionStats || [];
+      // Fetch stay availability
+      const availabilityResponse = await fetch(`${API_BASE_URL}/stay-availability`);
+      
+      if (statsResponse.ok && availabilityResponse.ok) {
+        const statsResult = await statsResponse.json();
+        const availabilityResult = await availabilityResponse.json();
+        
+        if (statsResult.success) {
+          const institutionStats = statsResult.data.institutionStats || [];
           const engineering = institutionStats.find(s => s._id === 'Engineering')?.count || 0;
           const polytechnic = institutionStats.find(s => s._id === 'Polytechnic')?.count || 0;
           
-          const stayStats = result.data.stayPreferenceStats || [];
-          const withStay = stayStats.find(s => s._id === 'With Stay')?.count || 0;
+          const stayStats = statsResult.data.stayStats || {};
           
           setStats({
-            total: result.data.totalRegistrations || 0,
-            totalRevenue: result.data.totalRevenue || 0,
-            withAccommodation: withStay,
-            pending: result.data.pendingRegistrations || 0,
-            approved: result.data.approvedRegistrations || 0,
-            rejected: result.data.rejectedRegistrations || 0,
+            total: statsResult.data.totalRegistrations || 0,
+            totalRevenue: statsResult.data.totalRevenue || 0,
+            withAccommodation: stayStats.used || 0,
+            pending: statsResult.data.pendingRegistrations || 0,
+            approved: statsResult.data.approvedRegistrations || 0,
+            rejected: statsResult.data.rejectedRegistrations || 0,
             engineering: engineering,
-            polytechnic: polytechnic
+            polytechnic: polytechnic,
+            stayCapacity: {
+              total: stayStats.capacity || 100,
+              used: stayStats.used || 0,
+              remaining: stayStats.remaining || 100
+            }
           });
         }
       }
@@ -423,6 +459,123 @@ const AdminPage = () => {
     }
   };
 
+  // Generate email content based on user status
+  const generateEmailContent = (user) => {
+    const registrationId = `ISTE${user.id.slice(-8).toUpperCase()}`;
+    const stayDatesText = user.stayDates && user.stayDates.length > 0 
+      ? `Stay Dates: ${user.stayDates.map(dateStr => {
+          const date = new Date(dateStr);
+          return date.toLocaleDateString('en-IN', { 
+            weekday: 'short', 
+            day: 'numeric', 
+            month: 'short',
+            year: 'numeric'
+          });
+        }).join(', ')}`
+      : '';
+    
+    if (user.status === 'approved') {
+      return {
+        subject: `🎉 Registration Approved - ISTE INDUSTRY 5.0 - ${registrationId}`,
+        body: `Dear ${user.fullName},
+
+Congratulations! Your registration for ISTE INDUSTRY 5.0 has been APPROVED.
+
+📋 Registration Details:
+• Registration ID: ${registrationId}
+• Name: ${user.fullName}
+• College: ${user.college}
+• Department: ${user.department} - ${user.year} Year
+• Institution Type: ${user.institution}
+• Accommodation: ${user.stayPreference} 
+${user.stayPreference === 'With Stay' ? `• Stay Days: ${user.stayDays} day${user.stayDays !== 1 ? 's' : ''}` : ''}
+${stayDatesText ? `• ${stayDatesText}` : ''}
+• Transaction ID: ${user.transactionId}
+• Amount Paid: ₹${user.amount} 
+• Status: APPROVED ✅
+• Approved By: ${user.approvedBy || 'Admin'}
+• Approval Date: ${user.approvedAt || new Date().toLocaleDateString('en-IN')}
+
+📍 Important Information:
+1. Please carry your college ID card for verification
+2. ${user.stayPreference === 'With Stay' ? 'Accommodation details will be shared separately' : 'No accommodation arranged'}
+3. Keep this email for reference
+
+We look forward to seeing you at ISTE INDUSTRY 5.0!
+
+Best regards,
+ISTE INDUSTRY 5.0 Team`
+      };
+    } else if (user.status === 'rejected') {
+      return {
+        subject: `⚠️ Registration Update - ISTE INDUSTRY 5.0 - ${registrationId}`,
+        body: `Dear ${user.fullName},
+
+We regret to inform you that your registration for ISTE INDUSTRY 5.0 could not be approved.
+
+📋 Registration Details:
+• Registration ID: ${registrationId}
+• Name: ${user.fullName}
+• College: ${user.college}
+• Transaction ID: ${user.transactionId}
+• Amount: ₹${user.amount}
+• Status: REJECTED ❌
+• Rejection Date: ${user.rejectedAt || new Date().toLocaleDateString('en-IN')}
+${user.rejectionReason ? `• Reason: ${user.rejectionReason}` : ''}
+
+🔍 What to do next:
+1. Review the reason for rejection
+2. If you believe this is a mistake, please contact us immediately
+3. Include your Transaction ID (${user.transactionId}) in all communications
+4. Refunds (if applicable) will be processed within 7-10 working days
+
+We apologize for any inconvenience caused.
+
+For queries, please contact us.
+
+Sincerely,
+ISTE INDUSTRY 5.0 Team`
+      };
+    } else {
+      return {
+        subject: `📋 Registration Status - ISTE INDUSTRY 5.0 - ${registrationId}`,
+        body: `Dear ${user.fullName},
+
+Your registration for ISTE INDUSTRY 5.0 is currently PENDING approval.
+
+📋 Registration Details:
+• Registration ID: ${registrationId}
+• Name: ${user.fullName}
+• College: ${user.college}
+• Department: ${user.department}
+• Transaction ID: ${user.transactionId}
+• Status: PENDING ⏳
+
+We will notify you once your registration is reviewed by our team.
+
+Best regards,
+ISTE INDUSTRY 5.0 Team`
+      };
+    }
+  };
+
+  // Send email via Gmail web interface
+  const handleSendEmail = (user) => {
+    const emailContent = generateEmailContent(user);
+    const adminEmail = 'iste.industry5.0@gmail.com';
+    
+    // Create Gmail web interface URL
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(user.email)}&su=${encodeURIComponent(emailContent.subject)}&body=${encodeURIComponent(emailContent.body)}&cc=${encodeURIComponent(adminEmail)}}`;
+    
+    // Debug: Log the generated URL
+    console.log('📧 Generated Gmail URL:', gmailUrl);
+    console.log('📧 Sending to:', user.email);
+    console.log('📧 Subject:', emailContent.subject);
+    
+    // Open Gmail in new tab
+    window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+  };
+
   // Filter users based on search and status
   useEffect(() => {
     let filtered = users;
@@ -454,7 +607,7 @@ const AdminPage = () => {
   const exportToCSV = () => {
     const headers = [
       'Name', 'Email', 'Phone', 'Institution Type', 'College', 'Department', 'Year', 
-      'ISTE Member', 'ISTE Reg No', 'Accommodation', 'Stay Days', 'Transaction ID', 
+      'ISTE Member', 'ISTE Reg No', 'Accommodation', 'Stay Days', 'Stay Dates', 'Transaction ID', 
       'Amount', 'Status', 'Registration Date', 'Payment Status', 'Approved By', 'Approval Date', 'Rejection Reason'
     ];
     
@@ -470,6 +623,7 @@ const AdminPage = () => {
       user.isteRegistrationNumber || '',
       user.stayPreference,
       user.stayDays,
+      user.stayDates ? user.stayDates.join(', ') : '',
       user.transactionId,
       `₹${user.amount}`,
       user.status,
@@ -666,6 +820,9 @@ const AdminPage = () => {
             <div className="stat-card">
               <div className="stat-number">{stats.withAccommodation}</div>
               <div className="stat-label">With Accommodation</div>
+              <div className="stat-subtext">
+                ({stats.stayCapacity.remaining} spots left)
+              </div>
             </div>
             <div className="stat-card">
               <div className="stat-number">₹{stats.totalRevenue}</div>
@@ -803,6 +960,18 @@ const AdminPage = () => {
                           >
                             <Eye size={16} />
                           </button>
+                          
+                          {/* Add Send Email button for approved/rejected users */}
+                          {(user.status === 'approved' || user.status === 'rejected') && (
+                            <button
+                              onClick={() => handleSendEmail(user)}
+                              className="action-btn email-btn"
+                              title="Send Email via Gmail"
+                            >
+                              <Mail size={16} />
+                            </button>
+                          )}
+                          
                           {user.status === 'pending' && (
                             <>
                               <button
@@ -881,7 +1050,9 @@ const AdminPage = () => {
                     <div className="detail-value">
                       {getInstitutionBadge(selectedUser.institution)}
                       <span className="institution-note">
-                        Base Fee: {selectedUser.institution === 'Polytechnic' ? '₹350' : '₹500'}
+                        Base Fee: {selectedUser.institution === 'Polytechnic' 
+                          ? (selectedUser.isIsteMember === 'Yes' ? '₹300' : '₹350')
+                          : '₹500'}
                       </span>
                     </div>
                   </div>
@@ -919,16 +1090,35 @@ const AdminPage = () => {
                   <BedDouble size={18} className="detail-icon" />
                   <div>
                     <label>Accommodation</label>
-                    <p className="detail-value">
-                      {selectedUser.stayPreference === 'With Stay' ? 
-                        `Yes (${selectedUser.stayDays} day${selectedUser.stayDays !== 1 ? 's' : ''})` 
-                        : 'No'}
+                    <div className="detail-value">
+                      <span>
+                        {selectedUser.stayPreference === 'With Stay' ? 
+                          `Yes (${selectedUser.stayDays} day${selectedUser.stayDays !== 1 ? 's' : ''})` 
+                          : 'No'}
+                      </span>
                       {selectedUser.stayPreference === 'With Stay' && selectedUser.stayDays > 0 && (
-                        <span className="stay-cost">
-                          • Cost: ₹{150 * selectedUser.stayDays}
-                        </span>
+                        <>
+                          <span className="stay-cost">
+                            • Cost: ₹{257 * selectedUser.stayDays}
+                          </span>
+                          {selectedUser.stayDates && selectedUser.stayDates.length > 0 && (
+                            <div className="stay-dates-list">
+                              <CalendarDays size={14} />
+                              <span>
+                                {selectedUser.stayDates.map(dateStr => {
+                                  const date = new Date(dateStr);
+                                  return date.toLocaleDateString('en-IN', { 
+                                    weekday: 'short', 
+                                    day: 'numeric', 
+                                    month: 'short' 
+                                  });
+                                }).join(', ')}
+                              </span>
+                            </div>
+                          )}
+                        </>
                       )}
-                    </p>
+                    </div>
                   </div>
                 </div>
 
@@ -953,12 +1143,16 @@ const AdminPage = () => {
                   <div className="payment-details">
                     <div className="payment-item">
                       <span>Base Fee ({selectedUser.institution}):</span>
-                      <span>₹{selectedUser.institution === 'Polytechnic' ? '350' : '500'}</span>
+                      <span>
+                        ₹{selectedUser.institution === 'Polytechnic' 
+                          ? (selectedUser.isIsteMember === 'Yes' ? '300' : '350')
+                          : '500'}
+                      </span>
                     </div>
                     {selectedUser.stayPreference === 'With Stay' && selectedUser.stayDays > 0 && (
                       <div className="payment-item">
                         <span>Accommodation ({selectedUser.stayDays} day{selectedUser.stayDays !== 1 ? 's' : ''}):</span>
-                        <span>₹{150 * selectedUser.stayDays}</span>
+                        <span>₹{257 * selectedUser.stayDays}</span>
                       </div>
                     )}
                     <div className="payment-total">
@@ -1016,6 +1210,21 @@ const AdminPage = () => {
                   </button>
                 </>
               )}
+              
+              {/* Add Send Email button in modal */}
+              {(selectedUser.status === 'approved' || selectedUser.status === 'rejected') && (
+                <button
+                  onClick={() => {
+                    handleSendEmail(selectedUser);
+                    setShowModal(false);
+                  }}
+                  className="btn-email"
+                >
+                  <Mail size={18} />
+                  Send Email via Gmail
+                </button>
+              )}
+              
               <button onClick={() => setShowModal(false)} className="btn-outline">
                 Close
               </button>

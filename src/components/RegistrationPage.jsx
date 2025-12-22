@@ -11,6 +11,7 @@ const RegistrationPage = () => {
   const [showPayment, setShowPayment] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
+  const [stayAvailability, setStayAvailability] = useState({ available: true, remaining: 100 });
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -23,11 +24,28 @@ const RegistrationPage = () => {
     isIsteMember: '',
     isteRegistrationNumber: '',
     stayPreference: '',
-    stayDays: 0,
+    stayDates: [],
     acknowledgement: false
   });
 
   const API_BASE_URL = 'https://iste-backend-fcd3.onrender.com/api';
+
+  // Fetch stay availability on component mount
+  useEffect(() => {
+    fetchStayAvailability();
+  }, []);
+
+  const fetchStayAvailability = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/stay-availability`);
+      if (response.ok) {
+        const data = await response.json();
+        setStayAvailability(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching stay availability:', error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,10 +76,18 @@ const RegistrationPage = () => {
       return;
     }
 
-    // Validate stayDays only if With Stay is selected
-    if (formData.stayPreference === 'With Stay' && (!formData.stayDays || formData.stayDays < 1)) {
-      setFormError('Please enter number of stay days (minimum 1)');
-      return;
+    // Validate stayDates only if With Stay is selected
+    if (formData.stayPreference === 'With Stay') {
+      if (!formData.stayDates || formData.stayDates.length === 0) {
+        setFormError('Please select stay dates');
+        return;
+      }
+      
+      // Check if stay is still available
+      if (!stayAvailability.available) {
+        setFormError('Stay accommodation is no longer available');
+        return;
+      }
     }
 
     // Validate email format only (no duplication check here)
@@ -83,30 +109,18 @@ const RegistrationPage = () => {
     setFormData(prev => {
       const updated = { ...prev, [name]: newValue };
       
-      // Reset stayDays when stayPreference changes
+      // Reset stayDates when stayPreference changes
       if (name === 'stayPreference') {
         if (value === 'Without Stay') {
-          updated.stayDays = 0;
-        } else if (value === 'With Stay' && prev.stayDays === 0) {
-          updated.stayDays = 1;
+          updated.stayDates = [];
+        } else if (value === 'With Stay' && (!prev.stayDates || prev.stayDates.length === 0)) {
+          updated.stayDates = [];
         }
       }
       
       // Reset otherDepartment when department changes from "Other"
       if (name === 'department' && value !== 'Other') {
         updated.otherDepartment = '';
-      }
-      
-      // Validate stayDays input (only for With Stay)
-      if (name === 'stayDays' && formData.stayPreference === 'With Stay') {
-        const numValue = parseInt(value) || 0;
-        if (numValue < 1) {
-          updated.stayDays = 1;
-        } else if (numValue > 10) {
-          updated.stayDays = 10;
-        } else {
-          updated.stayDays = numValue;
-        }
       }
       
       return updated;
@@ -116,14 +130,65 @@ const RegistrationPage = () => {
   };
 
   const calculateTotalAmount = () => {
-    let total = formData.institution === 'Polytechnic' ? 350 : 500;
+    // Determine base fee based on institution and ISTE membership
+    let baseFee;
+    if (formData.institution === 'Polytechnic') {
+      baseFee = formData.isIsteMember === 'Yes' ? 300 : 350;
+    } else {
+      baseFee = 500; // Engineering students
+    }
     
-    if (formData.stayPreference === 'With Stay' && formData.stayDays > 0) {
-      total += (150 * formData.stayDays);
+    let total = baseFee;
+    
+    if (formData.stayPreference === 'With Stay' && formData.stayDates.length > 0) {
+      total += (257 * formData.stayDates.length);
     }
     
     return total;
   };
+
+  const calculateBaseFee = () => {
+    if (formData.institution === 'Polytechnic') {
+      return formData.isIsteMember === 'Yes' ? 300 : 350;
+    }
+    return 500;
+  };
+
+  const handleDateSelect = (date) => {
+    if (formData.stayPreference !== 'With Stay') return;
+    
+    setFormData(prev => {
+      const dates = [...prev.stayDates];
+      
+      // Create a standardized date string to avoid timezone issues
+      const standardizedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const dateString = standardizedDate.toISOString();
+      
+      if (dates.includes(dateString)) {
+        // Remove date if already selected
+        return {
+          ...prev,
+          stayDates: dates.filter(d => d !== dateString)
+        };
+      } else {
+        // Add date if not already selected and within limit
+        if (dates.length < 3) { // Max 3 days (29, 30, 31)
+          return {
+            ...prev,
+            stayDates: [...dates, dateString]
+          };
+        }
+        return prev;
+      }
+    });
+  };
+
+  // Event dates - UPDATED TO 2026
+  const eventDates = [
+    new Date(2026, 0, 29), // January 29, 2026
+    new Date(2026, 0, 30), // January 30, 2026
+    new Date(2026, 0, 31)  // January 31, 2026
+  ];
 
   const nextStep = () => {
     if (currentStep === 1) {
@@ -172,6 +237,19 @@ const RegistrationPage = () => {
       }
     }
     
+    if (currentStep === 3) {
+      if (!formData.stayPreference) {
+        setFormError('Please select accommodation preference');
+        return;
+      }
+      if (formData.stayPreference === 'With Stay') {
+        if (!formData.stayDates || formData.stayDates.length === 0) {
+          setFormError('Please select stay dates');
+          return;
+        }
+      }
+    }
+    
     if (currentStep < 3) setCurrentStep(currentStep + 1);
   };
 
@@ -186,6 +264,7 @@ const RegistrationPage = () => {
       setIsSubmitting={setIsSubmitting}
       setFormError={setFormError}
       apiBaseUrl={API_BASE_URL}
+      stayAvailability={stayAvailability}
     />;
   }
 
@@ -224,16 +303,17 @@ const RegistrationPage = () => {
               <div className="progress-steps">
                 {[1, 2, 3].map((step) => (
                   <React.Fragment key={step}>
-                    <div className="step-container">
-                      <div className={`step-indicator ${currentStep >= step ? 'active' : 'inactive'}`}>
-                        {currentStep > step ? <CheckCircle2 size={20} /> : step}
-                      </div>
-                      <span className={`step-label ${currentStep >= step ? 'text-white' : 'text-gray-500'}`}>
-                        {step === 1 && 'Personal'}
-                        {step === 2 && 'Academic'}
-                        {step === 3 && 'Services'}
-                      </span>
-                    </div>
+                   {/* In your JSX, make sure step labels are always present */}
+<div className="step-container">
+  <div className={`step-indicator ${currentStep >= step ? 'active' : 'inactive'}`}>
+    {currentStep > step ? <CheckCircle2 size={20} /> : step}
+  </div>
+  <span className={`step-label ${currentStep >= step ? 'text-white' : 'text-gray-500'}`}>
+    {step === 1 && 'Personal'}
+    {step === 2 && 'Academic'}
+    {step === 3 && 'Services'}
+  </span>
+</div>
                     {step < 3 && (
                       <div className={`step-connector ${currentStep > step ? 'active' : 'inactive'}`}></div>
                     )}
@@ -318,7 +398,7 @@ const RegistrationPage = () => {
                       >
                         <option value="">Select Institution Type *</option>
                         <option value="Engineering">Engineering College (₹500 base fee)</option>
-                        <option value="Polytechnic">Polytechnic College (₹350 base fee)</option>
+                        <option value="Polytechnic">Polytechnic College (₹350 base fee, ₹300 for ISTE members)</option>
                       </select>
                     </div>
 
@@ -458,61 +538,115 @@ const RegistrationPage = () => {
                         onChange={handleChange}
                         required
                         className="modern-input"
+                        disabled={!stayAvailability.available && stayAvailability.remaining === 0}
                       >
                         <option value="">Do you require accommodation? *</option>
-                        <option value="With Stay">Yes, I need accommodation (₹150/day)</option>
+                        <option value="With Stay" disabled={!stayAvailability.available}>
+                          {stayAvailability.available 
+                            ? `Yes, I need accommodation (₹257/day) - ${stayAvailability.remaining} spots left`
+                            : 'Accommodation full - No spots available'}
+                        </option>
                         <option value="Without Stay">No, I don't need accommodation</option>
                       </select>
                     </div>
 
-                    {formData.stayPreference === 'With Stay' && (
-                      <div className="input-group">
-                        <div className="stay-days-container">
-                          <div className="stay-counter-wrapper">
-                            <span className="counter-label">Number of Stay Days *</span>
-                            <div className="counter-controls">
-                              <button
-                                type="button"
-                                className="counter-btn"
-                                onClick={() => {
-                                  const newValue = Math.max(1, formData.stayDays - 1);
-                                  setFormData(prev => ({ ...prev, stayDays: newValue }));
-                                }}
-                                disabled={formData.stayDays <= 1}
-                                aria-label="Decrease days"
+                    {formData.stayPreference === 'With Stay' && stayAvailability.available && (
+                      <div className="calendar-container">
+                        <div className="calendar-header">
+                          <h4>Select Stay Dates (January 2026)</h4>
+                          <div className="calendar-info">
+                            <span className="selected-dates-count">
+                              Selected: {formData.stayDates.length} day{formData.stayDates.length !== 1 ? 's' : ''}
+                            </span>
+                            <span className="date-price">₹257 per day</span>
+                          </div>
+                        </div>
+                        
+                        <div className="calendar-grid">
+                          {['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed'].map(day => (
+                            <div key={day} className="calendar-day-header">{day}</div>
+                          ))}
+                          
+                          {/* Generate calendar for January 2026 */}
+                          {Array.from({ length: 31 }, (_, i) => {
+                            const date = new Date(2026, 0, i + 1); // January 2026
+                            const dateString = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
+                            const isEventDate = eventDates.some(eventDate => 
+                              eventDate.getDate() === date.getDate() && 
+                              eventDate.getMonth() === date.getMonth() &&
+                              eventDate.getFullYear() === date.getFullYear()
+                            );
+                            const isSelected = formData.stayDates.includes(dateString);
+                            const isSelectable = isEventDate;
+                            
+                            return (
+                              <div 
+                                key={i}
+                                className={`calendar-day 
+                                  ${isSelectable ? 'selectable' : 'non-event'} 
+                                  ${isSelected ? 'selected' : ''}
+                                  ${!isEventDate ? 'disabled' : ''}`}
+                                onClick={() => isSelectable && handleDateSelect(date)}
                               >
-                                −
-                              </button>
-                              <span className="counter-value">{formData.stayDays}</span>
-                              <button
-                                type="button"
-                                className="counter-btn"
-                                onClick={() => {
-                                  const newValue = Math.min(10, formData.stayDays + 1);
-                                  setFormData(prev => ({ ...prev, stayDays: newValue }));
-                                }}
-                                disabled={formData.stayDays >= 10}
-                                aria-label="Increase days"
-                              >
-                                +
-                              </button>
+                                <span className="day-number">{i + 1}</span>
+                                {isEventDate && <span className="event-indicator">Event Day</span>}
+                                {isSelected && <div className="selected-indicator">✓</div>}
+                              </div>
+                            );
+                          })}
+                        </div>
+                        
+                        <div className="calendar-legends">
+                          <div className="legend-item">
+                            <div className="legend-color event-day"></div>
+                            <span>Event Day (29, 30, 31 Jan 2026)</span>
+                          </div>
+                          <div className="legend-item">
+                            <div className="legend-color selected-day"></div>
+                            <span>Selected for stay</span>
+                          </div>
+                        </div>
+                        
+                        {formData.stayDates.length > 0 && (
+                          <div className="selected-dates-summary">
+                            <h5>Your Stay Dates:</h5>
+                            <div className="dates-list">
+                              {formData.stayDates.map(dateStr => {
+                                const date = new Date(dateStr);
+                                return (
+                                  <div key={dateStr} className="date-chip">
+                                    {date.toLocaleDateString('en-IN', { 
+                                      weekday: 'short', 
+                                      day: 'numeric', 
+                                      month: 'short',
+                                      year: 'numeric'
+                                    })}
+                                    <button
+                                      type="button"
+                                      className="remove-date"
+                                      onClick={() => handleDateSelect(date)}
+                                    >
+                                      ×
+                                    </button>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                            <div className="stay-total">
+                              <span>Accommodation Cost:</span>
+                              <span className="stay-amount">
+                                ₹{formData.stayDates.length} × 257 = ₹{257 * formData.stayDates.length}
+                              </span>
                             </div>
                           </div>
-                          <input
-                            type="number"
-                            name="stayDays"
-                            value={formData.stayDays}
-                            onChange={handleChange}
-                            required={formData.stayPreference === 'With Stay'}
-                            min="1"
-                            max="10"
-                            className="modern-input"
-                            tabIndex={-1}
-                          />
-                          <div className="stay-days-hint">
-                            <span>₹150 per day × {formData.stayDays} day(s)</span>
-                            <span className="stay-calculation">= ₹{150 * formData.stayDays}</span>
-                          </div>
+                        )}
+                        
+                        <div className="stay-availability-info">
+                          <AlertCircle size={16} />
+                          <span>
+                            Only {stayAvailability.remaining} stay spots remaining. 
+                            First come, first served basis.
+                          </span>
                         </div>
                       </div>
                     )}
@@ -522,13 +656,19 @@ const RegistrationPage = () => {
                         <h4>Payment Summary</h4>
                         <div className="charges-breakdown">
                           <div className="charge-item">
-                            <span>Registration Fee ({formData.institution}):</span>
-                            <span>₹{formData.institution === 'Polytechnic' ? 350 : 500}</span>
+                            <span>
+                              Registration Fee ({formData.institution}):
+                              {formData.institution === 'Polytechnic' && formData.isIsteMember === 'Yes' && 
+                                ' (ISTE Member Discount Applied)'}
+                            </span>
+                            <span>
+                              ₹{calculateBaseFee()}
+                            </span>
                           </div>
-                          {formData.stayPreference === 'With Stay' && formData.stayDays > 0 && (
+                          {formData.stayPreference === 'With Stay' && formData.stayDates.length > 0 && (
                             <div className="charge-item">
-                              <span>Accommodation ({formData.stayDays} day{formData.stayDays > 1 ? 's' : ''}):</span>
-                              <span>₹{150 * formData.stayDays}</span>
+                              <span>Accommodation ({formData.stayDates.length} day{formData.stayDates.length > 1 ? 's' : ''}):</span>
+                              <span>₹{257 * formData.stayDates.length}</span>
                             </div>
                           )}
                           <div className="charge-total">
@@ -536,6 +676,11 @@ const RegistrationPage = () => {
                             <span className="total-amount">₹{calculateTotalAmount()}</span>
                           </div>
                         </div>
+                        {formData.institution === 'Polytechnic' && formData.isIsteMember === 'Yes' && (
+                          <small className="charges-note discount-note">
+                            You're getting a ₹50 discount for being an ISTE member!
+                          </small>
+                        )}
                         <small className="charges-note">Payment details will be shown on next page</small>
                       </div>
                     </div>
@@ -569,7 +714,7 @@ const RegistrationPage = () => {
                           !formData.acknowledgement || 
                           isSubmitting || 
                           !formData.stayPreference || 
-                          (formData.stayPreference === 'With Stay' && (!formData.stayDays || formData.stayDays < 1))
+                          (formData.stayPreference === 'With Stay' && formData.stayDates.length === 0)
                         }
                         className="submit-btn"
                       >
@@ -622,12 +767,20 @@ const RegistrationPage = () => {
                   <span className="price-value">₹500</span>
                 </div>
                 <div className="price-item">
-                  <span className="price-label">Polytechnic College</span>
+                  <span className="price-label">Polytechnic College (Non-ISTE)</span>
                   <span className="price-value">₹350</span>
                 </div>
                 <div className="price-item">
+                  <span className="price-label">Polytechnic College (ISTE Member)</span>
+                  <span className="price-value">₹300</span>
+                </div>
+                <div className="price-item">
                   <span className="price-label">Accommodation (per day)</span>
-                  <span className="price-value">₹150</span>
+                  <span className="price-value">₹257</span>
+                </div>
+                <div className="stay-availability-badge">
+                  <BedDouble size={14} />
+                  <span>Stay spots left: {stayAvailability.remaining}</span>
                 </div>
               </div>
             </div>
@@ -638,7 +791,7 @@ const RegistrationPage = () => {
   );
 };
 
-const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, apiBaseUrl }) => {
+const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, apiBaseUrl, stayAvailability }) => {
   const [transactionId, setTransactionId] = useState('');
   const [paymentCompleted, setPaymentCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -652,9 +805,17 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     
-    if (formData.stayPreference === 'With Stay' && (!formData.stayDays || formData.stayDays < 1)) {
-      setPaymentError('Please enter number of stay days (minimum 1)');
-      return;
+    if (formData.stayPreference === 'With Stay') {
+      if (!formData.stayDates || formData.stayDates.length === 0) {
+        setPaymentError('Please select stay dates');
+        return;
+      }
+      
+      // Check stay capacity again
+      if (!stayAvailability.available) {
+        setPaymentError('Stay accommodation is no longer available');
+        return;
+      }
     }
 
     if (!transactionId.trim()) {
@@ -697,7 +858,15 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
         return;
       }
 
-      // Prepare registration data
+      // Calculate base fee for backend
+      const calculateBaseFee = () => {
+        if (formData.institution === 'Polytechnic') {
+          return formData.isIsteMember === 'Yes' ? 300 : 350;
+        }
+        return 500;
+      };
+
+      // Prepare registration data with properly formatted dates
       const registrationData = {
         fullName: formData.fullName.trim(),
         email: formData.email.toLowerCase().trim(),
@@ -710,12 +879,22 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
         isIsteMember: formData.isIsteMember,
         isteRegistrationNumber: formData.isteRegistrationNumber ? formData.isteRegistrationNumber.trim() : '',
         stayPreference: formData.stayPreference,
-        stayDays: formData.stayPreference === 'With Stay' ? Number(formData.stayDays) : 0,
+        stayDates: formData.stayPreference === 'With Stay' ? 
+          formData.stayDates.map(dateStr => {
+            // Ensure consistent date format - use ISO string
+            const date = new Date(dateStr);
+            // Set to UTC midnight to avoid timezone issues
+            const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            return utcDate.toISOString();
+          }) : [],
+        stayDays: formData.stayPreference === 'With Stay' ? formData.stayDates.length : 0,
+        baseFee: calculateBaseFee(),
         totalAmount: totalAmount,
         transactionId: transactionId.trim()
       };
 
-      console.log('Registration data being sent:', registrationData);
+      console.log('📅 Sending stay dates:', registrationData.stayDates);
+      console.log('📋 Registration data being sent:', registrationData);
 
       const response = await fetch(`${apiBaseUrl}/register`, {
         method: 'POST',
@@ -826,8 +1005,32 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                     <span className="detail-label">Accommodation:</span>
                     <span className="detail-value">
                       {formData.stayPreference === 'With Stay' 
-                        ? `Yes (${formData.stayDays} day${formData.stayDays > 1 ? 's' : ''})` 
+                        ? `Yes (${formData.stayDates.length} day${formData.stayDates.length > 1 ? 's' : ''})` 
                         : 'No'}
+                    </span>
+                  </div>
+                  {formData.stayDates && formData.stayDates.length > 0 && (
+                    <div className="detail-item full-width">
+                      <span className="detail-label">Stay Dates:</span>
+                      <span className="detail-value">
+                        {formData.stayDates.map(dateStr => {
+                          const date = new Date(dateStr);
+                          return date.toLocaleDateString('en-IN', { 
+                            weekday: 'short', 
+                            day: 'numeric', 
+                            month: 'short',
+                            year: 'numeric'
+                          });
+                        }).join(', ')}
+                      </span>
+                    </div>
+                  )}
+                  <div className="detail-item">
+                    <span className="detail-label">Base Fee:</span>
+                    <span className="detail-value">
+                      ₹{formData.institution === 'Polytechnic' 
+                        ? (formData.isIsteMember === 'Yes' ? 300 : 350)
+                        : 500}
                     </span>
                   </div>
                 </div>
@@ -1036,10 +1239,40 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                   <span className="summary-label">Accommodation:</span>
                   <span className="summary-value">
                     {formData.stayPreference === 'With Stay' 
-                      ? `${formData.stayDays} day${formData.stayDays > 1 ? 's' : ''}` 
+                      ? `${formData.stayDates.length} day${formData.stayDates.length > 1 ? 's' : ''}` 
                       : 'No'}
                   </span>
                 </div>
+                {formData.stayDates && formData.stayDates.length > 0 && (
+                  <div className="summary-item full-width">
+                    <span className="summary-label">Stay Dates:</span>
+                    <span className="summary-value">
+                      {formData.stayDates.map(dateStr => {
+                        const date = new Date(dateStr);
+                        return date.toLocaleDateString('en-IN', { 
+                          weekday: 'short', 
+                          day: 'numeric', 
+                          month: 'short',
+                          year: 'numeric'
+                        });
+                      }).join(', ')}
+                    </span>
+                  </div>
+                )}
+                <div className="summary-item">
+                  <span className="summary-label">Base Fee:</span>
+                  <span className="summary-value">
+                    ₹{formData.institution === 'Polytechnic' 
+                      ? (formData.isIsteMember === 'Yes' ? 300 : 350)
+                      : 500}
+                  </span>
+                </div>
+                {formData.stayPreference === 'With Stay' && formData.stayDates.length > 0 && (
+                  <div className="summary-item">
+                    <span className="summary-label">Accommodation Fee:</span>
+                    <span className="summary-value">₹{257 * formData.stayDates.length}</span>
+                  </div>
+                )}
                 <div className="summary-total">
                   <span className="total-label">Total Amount:</span>
                   <span className="total-value">₹{totalAmount}</span>

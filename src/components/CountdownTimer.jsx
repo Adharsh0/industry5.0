@@ -76,6 +76,7 @@ const CountdownTimer = () => {
     });
 
   return (
+    <div className='overall'>
     <div ref={containerRef} className="countdown-container scroll-hidden">
       <div className="countdown-header scroll-item">
         <span className="countdown-label">Launching In</span>
@@ -99,10 +100,7 @@ const CountdownTimer = () => {
       </div>
 
       <div className="countdown-progress-container scroll-item" style={{ transitionDelay: '0.6s' }}>
-        <div className="progress-info">
-          <span className="progress-label">Countdown Progress</span>
-          <span className="progress-percentage">{progress.toFixed(1)}%</span>
-        </div>
+        
 
         <div className="countdown-progress">
           <div
@@ -111,11 +109,9 @@ const CountdownTimer = () => {
           />
         </div>
 
-        <div className="progress-dates">
-          <span className="start-date">{formatDate(startDate)}</span>
-          <span className="end-date">{formatDate(endDate)}</span>
-        </div>
+       
       </div>
+    </div>
     </div>
   );
 };

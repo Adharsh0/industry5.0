@@ -4,6 +4,7 @@
   position: relative;
   overflow: hidden;
   font-family: 'Inter', sans-serif;
+  
 }
 
 .footer::before {
@@ -13,9 +14,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    linear-gradient(90deg, rgba(74, 144, 226, 0.03) 1px, transparent 1px),
-    linear-gradient(rgba(74, 144, 226, 0.03) 1px, transparent 1px);
+ 
   background-size: 50px 50px;
   pointer-events: none;
   opacity: 0.3;

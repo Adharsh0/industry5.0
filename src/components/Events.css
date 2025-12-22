@@ -1,22 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap');
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-weight: 300;
-  scroll-behavior: smooth;
-}
+
 
 .events-container {
   min-height: 100vh;
-  background: #000000;
+  background: radial-gradient(circle at center, #070b12, #000);
   position: relative;
   overflow-x: hidden;
 }
@@ -86,6 +75,7 @@ body {
 
 .hero-content {
   position: relative;
+  
   z-index: 10;
   text-align: center;
   padding: 0 20px;
@@ -188,11 +178,12 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   z-index: 1;
-  background: linear-gradient(to bottom, transparent, #000000 5%);
+
 }
 
 /* Section Scroll Animations */
 .events-section {
+  
   margin-bottom: 120px;
   opacity: 0;
   transform: translateY(60px);
@@ -225,7 +216,7 @@ body {
   transition-delay: 0.2s;
 }
 
-.section-badge, .section-title, .section-subtitle {
+.section-badge, .section-title1, .section-subtitle1 {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.6s ease, transform 0.6s ease;
@@ -237,7 +228,7 @@ body {
   transition-delay: 0.3s;
 }
 
-.section-visible .section-title {
+.section-visible .section-title1 {
   opacity: 1;
   transform: translateY(0);
   transition-delay: 0.4s;
@@ -270,7 +261,7 @@ body {
   color: #93c5fd;
 }
 
-.section-title {
+.section-title1 {
   font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 300;
   color: #ffffff;
@@ -842,8 +833,8 @@ body {
   .event-card,
   .section-header,
   .section-badge,
-  .section-title,
-  .section-subtitle,
+  .section-title1,
+  .section-subtitle1,
   .hero-content,
   .collage-poster,
   .modal-wrapper,
@@ -902,7 +893,7 @@ body {
     margin-bottom: 40px;
   }
 
-  .section-title {
+  .section-title1 {
     font-size: 2.5rem;
   }
 

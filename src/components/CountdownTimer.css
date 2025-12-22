@@ -1,10 +1,12 @@
 /* Futuristic Minimal Countdown Timer */
+
 .countdown-container {
+  
     position: relative;
     margin: 80px auto 60px;
     z-index: 10;
     background: transparent;
-   
+    background: radial-gradient(circle at center, #070b12, #000);
     padding: 48px 40px;
     width: 90%;
     max-width: 700px;

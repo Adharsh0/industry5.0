@@ -1,11 +1,12 @@
 /* EventTimeline.css */
 body {
-    background: #000000;
+    
     min-height: 100vh;
     overflow-x: hidden;
   }
   
   .timeline-wrapper {
+    
     min-height: 100vh;
     background: #000000;
     position: relative;

@@ -422,8 +422,8 @@ const Events = () => {
         >
           <div className="section-header">
             <div className="section-badge">All Events</div>
-            <h2 className="section-title">NEXORA EVENTS 2025-26</h2>
-            <p className="section-subtitle">Explore all our exciting events happening this season</p>
+            <h2 className="section-title1">NEXORA EVENTS 2025-26</h2>
+            <p className="section-subtitle1">Explore all our exciting events happening this season</p>
           </div>
           <div className="events-grid">
             {allEvents.map((event, index) => (

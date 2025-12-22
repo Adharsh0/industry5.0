@@ -129,18 +129,13 @@ const Footer = () => {
 
         {/* Mobile CTA - Only visible on mobile */}
         <div className="mobile-cta">
-          <button 
-            className="mobile-cta-button btn-primary1"
-            onClick={handleRegisterClick}
-          >
-            Register Now <FaArrowRight className="btn-icon" />
-          </button>
+         
         </div>
 
         {/* Footer Bottom */}
         <div className="footer-bottom">
           <p className="footer-copyright">
-            © 2026 ISTE Kerala Section - Industry 5.0 Convention. All rights reserved.
+            © 2026 ISTE MBCET - Industry 5.0 Convention. All rights reserved.
           </p>
           <div className="footer-credits">
             <a href="#" className="footer-credit-link">Privacy Policy</a>

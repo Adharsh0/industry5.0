@@ -2,7 +2,7 @@
 
 /* ================= ROOT ================= */
 :root {
-  --bg: #080809;
+  --bg: radial-gradient(circle at center, #070b12, #000);;
   --card-bg: rgba(255, 255, 255, 0.03);
   --border: rgba(255, 255, 255, 0.08);
   --text: #ffffff;
@@ -17,17 +17,22 @@
   padding: 0;
 }
 
+/* ================= SMOOTH SCROLL ================= */
+html {
+  scroll-behavior: smooth;
+}
+
 /* ================= SECTION ================= */
 .contact-section-container {
   min-height: 100vh;
   background: var(--bg);
   padding-top: 100px;
   position: relative;
-  overflow-x: hidden; /* Prevent horizontal overflow */
+  overflow-x: hidden;
   font-family: 'Inter', sans-serif;
   opacity: 0;
-  transform: translateY(20px);
-  transition: 0.8s ease;
+  transform: translateY(0);
+  transition: opacity 0.8s ease, transform 0.8s ease;
   width: 100vw;
   max-width: 100%;
 }
@@ -72,7 +77,7 @@
 .contact-section-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px clamp(20px, 4vw, 40px); /* Responsive padding */
+  padding: 40px clamp(20px, 4vw, 40px);
   position: relative;
   z-index: 2;
   width: 100%;
@@ -82,7 +87,7 @@
 /* ================= HEADER ================= */
 .contact-section-header {
   text-align: center;
-  margin-bottom: clamp(40px, 6vw, 60px); /* Responsive margin */
+  margin-bottom: clamp(40px, 6vw, 60px);
   width: 100%;
   padding: 0 clamp(10px, 3vw, 20px);
 }
@@ -100,7 +105,7 @@
 
 .contact-main-heading {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(2rem, 5vw, 3rem); /* Responsive font size */
+  font-size: clamp(2rem, 5vw, 3rem);
   color: var(--text);
   margin-bottom: 14px;
   width: 100%;
@@ -126,7 +131,7 @@
 .contact-layout-grid {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
-  gap: clamp(20px, 3vw, 40px); /* Responsive gap */
+  gap: clamp(20px, 3vw, 40px);
   width: 100%;
 }
 
@@ -135,7 +140,7 @@
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: clamp(20px, 3vw, 28px); /* Responsive padding */
+  padding: clamp(20px, 3vw, 28px);
   width: 100%;
   max-width: 100%;
   overflow: hidden;
@@ -255,7 +260,6 @@
   padding: clamp(12px, 1.5vw, 14px);
   width: 100%;
   max-width: 100%;
-  overflow: hidden;
 }
 
 .faculty-row svg {
@@ -267,25 +271,18 @@
 .faculty-text {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
 }
 
 .faculty-text h4 {
   font-size: clamp(0.9rem, 1.1vw, 1rem);
   color: var(--text);
   margin: 0 0 4px 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .faculty-text span {
   font-size: clamp(0.75rem, 1vw, 0.85rem);
   color: var(--muted);
   display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .faculty-actions {
@@ -376,21 +373,41 @@
   line-height: 1.5;
 }
 
-/* ================= RESPONSIVE BREAKPOINTS ================= */
-
-/* Large desktops (1440px and above) */
-@media (min-width: 1440px) {
-  .contact-section-content {
-    max-width: 1400px;
-  }
-  
-  .contact-main-heading {
-    font-size: 3.5rem;
-  }
+/* ================= SCROLL ANIMATIONS ================= */
+.scroll-reveal-up,
+.scroll-reveal-left,
+.scroll-reveal-right,
+.scroll-reveal-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
 }
 
-/* Desktop (1025px - 1439px) */
-@media (min-width: 1025px) and (max-width: 1439px) {
+.scroll-reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-reveal-left {
+  transform: translateX(-20px);
+}
+
+.scroll-reveal-right {
+  transform: translateX(20px);
+}
+
+.scroll-reveal-left-visible,
+.scroll-reveal-right-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ================= RESPONSIVE BREAKPOINTS ================= */
+
+/* Desktop (1025px and above) */
+@media (min-width: 1025px) {
   .contact-layout-grid {
     grid-template-columns: 1.2fr 0.8fr;
   }
@@ -400,7 +417,7 @@
   }
 }
 
-/* Tablet landscape (769px - 1024px) */
+/* Tablet (769px - 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
   .contact-layout-grid {
     grid-template-columns: 1fr;
@@ -423,7 +440,7 @@
 /* Tablet portrait (577px - 768px) */
 @media (min-width: 577px) and (max-width: 768px) {
   .contact-layout-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Single column */
     gap: 28px;
   }
   
@@ -440,24 +457,51 @@
     font-size: 2.5rem;
   }
   
-  .person-actions {
-    flex-direction: row;
-  }
-  
+  /* Faculty mobile fix */
   .faculty-row {
     flex-direction: row;
     align-items: center;
+    padding: 16px;
+  }
+  
+  .faculty-actions {
+    display: flex;
+    gap: 20px;
   }
 }
 
-/* Mobile landscape (481px - 576px) */
-@media (min-width: 481px) and (max-width: 576px) {
+/* MOBILE LANDSCAPE AND PORTRAIT - SINGLE COLUMN LAYOUT */
+/* Mobile (below 768px) */
+@media (max-width: 768px) {
   .contact-section-container {
     padding-top: 80px;
   }
   
   .contact-section-content {
     padding: 30px 20px;
+  }
+  
+  .contact-layout-grid {
+    grid-template-columns: 1fr; /* Force single column */
+    gap: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Student Coordinators Section */
+  .contact-form-section {
+    order: 1;
+  }
+  
+  /* Faculty Advisors Section */
+  .contact-info-section {
+    order: 2;
+  }
+  
+  /* Location Card */
+  .contact-info-card {
+    order: 3;
+    margin-top: 24px;
   }
   
   .contact-main-heading {
@@ -481,11 +525,18 @@
   
   .faculty-row {
     flex-direction: row;
-    flex-wrap: nowrap;
+    align-items: center;
+    padding: 14px;
+  }
+  
+  .faculty-text {
+    flex: 1;
   }
   
   .faculty-actions {
     flex-shrink: 0;
+    display: flex;
+    gap: 16px;
   }
 }
 
@@ -523,16 +574,35 @@
   }
   
   .faculty-row {
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+  }
+  
+  .faculty-text {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .faculty-text h4 {
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+  
+  .faculty-text span {
+    font-size: 0.8rem;
+    line-height: 1.4;
   }
   
   .faculty-actions {
-    width: 100%;
-    justify-content: space-around;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
+    width: auto;
+    justify-content: flex-end;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+    gap: 12px;
+    display: flex;
   }
   
   .contact-map-container {
@@ -591,15 +661,23 @@
   }
   
   .faculty-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     padding: 12px 10px;
   }
   
   .faculty-text h4 {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
   
   .faculty-text span {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+  }
+  
+  .faculty-actions {
+    gap: 10px;
+    flex-shrink: 0;
   }
   
   .contact-map-container {
@@ -657,14 +735,21 @@
   }
   
   .faculty-row {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     gap: 8px;
+    padding: 10px 8px;
+  }
+  
+  .faculty-text {
+    flex: 1;
   }
   
   .faculty-actions {
-    width: 100%;
-    justify-content: space-between;
+    width: auto;
+    justify-content: flex-end;
+    gap: 8px;
+    display: flex;
   }
   
   .contact-map-container {
@@ -678,51 +763,6 @@
   .contact-location-address {
     font-size: 0.7rem;
   }
-}
-
-/* ================= SCROLL ANIMATIONS ================= */
-.scroll-reveal-up,
-.scroll-reveal-left,
-.scroll-reveal-right,
-.scroll-reveal-fade {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: 0.6s ease;
-}
-
-.scroll-reveal-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.scroll-reveal-left {
-  transform: translateX(-30px);
-}
-
-.scroll-reveal-right {
-  transform: translateX(30px);
-}
-
-.scroll-reveal-left-visible,
-.scroll-reveal-right-visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* ================= UTILITY CLASSES ================= */
-.text-truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.full-width {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
 }
 
 /* ================= REDUCED MOTION ================= */
@@ -747,24 +787,120 @@
   }
 }
 
-/* ================= PRINT STYLES ================= */
-@media print {
+/* ================= SCROLLBAR STYLING ================= */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #357ABD;
+}
+/* ================= GRID LAYOUT ================= */
+.contact-layout-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(20px, 3vw, 40px);
+  width: 100%;
+}
+
+/* Desktop (1025px and above) - Original layout */
+@media (min-width: 1025px) {
+  .contact-layout-grid {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+  
+  /* Keep original order for desktop */
+  .contact-form-section {
+    order: 1;
+  }
+  
+  .contact-info-section {
+    order: 2;
+  }
+  
+  .contact-info-card {
+    order: 3;
+    margin-top: 40px;
+  }
+  
+  .simple-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* MOBILE LAYOUT - Single column */
+@media (max-width: 768px) {
   .contact-section-container {
-    background: white !important;
-    color: black !important;
-    padding-top: 20px;
+    padding-top: 80px;
   }
   
-  .contact-shape,
-  .contact-map-container {
-    display: none;
+  .contact-section-content {
+    padding: 30px 20px;
   }
   
-  .simple-card,
-  .contact-info-card,
-  .person-card,
+  .contact-layout-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Mobile order */
+  .contact-form-section {
+    order: 1;
+  }
+  
+  .contact-info-section {
+    order: 2;
+  }
+  
+  /* Location card moved here for mobile */
+  .contact-info-card {
+    order: 3;
+    margin-top: 24px;
+  }
+  
+  .contact-main-heading {
+    font-size: 2.2rem;
+  }
+  
+  .simple-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  
+  .person-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .person-actions button {
+    flex: 1;
+    min-width: 120px;
+  }
+  
   .faculty-row {
-    border: 1px solid #ccc !important;
-    box-shadow: none !important;
+    flex-direction: row;
+    align-items: center;
+    padding: 14px;
+  }
+  
+  .faculty-text {
+    flex: 1;
+  }
+  
+  .faculty-actions {
+    flex-shrink: 0;
+    display: flex;
+    gap: 16px;
   }
 }

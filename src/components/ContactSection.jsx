@@ -1,82 +1,92 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { FaPhone, FaEnvelope, FaInstagram, FaUserTie, FaChalkboardTeacher } from 'react-icons/fa';
 import './ContactSection.css';
 
 const ContactSection = () => {
   const sectionRef = useRef(null);
   const observerRef = useRef(null);
-  const animationElements = useRef(new Set());
+  const hasAnimatedRef = useRef(new Set());
+
+  // Intersection Observer callback
+  const handleIntersection = useCallback((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const target = entry.target;
+        const id = target.id || target.className;
+        
+        // Only animate once
+        if (!hasAnimatedRef.current.has(id)) {
+          requestAnimationFrame(() => {
+            target.classList.add('visible');
+            target.classList.add('scroll-reveal-visible');
+            
+            // Add specific directional classes
+            if (target.classList.contains('scroll-reveal-left')) {
+              target.classList.add('scroll-reveal-left-visible');
+            }
+            if (target.classList.contains('scroll-reveal-right')) {
+              target.classList.add('scroll-reveal-right-visible');
+            }
+            if (target.classList.contains('scroll-reveal-up')) {
+              target.classList.add('scroll-reveal-up-visible');
+            }
+            if (target.classList.contains('scroll-reveal-fade')) {
+              target.classList.add('scroll-reveal-fade-visible');
+            }
+            
+            hasAnimatedRef.current.add(id);
+          });
+        }
+        
+        // Unobserve after animation
+        observerRef.current?.unobserve(target);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     // Initialize Intersection Observer
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            entry.target.classList.add('scroll-reveal-visible');
-            
-            // Add specific directional classes
-            if (entry.target.classList.contains('scroll-reveal-left')) {
-              entry.target.classList.add('scroll-reveal-left-visible');
-            }
-            if (entry.target.classList.contains('scroll-reveal-right')) {
-              entry.target.classList.add('scroll-reveal-right-visible');
-            }
-            if (entry.target.classList.contains('scroll-reveal-up')) {
-              entry.target.classList.add('scroll-reveal-up-visible');
-            }
-            if (entry.target.classList.contains('scroll-reveal-scale')) {
-              entry.target.classList.add('scroll-reveal-scale-visible');
-            }
-            if (entry.target.classList.contains('scroll-reveal-fade')) {
-              entry.target.classList.add('scroll-reveal-fade-visible');
-            }
-            
-            // Stop observing after animation
-            observerRef.current.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '0px 0px -30px 0px' // More sensitive trigger
-      }
-    );
+    const observerOptions = {
+      threshold: 0.15,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    observerRef.current = new IntersectionObserver(handleIntersection, observerOptions);
 
     // Observe main section
     if (sectionRef.current) {
       observerRef.current.observe(sectionRef.current);
     }
 
-    // Observe all animation elements
-    animationElements.current.forEach(element => {
-      if (element) observerRef.current.observe(element);
-    });
-
-    // Observe all elements with scroll-reveal classes
-    document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-up, .scroll-reveal-scale, .scroll-reveal-fade').forEach(el => {
-      if (!animationElements.current.has(el)) {
-        animationElements.current.add(el);
-        observerRef.current.observe(el);
-      }
-    });
+    // Observe all elements with scroll-reveal classes after a delay
+    setTimeout(() => {
+      const revealElements = document.querySelectorAll(
+        '.scroll-reveal-up, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-fade'
+      );
+      
+      revealElements.forEach((el, index) => {
+        setTimeout(() => {
+          if (observerRef.current) {
+            observerRef.current.observe(el);
+          }
+        }, index * 50);
+      });
+    }, 100);
 
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
     };
-  }, []);
+  }, [handleIntersection]);
 
-  const addToAnimationElements = (el) => {
-    if (el && !animationElements.current.has(el)) {
-      animationElements.current.add(el);
-      if (observerRef.current) {
+  const addToAnimationElements = useCallback((el) => {
+    if (el && observerRef.current) {
+      setTimeout(() => {
         observerRef.current.observe(el);
-      }
+      }, 100);
     }
-  };
+  }, []);
 
   const handleLocationClick = () => {
     window.open('https://maps.app.goo.gl/p8PJqvzm5Ug9T4LNA', '_blank', 'noopener,noreferrer');
@@ -115,14 +125,14 @@ const ContactSection = () => {
     {
       name: "Dr. Soumya",
       role: "ISTE Faculty Coordinator",
-      phone: "+91 9048522229",
+    
       email: "soumya.av@mbcet.ac.in",
       category: "faculty"
     },
     {
       name: "Mr. Melvin Jacob",
       role: "ISTE Faculty Coordinator",
-      phone: "+91 9497613790",
+  
       email: "melvin.jacob@mbcet.ac.in",
       category: "faculty"
     },
@@ -141,7 +151,7 @@ const ContactSection = () => {
       id="contact"
       ref={sectionRef}
     >
-      {/* Background Shapes (kept subtle) */}
+      {/* Background Shapes */}
       <div className="contact-bg-shapes">
         <div className="contact-shape shape-1"></div>
         <div className="contact-shape shape-2"></div>
@@ -150,11 +160,17 @@ const ContactSection = () => {
       <div className="contact-section-content">
         {/* Header */}
         <div className="contact-section-header">
-          <span className="contact-pill scroll-reveal-up" ref={addToAnimationElements}>
+          <span 
+            className="contact-pill scroll-reveal-up" 
+            ref={addToAnimationElements}
+          >
             Get In Touch
           </span>
   
-          <h1 className="contact-main-heading scroll-reveal-up" ref={addToAnimationElements}>
+          <h1 
+            className="contact-main-heading scroll-reveal-up" 
+            ref={addToAnimationElements}
+          >
             Contact <span className="contact-gradient-text">Coordinators</span>
           </h1>
   
@@ -168,10 +184,13 @@ const ContactSection = () => {
         </div>
   
         <div className="contact-layout-grid">
-          {/* LEFT COLUMN */}
+          {/* LEFT COLUMN - Student Coordinators + Location Card */}
           <div className="contact-form-section">
             {/* Student Coordinators */}
-            <div className="simple-card scroll-reveal-left" ref={addToAnimationElements}>
+            <div 
+              className="simple-card scroll-reveal-left" 
+              ref={addToAnimationElements}
+            >
               <h2 className="section-title">
                 <FaUserTie /> Student Coordinators
               </h2>
@@ -204,13 +223,19 @@ const ContactSection = () => {
               </div>
   
               {/* Social */}
-              <div className="social-row" onClick={handleInstagramClick}>
+              <div 
+                className="social-row" 
+                onClick={handleInstagramClick}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && handleInstagramClick()}
+              >
                 <FaInstagram />
                 <span>@nexora.live</span>
               </div>
             </div>
   
-            {/* ✅ LOCATION CARD — UNCHANGED DESIGN */}
+            {/* Location Card - Inside left column for desktop */}
             <div
               className="contact-info-card scroll-reveal-left"
               ref={addToAnimationElements}
@@ -222,6 +247,9 @@ const ContactSection = () => {
               <div
                 className="contact-map-container"
                 onClick={handleLocationClick}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && handleLocationClick()}
               >
                 <div className="contact-map-overlay"></div>
                 <div className="contact-map-marker">
@@ -240,9 +268,12 @@ const ContactSection = () => {
             </div>
           </div>
   
-          {/* RIGHT COLUMN */}
+          {/* RIGHT COLUMN - Faculty Advisors */}
           <div className="contact-info-section">
-            <div className="simple-card scroll-reveal-right" ref={addToAnimationElements}>
+            <div 
+              className="simple-card scroll-reveal-right" 
+              ref={addToAnimationElements}
+            >
               <h2 className="section-title">
                 <FaChalkboardTeacher /> Faculty Advisors
               </h2>
@@ -261,8 +292,14 @@ const ContactSection = () => {
                     </div>
   
                     <div className="faculty-actions">
-                      <FaPhone onClick={() => handlePhoneClick(f.phone)} />
-                      <FaEnvelope onClick={() => handleEmailClick(f.email)} />
+                      
+                      <FaEnvelope 
+                        onClick={() => handleEmailClick(f.email)} 
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => e.key === 'Enter' && handleEmailClick(f.email)}
+                        aria-label={`Email ${f.name}`}
+                      />
                     </div>
                   </div>
                 ))}
@@ -273,7 +310,6 @@ const ContactSection = () => {
       </div>
     </section>
   );
-  
 };
 
 export default ContactSection;

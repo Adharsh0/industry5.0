@@ -20,7 +20,7 @@ html {
   overflow: hidden;
   font-family: 'Inter', sans-serif;
   padding-top: calc(80px + env(safe-area-inset-top));
-  background: #000000;
+  background: radial-gradient(circle at center, #070b12, #000);
   scroll-margin-top: 80px;
 }
 

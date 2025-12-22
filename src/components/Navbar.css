@@ -51,8 +51,8 @@
 }
 
 .logo-image {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
   image-rendering: -webkit-optimize-contrast;
   filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.35));
@@ -405,7 +405,7 @@
   }
   
   .logo-image {
-    width: 38px;
+    width: 30px;
     height: 38px;
   }
 }
@@ -417,8 +417,8 @@
   }
   
   .logo-image {
-    width: 34px;
-    height: 34px;
+    width: 20px;
+    height: 20px;
   }
   
   .mobile-menu {

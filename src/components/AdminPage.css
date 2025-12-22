@@ -921,3 +921,61 @@
   gap: 12px;
   align-items: center;
 }
+/* Email Status Badges */
+.email-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.email-badge.email-sent {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.email-badge.email-failed {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.email-badge .email-time {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+/* Email Status in Modal */
+.email-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin: 4px 0;
+}
+
+.email-status.approved {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.email-status.rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.email-status.pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.email-timestamp {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-left: auto;
+}
