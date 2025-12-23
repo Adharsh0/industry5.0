@@ -303,17 +303,16 @@ const RegistrationPage = () => {
               <div className="progress-steps">
                 {[1, 2, 3].map((step) => (
                   <React.Fragment key={step}>
-                   {/* In your JSX, make sure step labels are always present */}
-<div className="step-container">
-  <div className={`step-indicator ${currentStep >= step ? 'active' : 'inactive'}`}>
-    {currentStep > step ? <CheckCircle2 size={20} /> : step}
-  </div>
-  <span className={`step-label ${currentStep >= step ? 'text-white' : 'text-gray-500'}`}>
-    {step === 1 && 'Personal'}
-    {step === 2 && 'Academic'}
-    {step === 3 && 'Services'}
-  </span>
-</div>
+                    <div className="step-container">
+                      <div className={`step-indicator ${currentStep >= step ? 'active' : 'inactive'}`}>
+                        {currentStep > step ? <CheckCircle2 size={20} /> : step}
+                      </div>
+                      <span className={`step-label ${currentStep >= step ? 'text-white' : 'text-gray-500'}`}>
+                        {step === 1 && 'Personal'}
+                        {step === 2 && 'Academic'}
+                        {step === 3 && 'Services'}
+                      </span>
+                    </div>
                     {step < 3 && (
                       <div className={`step-connector ${currentStep > step ? 'active' : 'inactive'}`}></div>
                     )}
@@ -921,6 +920,386 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
     }
   };
 
+  const generateReceipt = () => {
+    // Create a new window for printing
+    const receiptWindow = window.open('', '_blank');
+    
+    const receiptContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>NEXORA Registration Receipt</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+          
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+          
+          body {
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: #333;
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+          }
+          
+          .receipt-container {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+          }
+          
+          .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #4A90E2;
+          }
+          
+          .event-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+          
+          .event-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 16px;
+          }
+          
+          .status-badge {
+            display: inline-block;
+            background: #fbbf24;
+            color: #78350f;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 10px;
+          }
+          
+          .receipt-id {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+          }
+          
+          .receipt-id strong {
+            color: #4A90E2;
+          }
+          
+          .details-section {
+            margin-bottom: 40px;
+          }
+          
+          .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+          }
+          
+          .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+          }
+          
+          .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+          }
+          
+          .detail-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+          }
+          
+          .detail-value {
+            font-size: 16px;
+            color: #1a1a1a;
+            font-weight: 600;
+          }
+          
+          .amount-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #e5e7eb;
+          }
+          
+          .amount-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+          }
+          
+          .amount-row:last-child {
+            border-bottom: none;
+          }
+          
+          .amount-label {
+            font-size: 16px;
+            color: #4b5563;
+          }
+          
+          .amount-value {
+            font-size: 16px;
+            color: #1a1a1a;
+            font-weight: 500;
+          }
+          
+          .total-row {
+            padding-top: 15px;
+            margin-top: 15px;
+            border-top: 2px solid #4A90E2;
+          }
+          
+          .total-label {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+          }
+          
+          .total-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #4A90E2;
+          }
+          
+          .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+          }
+          
+          .footer-note {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.6;
+          }
+          
+          .contact-info {
+            font-size: 14px;
+            color: #4b5563;
+            margin-top: 20px;
+          }
+          
+          .watermark {
+            opacity: 0.1;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 120px;
+            font-weight: 900;
+            color: #4A90E2;
+            pointer-events: none;
+            z-index: -1;
+            white-space: nowrap;
+          }
+          
+          @media print {
+            body {
+              padding: 0;
+            }
+            
+            .receipt-container {
+              border: none;
+              box-shadow: none;
+              padding: 20px;
+            }
+            
+            .watermark {
+              opacity: 0.05;
+            }
+            
+            @page {
+              margin: 20mm;
+              size: A4;
+            }
+          }
+          
+          @media (max-width: 768px) {
+            body {
+              padding: 15px;
+            }
+            
+            .receipt-container {
+              padding: 20px;
+            }
+            
+            .event-title {
+              font-size: 24px;
+            }
+            
+            .details-grid {
+              grid-template-columns: 1fr;
+            }
+            
+            .watermark {
+              font-size: 80px;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="watermark">NEXORA 2026</div>
+        <div class="receipt-container">
+          <div class="header">
+            <h1 class="event-title">NEXORA 2026</h1>
+            <p class="event-subtitle">ISTE INDUSTRY 5.0 - Registration Receipt</p>
+            <p class="receipt-id">
+              <strong>Transaction ID:</strong> ${transactionId} | 
+              <strong>Reference:</strong> ${registrationId || 'Pending...'}
+            </p>
+          </div>
+          
+          <div class="details-section">
+            <h2 class="section-title">Registration Details</h2>
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Full Name</span>
+                <span class="detail-value">${formData.fullName}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Email Address</span>
+                <span class="detail-value">${formData.email}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Phone Number</span>
+                <span class="detail-value">${formData.phone}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Institution Type</span>
+                <span class="detail-value">${formData.institution}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">College</span>
+                <span class="detail-value">${formData.college}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Department</span>
+                <span class="detail-value">
+                  ${formData.department === 'Other' ? formData.otherDepartment : formData.department}
+                </span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Academic Year</span>
+                <span class="detail-value">${formData.year}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">ISTE Member</span>
+                <span class="detail-value">${formData.isIsteMember}</span>
+              </div>
+              ${formData.isteRegistrationNumber ? `
+              <div class="detail-item">
+                <span class="detail-label">ISTE Reg. Number</span>
+                <span class="detail-value">${formData.isteRegistrationNumber}</span>
+              </div>
+              ` : ''}
+              <div class="detail-item">
+                <span class="detail-label">Accommodation</span>
+                <span class="detail-value">
+                  ${formData.stayPreference === 'With Stay' 
+                    ? `Yes (${formData.stayDates.length} day${formData.stayDates.length > 1 ? 's' : ''})` 
+                    : 'No'}
+                </span>
+              </div>
+              ${formData.stayDates && formData.stayDates.length > 0 ? `
+              <div class="detail-item" style="grid-column: 1 / -1;">
+                <span class="detail-label">Stay Dates</span>
+                <span class="detail-value">
+                  ${formData.stayDates.map(dateStr => {
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('en-IN', { 
+                      weekday: 'short', 
+                      day: 'numeric', 
+                      month: 'short',
+                      year: 'numeric'
+                    });
+                  }).join(', ')}
+                </span>
+              </div>
+              ` : ''}
+            </div>
+          </div>
+          
+          <div class="amount-section">
+            <h2 class="section-title">Payment Summary</h2>
+            <div class="amount-row">
+              <span class="amount-label">Registration Fee (${formData.institution})</span>
+              <span class="amount-value">
+                ₹${formData.institution === 'Polytechnic' 
+                  ? (formData.isIsteMember === 'Yes' ? '300' : '350')
+                  : '500'}
+              </span>
+            </div>
+            ${formData.stayPreference === 'With Stay' && formData.stayDates.length > 0 ? `
+            <div class="amount-row">
+              <span class="amount-label">Accommodation (${formData.stayDates.length} day${formData.stayDates.length > 1 ? 's' : ''})</span>
+              <span class="amount-value">₹${257 * formData.stayDates.length}</span>
+            </div>
+            ` : ''}
+            <div class="amount-row total-row">
+              <span class="total-label">Total Amount</span>
+              <span class="total-value">₹${totalAmount}</span>
+            </div>
+          </div>
+          
+          <div class="footer">
+            <p class="footer-note">
+              This receipt confirms your registration submission for NEXORA 2026 - ISTE INDUSTRY 5.0.<br>
+              Your registration status is currently <strong>PENDING ADMIN APPROVAL</strong>.<br>
+              You will receive a confirmation email once your registration is approved.
+            </p>
+            <div class="contact-info">
+              <strong>Venue:</strong> Mar Baselios College of Engineering and Technology, Thiruvananthapuram<br>
+              <strong>Dates:</strong> January 29-31, 2026 | <strong>Contact:</strong> info@nexora2026.com
+            </div>
+          </div>
+        </div>
+        
+        <script>
+          // Auto print when page loads
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+            }, 1000);
+          };
+        </script>
+      </body>
+      </html>
+    `;
+    
+    receiptWindow.document.write(receiptContent);
+    receiptWindow.document.close();
+  };
+
   if (paymentCompleted) {
     return (
       <div className="registration-container">
@@ -1045,21 +1424,10 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                 </button>
                 <button 
                   className="success-btn secondary"
-                  onClick={() => window.print()}
+                  onClick={generateReceipt}
                 >
                   <Download size={18} />
                   Save Receipt
-                </button>
-                <button 
-                  className="success-btn outline"
-                  onClick={() => {
-                    if (transactionId) {
-                      window.open(`${apiBaseUrl}/check-status/${transactionId}`, '_blank');
-                    }
-                  }}
-                >
-                  <ExternalLink size={18} />
-                  Check Status
                 </button>
               </div>
             </div>

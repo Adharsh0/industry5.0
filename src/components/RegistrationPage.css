@@ -3400,3 +3400,164 @@ select.modern-input {
     font-size: 0.75rem;
   }
 }
+/* Add this to your RegistrationPage.css file */
+
+/* Receipt specific print styles */
+@media print {
+  .bg-shapes,
+  .success-actions,
+  .back-btn,
+  .btn-primary,
+  .btn-secondary,
+  .submit-btn,
+  .error-alert,
+  .registration-note,
+  .progress-steps,
+  .form-step,
+  .info-section,
+  .map-container,
+  .pricing-card,
+  .stay-availability-badge,
+  .calendar-container,
+  .calendar-header,
+  .calendar-grid,
+  .calendar-legends,
+  .selected-dates-summary,
+  .stay-availability-info,
+  .input-group,
+  .checkbox-group,
+  .charges-summary,
+  .payment-header,
+  .qr-section,
+  .transaction-form,
+  .payment-instructions,
+  .payment-tip,
+  .process-steps,
+  .success-instructions,
+  .contact-info,
+  .step-title,
+  .form-title,
+  .qr-title,
+  .card-header,
+  .card-title,
+  .registration-header,
+  .main-heading,
+  .header-description,
+  .registration-note,
+  .error-alert {
+    display: none !important;
+  }
+  
+  .registration-container {
+    background: white !important;
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+  
+  .registration-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+  
+  .success-container {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .success-card {
+    background: white !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  
+  .success-icon-container,
+  .status-container {
+    display: none !important;
+  }
+  
+  .success-title {
+    color: #000 !important;
+    text-align: center;
+    font-size: 28px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .success-message {
+    color: #333 !important;
+    text-align: center;
+    font-size: 16px !important;
+    margin-bottom: 30px !important;
+  }
+  
+  .success-details {
+    background: white !important;
+    border: 1px solid #ddd !important;
+    padding: 20px !important;
+    margin: 20px 0 !important;
+  }
+  
+  .success-details h3 {
+    color: #4A90E2 !important;
+    border-bottom: 2px solid #4A90E2 !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .details-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+    gap: 15px !important;
+  }
+  
+  .detail-item {
+    border-bottom: 1px solid #eee !important;
+    padding: 8px 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+  }
+  
+  .detail-label {
+    color: #666 !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+  }
+  
+  .detail-value {
+    color: #000 !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    text-align: right !important;
+  }
+  
+  .detail-item.full-width {
+    flex-direction: column !important;
+  }
+  
+  .detail-item.full-width .detail-value {
+    text-align: left !important;
+    margin-top: 5px !important;
+  }
+  
+  @page {
+    margin: 20mm;
+    size: A4;
+  }
+}
+
+/* Ensure proper printing on all devices */
+@media print and (max-width: 768px) {
+  .success-title {
+    font-size: 24px !important;
+  }
+  
+  .success-message {
+    font-size: 14px !important;
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
