@@ -6,13 +6,14 @@ const ContactSection = () => {
   const sectionRef = useRef(null);
   const observerRef = useRef(null);
   const hasAnimatedRef = useRef(new Set());
+  const allElementsRef = useRef([]);
 
   // Intersection Observer callback
   const handleIntersection = useCallback((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         const target = entry.target;
-        const id = target.id || target.className;
+        const id = target.id || target.className + '-' + Math.random();
         
         // Only animate once
         if (!hasAnimatedRef.current.has(id)) {
@@ -37,11 +38,17 @@ const ContactSection = () => {
             hasAnimatedRef.current.add(id);
           });
         }
-        
-        // Unobserve after animation
-        observerRef.current?.unobserve(target);
       }
     });
+  }, []);
+
+  // Collect all animation elements
+  const collectAnimationElements = useCallback(() => {
+    if (!sectionRef.current) return [];
+    
+    return Array.from(sectionRef.current.querySelectorAll(
+      '.scroll-reveal-up, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-fade'
+    ));
   }, []);
 
   useEffect(() => {
@@ -56,35 +63,68 @@ const ContactSection = () => {
     // Observe main section
     if (sectionRef.current) {
       observerRef.current.observe(sectionRef.current);
-    }
-
-    // Observe all elements with scroll-reveal classes after a delay
-    setTimeout(() => {
-      const revealElements = document.querySelectorAll(
-        '.scroll-reveal-up, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-fade'
-      );
       
-      revealElements.forEach((el, index) => {
-        setTimeout(() => {
-          if (observerRef.current) {
-            observerRef.current.observe(el);
+      // Collect and observe all animation elements after a small delay
+      // to ensure DOM is ready
+      const observeAllElements = () => {
+        const revealElements = collectAnimationElements();
+        allElementsRef.current = revealElements;
+        
+        revealElements.forEach((el, index) => {
+          // Add unique identifier for tracking
+          if (!el.dataset.observerId) {
+            el.dataset.observerId = `element-${Date.now()}-${index}`;
           }
-        }, index * 50);
+          
+          setTimeout(() => {
+            if (observerRef.current && el.isConnected) {
+              observerRef.current.observe(el);
+            }
+          }, index * 30); // Reduced delay for better timing
+        });
+      };
+
+      // Initial observation
+      setTimeout(observeAllElements, 100);
+      
+      // Also observe on resize and after animations
+      const resizeObserver = new ResizeObserver(() => {
+        setTimeout(observeAllElements, 50);
       });
-    }, 100);
+      
+      if (sectionRef.current) {
+        resizeObserver.observe(sectionRef.current);
+      }
+      
+      // Cleanup resize observer
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
 
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
     };
-  }, [handleIntersection]);
+  }, [handleIntersection, collectAnimationElements]);
 
   const addToAnimationElements = useCallback((el) => {
-    if (el && observerRef.current) {
+    if (el && observerRef.current && el.isConnected) {
+      // Add unique identifier
+      if (!el.dataset.observerId) {
+        el.dataset.observerId = `manual-${Date.now()}`;
+      }
+      
+      // Observe after a small delay to ensure element is in DOM
       setTimeout(() => {
-        observerRef.current.observe(el);
-      }, 100);
+        if (observerRef.current && el.isConnected) {
+          observerRef.current.observe(el);
+        }
+      }, 50);
+      
+      // Also add to tracking array
+      allElementsRef.current.push(el);
     }
   }, []);
 
@@ -125,14 +165,12 @@ const ContactSection = () => {
     {
       name: "Dr. Soumya",
       role: "ISTE Faculty Coordinator",
-    
       email: "soumya.av@mbcet.ac.in",
       category: "faculty"
     },
     {
       name: "Mr. Melvin Jacob",
       role: "ISTE Faculty Coordinator",
-  
       email: "melvin.jacob@mbcet.ac.in",
       category: "faculty"
     },
@@ -144,6 +182,20 @@ const ContactSection = () => {
       category: "faculty"
     }
   ];
+
+  // Create refs for all student coordinator cards
+  const studentCardRefs = useRef([]);
+  const facultyCardRefs = useRef([]);
+
+  const setStudentRef = useCallback((el, index) => {
+    studentCardRefs.current[index] = el;
+    addToAnimationElements(el);
+  }, [addToAnimationElements]);
+
+  const setFacultyRef = useCallback((el, index) => {
+    facultyCardRefs.current[index] = el;
+    addToAnimationElements(el);
+  }, [addToAnimationElements]);
 
   return (
     <section
@@ -200,7 +252,8 @@ const ContactSection = () => {
                   <div
                     key={i}
                     className="person-card scroll-reveal-up"
-                    ref={addToAnimationElements}
+                    ref={(el) => setStudentRef(el, i)}
+                    data-observer-id={`student-${i}`}
                   >
                     <div className="person-header">
                       <FaUserTie />
@@ -224,8 +277,9 @@ const ContactSection = () => {
   
               {/* Social */}
               <div 
-                className="social-row" 
+                className="social-row scroll-reveal-up" 
                 onClick={handleInstagramClick}
+                ref={addToAnimationElements}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleInstagramClick()}
@@ -283,7 +337,8 @@ const ContactSection = () => {
                   <div
                     key={i}
                     className="faculty-row scroll-reveal-up"
-                    ref={addToAnimationElements}
+                    ref={(el) => setFacultyRef(el, i)}
+                    data-observer-id={`faculty-${i}`}
                   >
                     <FaChalkboardTeacher />
                     <div className="faculty-text">
@@ -292,7 +347,6 @@ const ContactSection = () => {
                     </div>
   
                     <div className="faculty-actions">
-                      
                       <FaEnvelope 
                         onClick={() => handleEmailClick(f.email)} 
                         role="button"

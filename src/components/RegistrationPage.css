@@ -3326,3 +3326,77 @@ select.modern-input {
 .step-connector.inactive {
   background: rgba(255, 255, 255, 0.1);
 }
+.calendar-container {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+/* ================= MOBILE CALENDAR FIX ================= */
+@media (max-width: 768px) {
+
+  /* Allow safe horizontal scroll if needed */
+  .calendar-container {
+    overflow-x: auto;
+    padding: 14px;
+  }
+
+  /* Reduce grid size */
+  .calendar-grid {
+    grid-template-columns: repeat(7, minmax(32px, 1fr));
+    gap: 4px;
+  }
+
+  /* Remove square constraint */
+  .calendar-day {
+    aspect-ratio: auto;
+    min-height: 44px;
+    padding: 4px 2px;
+  }
+
+  /* Smaller date numbers */
+  .day-number {
+    font-size: 0.85rem;
+  }
+
+  /* Hide event label text (keeps UI clean) */
+  .event-indicator {
+    display: none;
+  }
+
+  /* Smaller selection check */
+  .selected-indicator {
+    width: 14px;
+    height: 14px;
+    font-size: 0.65rem;
+    top: 3px;
+    right: 3px;
+  }
+
+  /* Legends stack vertically */
+  .calendar-legends {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Selected dates chips wrap cleanly */
+  .dates-list {
+    gap: 6px;
+  }
+
+  .date-chip {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+}
+@media (max-width: 360px) {
+  .calendar-grid {
+    grid-template-columns: repeat(7, minmax(28px, 1fr));
+  }
+
+  .calendar-day {
+    min-height: 40px;
+  }
+
+  .day-number {
+    font-size: 0.75rem;
+  }
+}

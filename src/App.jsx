@@ -12,15 +12,32 @@ import HostSection from './components/HostSection';
 import HostedPage from './components/HostedPage';
 import SplashScreen from './components/SplashScreen';
 import Events from './components/Events';
-import EventTimeline from './components/EventTimeline';
+import CustomCursor from './components/CustomCursor'; // Import CustomCursor
 import CountdownTimer from './components/CountdownTimer';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if mobile/tablet
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    // Initial check
+    checkMobile();
+
+    // Listen for resize
+    window.addEventListener('resize', checkMobile);
+
+    // Splash screen timer
     const timer = setTimeout(() => setShowSplash(false), 2500);
-    return () => clearTimeout(timer);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   return (
@@ -28,28 +45,32 @@ function App() {
       {showSplash ? (
         <SplashScreen />
       ) : (
-        <div className="App">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={
-              <>
-                <HomeSection />
-                <CountdownTimer />
-                <HostedPage />
-                <AboutSection />
-                <EventTimeline />
-                <ContactSection />
+        <>
+          {/* Only show custom cursor on desktop */}
+          {!isMobile && <CustomCursor />}
+          
+          <div className="App">
+            <Navbar />
+            <Routes>
+              <Route path="/" element={
+                <>
+                  <HomeSection />
+                  <CountdownTimer />
+                  <HostedPage />
+                  <AboutSection />
                 
-              </>
-            } />
-            <Route path="/events" element={<Events />} />
-            <Route path="/register" element={<RegistrationPage />} />
-            <Route path="/host" element={<HostSection />} />
-            <Route path="/admin-iste-qwert" element={<AdminPage />} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-          <Footer />
-        </div>
+                  <ContactSection />
+                </>
+              } />
+              <Route path="/events" element={<Events />} />
+              <Route path="/register" element={<RegistrationPage />} />
+              <Route path="/host" element={<HostSection />} />
+              <Route path="/admin-iste-qwert" element={<AdminPage />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+            <Footer />
+          </div>
+        </>
       )}
     </Router>
   );

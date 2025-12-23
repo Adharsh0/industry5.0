@@ -483,3 +483,71 @@
     height: 17px;
   }
 }
+/* ================= MOBILE LOGO SIZE FIX ================= */
+
+/* ================= MOBILE HAMBURGER SIZE FIX ================= */
+@media (max-width: 900px) {
+  .mobile-menu-toggle {
+    width: 42px;
+    height: 42px;
+  }
+
+  .hamburger {
+    width: 22px;
+    height: 16px;
+  }
+
+  .hamburger span {
+    height: 2.4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-menu-toggle {
+    width: 38px;
+    height: 38px;
+  }
+
+  .hamburger {
+    width: 20px;
+    height: 14px;
+  }
+
+  .hamburger span {
+    height: 2px;
+  }
+}
+@media (max-width: 900px) {
+  .hamburger.active span:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+  }
+
+  .hamburger.active span:nth-child(3) {
+    transform: translateY(-6.5px) rotate(-45deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .hamburger.active span:nth-child(1) {
+    transform: translateY(5.5px) rotate(45deg);
+  }
+
+  .hamburger.active span:nth-child(3) {
+    transform: translateY(-5.5px) rotate(-45deg);
+  }
+}
+
+/* ===== FORCE MOBILE LOGO SIZE ===== */
+@media (max-width: 900px) {
+  .navbar .logo-image {
+    width: 35px !important;
+    height: 35px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar .logo-image {
+    width: 35px !important;
+    height: 35px !important;
+  }
+}

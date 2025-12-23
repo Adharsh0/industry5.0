@@ -904,3 +904,19 @@ html {
     gap: 16px;
   }
 }
+/* Ensure all scroll reveal elements start hidden */
+.scroll-reveal-up:not(.scroll-reveal-visible),
+.scroll-reveal-left:not(.scroll-reveal-left-visible),
+.scroll-reveal-right:not(.scroll-reveal-right-visible),
+.scroll-reveal-fade:not(.scroll-reveal-fade-visible) {
+  opacity: 0 !important;
+  transform: translateY(20px) !important;
+}
+
+.scroll-reveal-left:not(.scroll-reveal-left-visible) {
+  transform: translateX(-20px) !important;
+}
+
+.scroll-reveal-right:not(.scroll-reveal-right-visible) {
+  transform: translateX(20px) !important;
+}
