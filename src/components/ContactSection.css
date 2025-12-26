@@ -920,3 +920,269 @@ html {
 .scroll-reveal-right:not(.scroll-reveal-right-visible) {
   transform: translateX(20px) !important;
 }
+/* ================= ENHANCED MAP MARKER HOVER EFFECTS ================= */
+.contact-map-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  width: clamp(30px, 5vw, 40px);
+  height: clamp(30px, 5vw, 40px);
+  background: var(--accent);
+  border-radius: 50% 50% 50% 0;
+  box-shadow: 0 0 15px rgba(74, 144, 226, 0.5);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* Marker dot */
+.contact-marker-dot {
+  width: clamp(10px, 2vw, 14px);
+  height: clamp(10px, 2vw, 14px);
+  background: #0a141f;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  transition: all 0.3s ease;
+}
+
+/* Marker glow effect */
+.contact-map-marker::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(74, 144, 226, 0.3);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: -1;
+}
+
+/* Pulsing rings animation */
+@keyframes markerPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.7);
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 0.7;
+    box-shadow: 0 0 0 20px rgba(74, 144, 226, 0);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.4);
+    opacity: 0;
+    box-shadow: 0 0 0 0 rgba(74, 144, 226, 0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+  50% {
+    transform: translate(-50%, -60%) rotate(-45deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(315deg);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(74, 144, 226, 0.8),
+                0 0 35px rgba(74, 144, 226, 0.4);
+  }
+}
+
+/* Hover effects on the map container */
+.contact-map-container:hover .contact-map-marker {
+  animation: bounce 1.2s ease infinite, glow 2s ease infinite;
+  background: linear-gradient(135deg, #4A90E2, #5a9aee);
+  transform: translate(-50%, -50%) rotate(-45deg) scale(1.2);
+}
+
+.contact-map-container:hover .contact-map-marker::before {
+  width: 80px;
+  height: 80px;
+  background: rgba(74, 144, 226, 0.2);
+  animation: markerPulse 2s ease-out infinite;
+}
+
+.contact-map-container:hover .contact-marker-dot {
+  background: #fff;
+  transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
+}
+
+/* Auto-pulse effect (without hover) */
+@keyframes autoPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) rotate(-45deg);
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.5);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(-45deg) scale(1.1);
+    box-shadow: 0 0 20px rgba(74, 144, 226, 0.7);
+  }
+}
+
+.contact-map-marker {
+  animation: autoPulse 3s ease-in-out infinite;
+}
+
+/* Enhanced map container hover */
+.contact-map-container {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+.contact-map-container:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.contact-map-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(74, 144, 226, 0.1) 0%,
+    transparent 50%,
+    rgba(74, 144, 226, 0.1) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.contact-map-container:hover::after {
+  opacity: 1;
+}
+
+/* Map hint text */
+.contact-map-container::before {
+  content: 'Click to view location on Google Maps';
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  white-space: nowrap;
+  z-index: 20;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contact-map-container:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Map overlay enhancement */
+.contact-map-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  transition: all 0.4s ease;
+}
+
+.contact-map-container:hover .contact-map-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.1) 50%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+}
+
+/* Marker shadow effect */
+.contact-map-marker::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  filter: blur(3px);
+  transition: all 0.3s ease;
+}
+
+.contact-map-container:hover .contact-map-marker::after {
+  width: 30px;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  filter: blur(5px);
+}
+
+/* Mobile optimization for hover effects */
+@media (max-width: 768px) {
+  .contact-map-marker {
+    animation: autoPulse 4s ease-in-out infinite;
+  }
+  
+  .contact-map-container::before {
+    content: 'Tap to open map';
+    font-size: 11px;
+    padding: 6px 12px;
+    bottom: 15px;
+  }
+  
+  .contact-map-container:active .contact-map-marker {
+    animation: bounce 0.3s ease, glow 0.5s ease;
+    transform: translate(-50%, -50%) rotate(-45deg) scale(1.1);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .contact-map-marker,
+  .contact-map-container,
+  .contact-map-container::before,
+  .contact-map-marker::before,
+  .contact-map-marker::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .contact-map-container:hover .contact-map-marker {
+    transform: translate(-50%, -50%) rotate(-45deg) scale(1.1);
+    background: var(--accent);
+  }
+}

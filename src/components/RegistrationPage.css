@@ -3600,3 +3600,198 @@ select.modern-input {
     word-break: break-word;
   }
 }
+/* Add these button animation styles to RegistrationPage.css */
+
+/* Button Press Animation */
+@keyframes buttonPress {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 8px 24px rgba(74, 144, 226, 0.3);
+  }
+  50% {
+    transform: scale(0.95);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 8px 24px rgba(74, 144, 226, 0.3);
+  }
+}
+
+/* Ripple Effect Animation */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Button with press animation */
+.btn-primary,
+.submit-btn,
+.payment-btn,
+.submit-btn:not(:disabled) {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Active state animation */
+.btn-primary:active:not(:disabled),
+.submit-btn:active:not(:disabled),
+.payment-btn:active:not(:disabled) {
+  animation: buttonPress 0.3s ease;
+}
+
+/* Ripple effect container */
+.btn-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+/* Hover effect enhancement */
+.btn-primary:hover:not(:disabled),
+.submit-btn:hover:not(:disabled),
+.payment-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(74, 144, 226, 0.4);
+}
+
+/* Loading state animation */
+.submit-btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+.submit-btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Success state animation */
+@keyframes successPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+  }
+}
+
+.btn-success {
+  animation: successPulse 1s ease;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* Add these to existing button styles */
+.btn-primary, 
+.submit-btn, 
+.payment-btn {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* Touch-friendly button press feedback */
+@media (max-width: 768px) {
+  .btn-primary:active:not(:disabled),
+  .submit-btn:active:not(:disabled),
+  .payment-btn:active:not(:disabled) {
+    animation: buttonPress 0.2s ease;
+  }
+  
+  /* Remove hover effects on mobile, keep only active state */
+  .btn-primary:hover:not(:disabled),
+  .submit-btn:hover:not(:disabled),
+  .payment-btn:hover:not(:disabled) {
+    transform: none;
+    box-shadow: 0 8px 24px rgba(74, 144, 226, 0.3);
+  }
+}
+
+/* Disabled button state */
+.btn-primary:disabled,
+.submit-btn:disabled,
+.payment-btn:disabled {
+  transform: none !important;
+  animation: none !important;
+  box-shadow: none !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Add focus ring for accessibility */
+.btn-primary:focus-visible:not(:disabled),
+.submit-btn:focus-visible:not(:disabled),
+.payment-btn:focus-visible:not(:disabled) {
+  outline: 3px solid rgba(74, 144, 226, 0.5);
+  outline-offset: 2px;
+  animation: none;
+}
+
+/* Button text transition */
+.btn-primary span,
+.submit-btn span,
+.payment-btn span {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.btn-primary:active:not(:disabled) span,
+.submit-btn:active:not(:disabled) span,
+.payment-btn:active:not(:disabled) span {
+  transform: scale(0.95);
+}
+
+/* Shimmer effect for special buttons */
+.btn-primary.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(74, 144, 226, 0.8) 0%,
+    rgba(74, 144, 226, 1) 25%,
+    rgba(74, 144, 226, 1) 50%,
+    rgba(74, 144, 226, 0.8) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Button icon animation */
+.btn-primary svg,
+.submit-btn svg,
+.payment-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) svg,
+.submit-btn:hover:not(:disabled) svg,
+.payment-btn:hover:not(:disabled) svg {
+  transform: translateX(4px);
+}
+
+.btn-primary:active:not(:disabled) svg,
+.submit-btn:active:not(:disabled) svg,
+.payment-btn:active:not(:disabled) svg {
+  transform: translateX(4px) scale(0.9);
+}

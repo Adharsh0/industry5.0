@@ -299,14 +299,14 @@ const HostSection = () => {
                   style={{animationDelay: '0.45s'}}
                 >
                   <FaUniversity className="contact-icon" />
-                  <a href="tel:+914712545432">+91 471 254 5432</a>
+                  <a href="tel:+914712545432">+91 471 2545 866</a>
                 </div>
                 <div 
                   className="contact-item"
                   style={{animationDelay: '0.5s'}}
                 >
                   <FaGraduationCap className="contact-icon" />
-                  <a href="mailto:info@mbcet.ac.in">info@mbcet.ac.in</a>
+                  <a href="mailto:info@mbcet.ac.in">mbcet@mbcet.org</a>
                 </div>
               </div>
             </div>

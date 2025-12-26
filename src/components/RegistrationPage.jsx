@@ -801,44 +801,84 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState('');
   const [registrationId, setRegistrationId] = useState('');
+  const [isButtonPressed, setIsButtonPressed] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
+  // Add effect to clear button pressed state
+  useEffect(() => {
+    if (isButtonPressed) {
+      const timer = setTimeout(() => setIsButtonPressed(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isButtonPressed]);
+
+  // Function to create ripple effect
+  const createRipple = (event) => {
+    const button = event.currentTarget;
+    const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+    circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+    circle.classList.add("btn-ripple");
+
+    const ripple = button.getElementsByClassName("btn-ripple")[0];
+
+    if (ripple) {
+      ripple.remove();
+    }
+
+    button.appendChild(circle);
+  };
+
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
+    
+    // Add button press animation
+    setIsButtonPressed(true);
+    createRipple(e);
     
     if (formData.stayPreference === 'With Stay') {
       if (!formData.stayDates || formData.stayDates.length === 0) {
         setPaymentError('Please select stay dates');
+        setIsButtonPressed(false);
         return;
       }
       
       // Check stay capacity again
       if (!stayAvailability.available) {
         setPaymentError('Stay accommodation is no longer available');
+        setIsButtonPressed(false);
         return;
       }
     }
 
     if (!transactionId.trim()) {
       setPaymentError('Please enter your transaction ID');
+      setIsButtonPressed(false);
       return;
     }
 
     if (transactionId.length < 3) {
       setPaymentError('Transaction ID must be at least 3 characters');
+      setIsButtonPressed(false);
       return;
     }
 
     if (!formData.institution) {
       setPaymentError('Institution type is required');
+      setIsButtonPressed(false);
       return;
     }
 
     if (formData.department === 'Other' && !formData.otherDepartment.trim()) {
       setPaymentError('Please specify your department name');
+      setIsButtonPressed(false);
       return;
     }
 
@@ -859,6 +899,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
       if (emailCheckResult.exists) {
         setPaymentError('This email is already registered. Please go back and use a different email address.');
         setIsProcessing(false);
+        setIsButtonPressed(false);
         return;
       }
 
@@ -923,6 +964,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
       setPaymentError('Network error. Please check your internet connection and try again.');
     } finally {
       setIsProcessing(false);
+      setIsButtonPressed(false);
     }
   };
 
@@ -1413,7 +1455,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                   <div className="detail-item">
                     <span className="detail-label">Base Fee:</span>
                     <span className="detail-value">
-                      ₹${formData.institution === 'Polytechnic' 
+                      ₹{formData.institution === 'Polytechnic' 
                         ? (formData.isIsteMember === 'Yes' ? 300 : 350)
                         : (formData.isIsteMember === 'Yes' ? 450 : 500)}
                     </span>
@@ -1535,8 +1577,13 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
 
                   <button 
                     type="submit" 
-                    className="submit-btn payment-btn"
+                    className={`submit-btn payment-btn ${isButtonPressed ? 'pressed' : ''}`}
                     disabled={isProcessing}
+                    onClick={(e) => {
+                      if (!isProcessing) {
+                        createRipple(e);
+                      }
+                    }}
                   >
                     {isProcessing ? (
                       <>
@@ -1636,7 +1683,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                 <div className="summary-item">
                   <span className="summary-label">Base Fee:</span>
                   <span className="summary-value">
-                    ₹${formData.institution === 'Polytechnic' 
+                    ₹{formData.institution === 'Polytechnic' 
                       ? (formData.isIsteMember === 'Yes' ? 300 : 350)
                       : (formData.isIsteMember === 'Yes' ? 450 : 500)}
                   </span>

@@ -177,10 +177,17 @@ const ContactSection = () => {
     {
       name: "Dr. Jishnu Chandran",
       role: "ISTE Faculty Coordinator",
-      phone: "+91 9497613790",
+      
       email: "jishnuchandran.r@mbcet.ac.in",
       category: "faculty"
+    },
+     {
+      name: "Ms. Asha S",
+      role: "ISTE Faculty Coordinator",
+      email: "asha.s@mbcet.ac.in",
+      category: "faculty"
     }
+   
   ];
 
   // Create refs for all student coordinator cards
