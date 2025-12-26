@@ -98,7 +98,6 @@ const Footer = () => {
               <a href="#home" className="footer-link">Home</a>
               <a href="#about" className="footer-link">About</a>
               <a href="#events" className="footer-link">Events</a>
-              <a href="#schedule" className="footer-link">Schedule</a>
               <Link to="/register" className="footer-link">Register</Link>
             </div>
           </div>
@@ -109,7 +108,9 @@ const Footer = () => {
             <div className="footer-links">
               <div className="footer-contact-item">
                 <FaMapMarkerAlt className="footer-contact-icon" />
-                <span>Mar Baselios College of Engineering & Technology</span>
+                <span>Mar Baselios College of Engineering & Technology
+                  (Autonomous)
+                </span>
               </div>
               <div className="footer-contact-item">
                 <FaEnvelope className="footer-contact-icon" />
@@ -117,12 +118,7 @@ const Footer = () => {
                   istestudentchapter@mbcet.ac.in
                 </a>
               </div>
-              <div className="footer-contact-item">
-                <FaPhone className="footer-contact-icon" />
-                <a href="tel:+919876543210" className="footer-contact-link">
-                  +91 98765 43210
-                </a>
-              </div>
+              
             </div>
           </div>
         </div>
