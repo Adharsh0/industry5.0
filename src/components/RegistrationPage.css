@@ -3561,3 +3561,42 @@ select.modern-input {
     grid-template-columns: 1fr !important;
   }
 }
+/* ================= MOBILE PAYMENT FIX ================= */
+@media (max-width: 1024px) {
+
+  .payment-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+    width: 100% !important;
+  }
+
+  .form-section,
+  .info-section {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+/* ================= SUCCESS PAGE MOBILE FIX ================= */
+@media (max-width: 768px) {
+
+  .details-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  .detail-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .detail-label,
+  .detail-value {
+    text-align: left !important;
+    width: 100% !important;
+    word-break: break-word;
+  }
+}

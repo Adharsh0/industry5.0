@@ -5,7 +5,8 @@
   position: relative;
   font-family: 'Inter', sans-serif;
   padding: 80px 0;
-  background: radial-gradient(circle at center, #070b12, #000);
+  background: linear-gradient(135deg, #0f172a, #020617);
+
   
 }
 

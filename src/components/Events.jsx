@@ -270,7 +270,36 @@ const Events = () => {
         "name2": "Kiran Biju",
         "phone2": "7909208609"
       }
+    },
+    {
+      "id": 10,
+      "title": "SELF DEFENSE WORKSHOP – NEXORA ’26",
+      "poster": "/sd.jpeg",
+      "date": "03 January 2026",
+      "time": "10:00 AM onwards",
+      "venue": "Mar Baselios College of Engineering and Technology (MBCET)",
+      "description": "Empower yourself with the skills, confidence, and awareness needed to protect yourself in real-life situations. This hands-on self-defense workshop focuses on practical techniques, situational awareness, and personal safety, helping participants build confidence, strength, and self-discipline.",
+      "registerLink": "https://forms.gle/J7FqCp1rmhvLpwEx8",
+      "category": "Workshop",
+      "isHighlighted": true,
+      "details": {
+        "mode": "Offline",
+        "fee": "Registration fees apply",
+        "lastDate": "02 January 2026",
+        "certificate": "Activity points will be rewarded",
+        "seats": "Limited seats available"
+      },
+      "note": "Take a step towards becoming stronger, safer, and more confident. Don’t miss this opportunity to learn a life-saving skill!",
+      "presentedBy": "24th Annual ISTE State Student Convention",
+      "inAssociationWith": "Department of Physical Education, MBCET",
+      "contact": {
+        "name1": "Kiran Biju",
+        "phone1": "7909208609",
+        "name2": "Jithin Joy",
+        "phone2": "7994716579"
+      }
     }
+    
   ];
 
  

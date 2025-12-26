@@ -35,6 +35,7 @@ const HostedPage = () => {
           
           <div className="college-name">
             Mar Baselios College of Engineering and Technology
+            (Autonomous)
           </div>
           {/* Add more animated elements here if needed */}
         </div>

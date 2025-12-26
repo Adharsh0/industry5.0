@@ -115,7 +115,7 @@ const HostSection = () => {
                     </div>
                   </div>
                   <div className="college-info">
-                    <h2 className="college-name">Mar Baselios College of Engineering and Technology</h2>
+                    <h2 className="college-name">Mar Baselios College of Engineering and Technology(Autonomous)</h2>
                     <p className="college-motto">"Where Innovation Meets Excellence"</p>
                   </div>
                 </div>

@@ -135,7 +135,8 @@ const RegistrationPage = () => {
     if (formData.institution === 'Polytechnic') {
       baseFee = formData.isIsteMember === 'Yes' ? 300 : 350;
     } else {
-      baseFee = 500; // Engineering students
+      // Engineering students
+      baseFee = formData.isIsteMember === 'Yes' ? 450 : 500;
     }
     
     let total = baseFee;
@@ -151,7 +152,8 @@ const RegistrationPage = () => {
     if (formData.institution === 'Polytechnic') {
       return formData.isIsteMember === 'Yes' ? 300 : 350;
     }
-    return 500;
+    // Engineering students
+    return formData.isIsteMember === 'Yes' ? 450 : 500;
   };
 
   const handleDateSelect = (date) => {
@@ -396,7 +398,7 @@ const RegistrationPage = () => {
                         className="modern-input"
                       >
                         <option value="">Select Institution Type *</option>
-                        <option value="Engineering">Engineering College (₹500 base fee)</option>
+                        <option value="Engineering">Engineering College (₹500 base fee, ₹450 for ISTE members)</option>
                         <option value="Polytechnic">Polytechnic College (₹350 base fee, ₹300 for ISTE members)</option>
                       </select>
                     </div>
@@ -657,8 +659,7 @@ const RegistrationPage = () => {
                           <div className="charge-item">
                             <span>
                               Registration Fee ({formData.institution}):
-                              {formData.institution === 'Polytechnic' && formData.isIsteMember === 'Yes' && 
-                                ' (ISTE Member Discount Applied)'}
+                              {formData.isIsteMember === 'Yes' && ' (ISTE Member Discount Applied)'}
                             </span>
                             <span>
                               ₹{calculateBaseFee()}
@@ -675,9 +676,9 @@ const RegistrationPage = () => {
                             <span className="total-amount">₹{calculateTotalAmount()}</span>
                           </div>
                         </div>
-                        {formData.institution === 'Polytechnic' && formData.isIsteMember === 'Yes' && (
+                        {formData.isIsteMember === 'Yes' && (
                           <small className="charges-note discount-note">
-                            You're getting a ₹50 discount for being an ISTE member!
+                            You're getting a discount for being an ISTE member!
                           </small>
                         )}
                         <small className="charges-note">Payment details will be shown on next page</small>
@@ -762,8 +763,12 @@ const RegistrationPage = () => {
               </div>
               <div className="pricing-details">
                 <div className="price-item">
-                  <span className="price-label">Engineering College</span>
+                  <span className="price-label">Engineering College (Non-ISTE)</span>
                   <span className="price-value">₹500</span>
+                </div>
+                <div className="price-item">
+                  <span className="price-label">Engineering College (ISTE Member)</span>
+                  <span className="price-value">₹450</span>
                 </div>
                 <div className="price-item">
                   <span className="price-label">Polytechnic College (Non-ISTE)</span>
@@ -862,7 +867,8 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
         if (formData.institution === 'Polytechnic') {
           return formData.isIsteMember === 'Yes' ? 300 : 350;
         }
-        return 500;
+        // Engineering students
+        return formData.isIsteMember === 'Yes' ? 450 : 500;
       };
 
       // Prepare registration data with properly formatted dates
@@ -1256,7 +1262,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
               <span class="amount-value">
                 ₹${formData.institution === 'Polytechnic' 
                   ? (formData.isIsteMember === 'Yes' ? '300' : '350')
-                  : '500'}
+                  : (formData.isIsteMember === 'Yes' ? '450' : '500')}
               </span>
             </div>
             ${formData.stayPreference === 'With Stay' && formData.stayDates.length > 0 ? `
@@ -1407,9 +1413,9 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                   <div className="detail-item">
                     <span className="detail-label">Base Fee:</span>
                     <span className="detail-value">
-                      ₹{formData.institution === 'Polytechnic' 
+                      ₹${formData.institution === 'Polytechnic' 
                         ? (formData.isIsteMember === 'Yes' ? 300 : 350)
-                        : 500}
+                        : (formData.isIsteMember === 'Yes' ? 450 : 500)}
                     </span>
                   </div>
                 </div>
@@ -1630,9 +1636,9 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                 <div className="summary-item">
                   <span className="summary-label">Base Fee:</span>
                   <span className="summary-value">
-                    ₹{formData.institution === 'Polytechnic' 
+                    ₹${formData.institution === 'Polytechnic' 
                       ? (formData.isIsteMember === 'Yes' ? 300 : 350)
-                      : 500}
+                      : (formData.isIsteMember === 'Yes' ? 450 : 500)}
                   </span>
                 </div>
                 {formData.stayPreference === 'With Stay' && formData.stayDates.length > 0 && (
