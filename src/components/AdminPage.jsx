@@ -175,19 +175,20 @@ const AdminPage = () => {
       console.log('📊 API Response:', result);
       
       if (result.success) {
-        // UPDATED MAPPING with stayDates and correct calculations
+        // UPDATED MAPPING with new pricing for engineering students
         const mappedUsers = result.data.map(user => {
           const institution = user.institution || 'Engineering';
           const stayPreference = user.stayPreference || 'Without Stay';
           const stayDates = user.stayDates || [];
           const stayDays = stayDates.length;
           
-          // Calculate correct amounts based on new pricing
+          // Calculate correct amounts based on NEW pricing
           let baseFee;
           if (institution === 'Polytechnic') {
             baseFee = user.isIsteMember === 'Yes' ? 300 : 350;
           } else {
-            baseFee = 500;
+            // Engineering students - UPDATED with new pricing
+            baseFee = user.isIsteMember === 'Yes' ? 450 : 500;
           }
           
           const stayFee = stayDays * 257;
@@ -1052,7 +1053,7 @@ ISTE INDUSTRY 5.0 Team`
                       <span className="institution-note">
                         Base Fee: {selectedUser.institution === 'Polytechnic' 
                           ? (selectedUser.isIsteMember === 'Yes' ? '₹300' : '₹350')
-                          : '₹500'}
+                          : (selectedUser.isIsteMember === 'Yes' ? '₹450' : '₹500')}
                       </span>
                     </div>
                   </div>
@@ -1146,7 +1147,7 @@ ISTE INDUSTRY 5.0 Team`
                       <span>
                         ₹{selectedUser.institution === 'Polytechnic' 
                           ? (selectedUser.isIsteMember === 'Yes' ? '300' : '350')
-                          : '500'}
+                          : (selectedUser.isIsteMember === 'Yes' ? '450' : '500')}
                       </span>
                     </div>
                     {selectedUser.stayPreference === 'With Stay' && selectedUser.stayDays > 0 && (
