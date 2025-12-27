@@ -11,7 +11,7 @@ const RegistrationPage = () => {
   const [showPayment, setShowPayment] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
-  const [stayAvailability, setStayAvailability] = useState({ available: true, remaining: 100 });
+  const [stayAvailability, setStayAvailability] = useState({ available: true, remaining: 250 });
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -142,7 +142,7 @@ const RegistrationPage = () => {
     let total = baseFee;
     
     if (formData.stayPreference === 'With Stay' && formData.stayDates.length > 0) {
-      total += (257 * formData.stayDates.length);
+      total += (217 * formData.stayDates.length); // UPDATED: ₹217 per day
     }
     
     return total;
@@ -544,7 +544,7 @@ const RegistrationPage = () => {
                         <option value="">Do you require accommodation? *</option>
                         <option value="With Stay" disabled={!stayAvailability.available}>
                           {stayAvailability.available 
-                            ? `Yes, I need accommodation (₹257/day) - ${stayAvailability.remaining} spots left`
+                            ? `Yes, I need accommodation (₹217/day) - ${stayAvailability.remaining} spots left`
                             : 'Accommodation full - No spots available'}
                         </option>
                         <option value="Without Stay">No, I don't need accommodation</option>
@@ -559,7 +559,7 @@ const RegistrationPage = () => {
                             <span className="selected-dates-count">
                               Selected: {formData.stayDates.length} day{formData.stayDates.length !== 1 ? 's' : ''}
                             </span>
-                            <span className="date-price">₹257 per day</span>
+                            <span className="date-price">₹217 per day</span>
                           </div>
                         </div>
                         
@@ -636,7 +636,7 @@ const RegistrationPage = () => {
                             <div className="stay-total">
                               <span>Accommodation Cost:</span>
                               <span className="stay-amount">
-                                ₹{formData.stayDates.length} × 257 = ₹{257 * formData.stayDates.length}
+                                ₹{formData.stayDates.length} × 217 = ₹{217 * formData.stayDates.length}
                               </span>
                             </div>
                           </div>
@@ -668,7 +668,7 @@ const RegistrationPage = () => {
                           {formData.stayPreference === 'With Stay' && formData.stayDates.length > 0 && (
                             <div className="charge-item">
                               <span>Accommodation ({formData.stayDates.length} day{formData.stayDates.length > 1 ? 's' : ''}):</span>
-                              <span>₹{257 * formData.stayDates.length}</span>
+                              <span>₹{217 * formData.stayDates.length}</span>
                             </div>
                           )}
                           <div className="charge-total">
@@ -780,7 +780,7 @@ const RegistrationPage = () => {
                 </div>
                 <div className="price-item">
                   <span className="price-label">Accommodation (per day)</span>
-                  <span className="price-value">₹257</span>
+                  <span className="price-value">₹217</span>
                 </div>
                 <div className="stay-availability-badge">
                   <BedDouble size={14} />
@@ -1310,7 +1310,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
             ${formData.stayPreference === 'With Stay' && formData.stayDates.length > 0 ? `
             <div class="amount-row">
               <span class="amount-label">Accommodation (${formData.stayDates.length} day${formData.stayDates.length > 1 ? 's' : ''})</span>
-              <span class="amount-value">₹${257 * formData.stayDates.length}</span>
+              <span class="amount-value">₹${217 * formData.stayDates.length}</span>
             </div>
             ` : ''}
             <div class="amount-row total-row">
@@ -1455,7 +1455,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                   <div className="detail-item">
                     <span className="detail-label">Base Fee:</span>
                     <span className="detail-value">
-                      ₹{formData.institution === 'Polytechnic' 
+                      ₹${formData.institution === 'Polytechnic' 
                         ? (formData.isIsteMember === 'Yes' ? 300 : 350)
                         : (formData.isIsteMember === 'Yes' ? 450 : 500)}
                     </span>
@@ -1683,7 +1683,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                 <div className="summary-item">
                   <span className="summary-label">Base Fee:</span>
                   <span className="summary-value">
-                    ₹{formData.institution === 'Polytechnic' 
+                    ₹${formData.institution === 'Polytechnic' 
                       ? (formData.isIsteMember === 'Yes' ? 300 : 350)
                       : (formData.isIsteMember === 'Yes' ? 450 : 500)}
                   </span>
@@ -1691,7 +1691,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                 {formData.stayPreference === 'With Stay' && formData.stayDates.length > 0 && (
                   <div className="summary-item">
                     <span className="summary-label">Accommodation Fee:</span>
-                    <span className="summary-value">₹{257 * formData.stayDates.length}</span>
+                    <span className="summary-value">₹${217 * formData.stayDates.length}</span>
                   </div>
                 )}
                 <div className="summary-total">

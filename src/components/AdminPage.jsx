@@ -43,9 +43,9 @@ const AdminPage = () => {
     engineering: 0,
     polytechnic: 0,
     stayCapacity: {
-      total: 100,
+      total: 250,
       used: 0,
-      remaining: 100
+      remaining: 250
     }
   });
 
@@ -139,9 +139,9 @@ const AdminPage = () => {
       engineering: 0,
       polytechnic: 0,
       stayCapacity: {
-        total: 100,
+        total: 250,
         used: 0,
-        remaining: 100
+        remaining: 250
       }
     });
     setError('');
@@ -175,7 +175,7 @@ const AdminPage = () => {
       console.log('📊 API Response:', result);
       
       if (result.success) {
-        // UPDATED MAPPING with new pricing for engineering students
+        // UPDATED MAPPING with new pricing and stay capacity
         const mappedUsers = result.data.map(user => {
           const institution = user.institution || 'Engineering';
           const stayPreference = user.stayPreference || 'Without Stay';
@@ -187,11 +187,11 @@ const AdminPage = () => {
           if (institution === 'Polytechnic') {
             baseFee = user.isIsteMember === 'Yes' ? 300 : 350;
           } else {
-            // Engineering students - UPDATED with new pricing
+            // Engineering students
             baseFee = user.isIsteMember === 'Yes' ? 450 : 500;
           }
           
-          const stayFee = stayDays * 257;
+          const stayFee = stayDays * 217; // UPDATED: ₹217 per day
           const totalAmount = baseFee + stayFee;
           
           return {
@@ -300,9 +300,9 @@ const AdminPage = () => {
             engineering: engineering,
             polytechnic: polytechnic,
             stayCapacity: {
-              total: stayStats.capacity || 100,
+              total: stayStats.capacity || 250,
               used: stayStats.used || 0,
-              remaining: stayStats.remaining || 100
+              remaining: stayStats.remaining || 250
             }
           });
         }
@@ -1100,7 +1100,7 @@ ISTE INDUSTRY 5.0 Team`
                       {selectedUser.stayPreference === 'With Stay' && selectedUser.stayDays > 0 && (
                         <>
                           <span className="stay-cost">
-                            • Cost: ₹{257 * selectedUser.stayDays}
+                            • Cost: ₹${217 * selectedUser.stayDays}
                           </span>
                           {selectedUser.stayDates && selectedUser.stayDates.length > 0 && (
                             <div className="stay-dates-list">
@@ -1153,7 +1153,7 @@ ISTE INDUSTRY 5.0 Team`
                     {selectedUser.stayPreference === 'With Stay' && selectedUser.stayDays > 0 && (
                       <div className="payment-item">
                         <span>Accommodation ({selectedUser.stayDays} day{selectedUser.stayDays !== 1 ? 's' : ''}):</span>
-                        <span>₹{257 * selectedUser.stayDays}</span>
+                        <span>₹${217 * selectedUser.stayDays}</span>
                       </div>
                     )}
                     <div className="payment-total">

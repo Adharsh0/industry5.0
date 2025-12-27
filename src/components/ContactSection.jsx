@@ -163,7 +163,7 @@ const ContactSection = () => {
 
   const faculty = [
     {
-      name: "Dr. Soumya",
+      name: "Dr. Soumya A V",
       role: "ISTE Faculty Coordinator",
       email: "soumya.av@mbcet.ac.in",
       category: "faculty"
@@ -175,7 +175,7 @@ const ContactSection = () => {
       category: "faculty"
     },
     {
-      name: "Dr. Jishnu Chandran",
+      name: "Dr. Jishnu Chandran R",
       role: "ISTE Faculty Coordinator",
       
       email: "jishnuchandran.r@mbcet.ac.in",
