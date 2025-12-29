@@ -12,7 +12,6 @@ const Events = () => {
   const eventCardRefs = useRef([]);
 
   const allEvents = [
-    
     {
       id: 0,
       title: "CAMPUS AMBASSADOR PROGRAM",
@@ -23,7 +22,7 @@ const Events = () => {
       description: "Ready to elevate your leadership and marketing skills? Become a Campus Ambassador for NEXORA 2026 - ISTE All Kerala Annual Students Convention. Join us in inspiring, connecting, and empowering our campuses, and be the vehicle for change in your community!",
       registerLink: "https://forms.gle/BPmHy4FQx3nrJS1L9",
       category: "Ambassador Program",
-      isHighlighted: true, // Special flag for highlighting
+      isHighlighted: true,
       details: {
         eligibility: "Open to ISTE Members",
         rewards: "Fantastic prizes and premium gifts for top 3 ambassadors",
@@ -37,6 +36,57 @@ const Events = () => {
         name2: "Adhithya Mohan",
         phone2: "9539066643"
       }
+    },
+    {
+      id: 0.5,
+      title: "CALL FOR PAPERS: PATHRIKA",
+      poster: "/paper.jpeg",
+      date: "Submission: 01 Jan 2026 - 09 Jan 2026",
+      time: "Paper Presentation: 31 Jan 2026",
+      venue: "ISTE Annual State Students' Convention 2026, NEXORA",
+      description: "We invite undergraduate and postgraduate students to submit original research papers for presentation at NEXORA 2026. Present your research, get published in our convention souvenir, and connect with the technical education community.",
+      registerLink: "#",
+      category: "Special Event",
+      isHighlighted: true,
+      details: {
+        themes: "20+ research themes including AI, IoT, Robotics, Renewable Energy, Cybersecurity & more",
+        submission: "Abstract: 01 Jan 2026 | Full Paper: 09 Jan 2026",
+        presentation: "31 January 2026",
+        publication: "All presented papers published in ISTE Annual Convention Souvenir",
+        eligibility: "Undergraduate & Postgraduate Students",
+        registrationFee: "ISTE members: ₹200 | Non-members: ₹250"
+      },
+      note: "Submit your original research papers to ISTE mail: istestudentchapter@mbcet.ac.in",
+      contact: {
+        name1: "Ms Poorna BR",
+        phone1: "94463 56114",
+        name2: "Dr Lekshmi Chandran M",
+        phone2: "94963 35333",
+        name3: "Ms Amritha BJ",
+        phone3: "94968 17349"
+      },
+      themes: [
+        "Industrial Robotics and Automation",
+        "Sustainable Waste Management",
+        "Industry–Academia Synergetic Systems",
+        "Bio-Inspired Production Techniques",
+        "Systems for Net–Zero Emission",
+        "Internet of Things (IoT)",
+        "Renewable Energy Extraction & Utilization Systems",
+        "Advanced Communication & Alert Systems",
+        "Smart Energy Grids & Power Systems",
+        "Cyber-Physical Systems for Next-Generation Industries",
+        "Digital Twins for Industrial Systems",
+        "Fault–Tolerant Industrial Electronics for Resilient Factories",
+        "Smart & Sustainable Infrastructure",
+        "Circular Economy Models for Industry 5.0",
+        "Disaster–Resilient Industrial & Residential Layouts",
+        "AI in Sustainability",
+        "Advances in AI, Machine Learning & Deep Learning",
+        "AI in Teaching, Education and Research",
+        "Cybersecurity & Blockchain",
+        "Cloud Computing & Edge Computing"
+      ]
     },
     {
       id: 1,
@@ -247,7 +297,7 @@ const Events = () => {
     },
     {
       "id": 9,
-      "title": "WEB DEVELOPMENT WORKSHOP – NEXORA ’26",
+      "title": "WEB DEVELOPMENT WORKSHOP – NEXORA '26",
       "poster": "/web.jpeg",
       "date": "January 3 – January 7",
       "time": "7:00 PM – 8:00 PM",
@@ -273,7 +323,7 @@ const Events = () => {
     },
     {
       "id": 10,
-      "title": "SELF DEFENSE WORKSHOP – NEXORA ’26",
+      "title": "SELF DEFENSE WORKSHOP – NEXORA '26",
       "poster": "/sd.jpeg",
       "date": "03 January 2026",
       "time": "10:00 AM onwards",
@@ -289,7 +339,7 @@ const Events = () => {
         "certificate": "Activity points will be rewarded",
         "seats": "Limited seats available"
       },
-      "note": "Take a step towards becoming stronger, safer, and more confident. Don’t miss this opportunity to learn a life-saving skill!",
+      "note": "Take a step towards becoming stronger, safer, and more confident. Don't miss this opportunity to learn a life-saving skill!",
       "presentedBy": "24th Annual ISTE State Student Convention",
       "inAssociationWith": "Department of Physical Education, MBCET",
       "contact": {
@@ -299,14 +349,11 @@ const Events = () => {
         "phone2": "7994716579"
       }
     }
-    
   ];
-
- 
 
   // Initialize section refs
   useEffect(() => {
-    sectionRefs.current = sectionRefs.current.slice(0, 1); // Only one section now
+    sectionRefs.current = sectionRefs.current.slice(0, 1);
     eventCardRefs.current = eventCardRefs.current.slice(0, allEvents.length);
   }, []);
 
@@ -362,15 +409,14 @@ const Events = () => {
     return shuffled;
   };
 
-  // Initialize background posters - USING YOUR EVENT POSTERS
+  // Initialize background posters
   useEffect(() => {
-    // Create duplicates of your event posters to have enough for collage
     const allPosters = [];
-    for (let i = 0; i < 3; i++) { // Create 3 copies of each poster
+    for (let i = 0; i < 3; i++) {
       allPosters.push(...allEvents.map(event => event.poster));
     }
     const shuffledPosters = shuffleArray(allPosters);
-    setBackgroundPosters(shuffledPosters.slice(0, 20)); // Use 20 posters for collage
+    setBackgroundPosters(shuffledPosters.slice(0, 20));
   }, []);
 
   // Typing effect for title
@@ -444,7 +490,6 @@ const Events = () => {
       </div>
 
       <div className="events-wrapper">
-        {/* Only ONE section now with ALL events */}
         <section 
           ref={el => sectionRefs.current[0] = el}
           className="events-section"
@@ -478,8 +523,6 @@ const Events = () => {
             ))}
           </div>
         </section>
-
-        {/* REMOVE the second section completely */}
       </div>
 
       {selectedEvent && (
@@ -502,7 +545,9 @@ const Events = () => {
                 />
               </div>
               <div className="modal-info">
-                <span className="modal-category">{selectedEvent.category}</span>
+                <span className={`modal-category ${selectedEvent.id === 0.5 ? 'special-category' : ''}`}>
+                  {selectedEvent.id === 0.5 ? '📄 Research Conference' : selectedEvent.category}
+                </span>
                 <h2 className="modal-title">{selectedEvent.title}</h2>
                 
                 <div className="modal-details">
@@ -595,10 +640,54 @@ const Events = () => {
                   <h3>About Event</h3>
                   <p>{selectedEvent.description}</p>
                   
-                  {selectedEvent.details && (
+                  {/* Special Event - Call for Papers */}
+                  {selectedEvent.id === 0.5 && (
+                    <div className="event-special-details">
+                      <h4>Important Dates:</h4>
+                      <ul>
+                        <li><strong>Abstract Submission:</strong> 01 January 2026</li>
+                        <li><strong>Acceptance of Abstract:</strong> 03 January 2026</li>
+                        <li><strong>Full Paper Submission:</strong> 09 January 2026</li>
+                        <li><strong>Full Paper Acceptance:</strong> 14 January 2026</li>
+                        <li><strong>Paper Presentation:</strong> 31 January 2026</li>
+                      </ul>
+                      
+                      <h4>Research Themes:</h4>
+                      <div className="themes-grid">
+                        {selectedEvent.themes.map((theme, index) => (
+                          <div key={index} className="theme-chip">
+                            {theme}
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <div className="important-note">
+                        <h4>📢 Important Information:</h4>
+                        <ul>
+                          <li>Soft copy of papers should be sent to: <strong>istestudentchapter@mbcet.ac.in</strong></li>
+                          <li>All presented papers will be published in ISTE Annual Convention Souvenir</li>
+                          <li>Organized by: ISTE MBCET Chapter, Mar Baselios College of Engineering and Technology, Nalanchira</li>
+                          <li>Registration Fee: ISTE members: ₹200 | Non-members: ₹250</li>
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Other events details */}
+                  {selectedEvent.id !== 0.5 && selectedEvent.details && (
                     <div className="event-extra-details">
                       <h4>Event Details:</h4>
                       <ul>
+                        {/* Event 0 */}
+                        {selectedEvent.id === 0 && (
+                          <>
+                            <li><strong>Eligibility:</strong> {selectedEvent.details.eligibility}</li>
+                            <li><strong>Rewards:</strong> {selectedEvent.details.rewards}</li>
+                            <li><strong>Selection Criteria:</strong> {selectedEvent.details.criteria}</li>
+                            <li><strong>Benefits:</strong> {selectedEvent.details.benefits}</li>
+                          </>
+                        )}
+                        
                         {/* Event 1 */}
                         {selectedEvent.id === 1 && (
                           <>
@@ -687,6 +776,28 @@ const Events = () => {
                             <li><strong>Participants:</strong> {selectedEvent.details.participants}</li>
                           </>
                         )}
+                        
+                        {/* Event 9 */}
+                        {selectedEvent.id === 9 && (
+                          <>
+                            <li><strong>Mode:</strong> {selectedEvent.details.mode}</li>
+                            <li><strong>Fee:</strong> {selectedEvent.details.fee}</li>
+                            <li><strong>Last Date:</strong> {selectedEvent.details.lastDate}</li>
+                            <li><strong>Certificate:</strong> {selectedEvent.details.certificate}</li>
+                            <li><strong>Seats:</strong> {selectedEvent.details.seats}</li>
+                          </>
+                        )}
+                        
+                        {/* Event 10 */}
+                        {selectedEvent.id === 10 && (
+                          <>
+                            <li><strong>Mode:</strong> {selectedEvent.details.mode}</li>
+                            <li><strong>Fee:</strong> {selectedEvent.details.fee}</li>
+                            <li><strong>Last Date:</strong> {selectedEvent.details.lastDate}</li>
+                            <li><strong>Certificate:</strong> {selectedEvent.details.certificate}</li>
+                            <li><strong>Seats:</strong> {selectedEvent.details.seats}</li>
+                          </>
+                        )}
                       </ul>
                     </div>
                   )}
@@ -701,6 +812,16 @@ const Events = () => {
                         <li><strong>Team of 3:</strong> {selectedEvent.fees.trio}</li>
                         <li><strong>Team of 4:</strong> {selectedEvent.fees.quad}</li>
                       </ul>
+                    </div>
+                  )}
+
+                  {/* Event 9 & 10 - Presented By */}
+                  {selectedEvent.presentedBy && (
+                    <div className="event-presented-by">
+                      <p><strong>Presented by:</strong> {selectedEvent.presentedBy}</p>
+                      {selectedEvent.inAssociationWith && (
+                        <p><strong>In association with:</strong> {selectedEvent.inAssociationWith}</p>
+                      )}
                     </div>
                   )}
 
@@ -740,11 +861,22 @@ const Events = () => {
                   className="register-btn1"
                   target="_blank" 
                   rel="noopener noreferrer"
+                  onClick={(e) => {
+                    if (selectedEvent.registerLink === '#') {
+                      e.preventDefault();
+                      // Optional: Show a message that registration link is coming soon
+                      alert('Registration link will be available soon!');
+                    }
+                  }}
                 >
-                  <span>Register Now</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                  <span>
+                    {selectedEvent.registerLink === '#' ? 'Registration Coming Soon' : 'Register Now'}
+                  </span>
+                  {selectedEvent.registerLink !== '#' && (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
                 </a>
               </div>
             </div>

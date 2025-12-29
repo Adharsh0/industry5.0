@@ -1142,10 +1142,10 @@ background: #000000;
   }
 
   /* Reduce poster visibility further on mobile */
-  .collage-poster {
+  /* .collage-poster {
     opacity: 0.25 !important;
     filter: grayscale(40%) blur(0px);
-  }
+  } */
 
   /* Ensure hero text stays on top */
   .hero-content {
@@ -1163,5 +1163,169 @@ background: #000000;
   .hero-subtitle {
     background: rgba(0, 0, 0, 0.35);
     border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+/* Add to your existing Events.css file */
+
+/* Special Category Badge */
+.modal-category.special-category {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.1));
+  border-color: rgba(168, 85, 247, 0.3);
+  color: #c4b5fd;
+  font-weight: 600;
+}
+
+/* Special Event Styles */
+.event-special-details {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(139, 92, 246, 0.08);
+  border-radius: 12px;
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+.event-special-details h4 {
+  font-size: 0.875rem;
+  color: #a78bfa;
+  margin-bottom: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.event-special-details ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 20px;
+}
+
+.event-special-details li {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.8;
+  padding-left: 12px;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.event-special-details li:before {
+  content: '📅';
+  color: #a78bfa;
+  position: absolute;
+  left: -4px;
+  font-size: 0.75rem;
+}
+
+/* Themes Grid */
+.themes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.theme-chip {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  color: #c4b5fd;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.3;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.theme-chip:hover {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Important Note Section */
+.important-note {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(245, 158, 11, 0.08);
+  border-radius: 10px;
+  border-left: 4px solid #f59e0b;
+}
+
+.important-note h4 {
+  color: #fbbf24;
+  font-size: 0.875rem;
+  margin-bottom: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.important-note ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.important-note li {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  padding-left: 12px;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.important-note li:before {
+  content: '📌';
+  color: #f59e0b;
+  position: absolute;
+  left: -4px;
+  font-size: 0.75rem;
+}
+
+/* Event Presented By */
+.event-presented-by {
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(59, 130, 246, 0.06);
+  border-radius: 10px;
+  border: 1px solid rgba(59, 130, 246, 0.12);
+  backdrop-filter: blur(10px);
+}
+
+.event-presented-by p {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin: 4px 0;
+}
+
+.event-presented-by strong {
+  color: #93c5fd;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .themes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+  }
+  
+  .theme-chip {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .themes-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .event-special-details,
+  .important-note,
+  .event-presented-by {
+    padding: 14px;
   }
 }
