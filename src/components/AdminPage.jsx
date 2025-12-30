@@ -20,7 +20,8 @@ import {
   LogOut,
   GraduationCap,
   BedDouble,
-  CalendarDays
+  CalendarDays,
+  Users
 } from 'lucide-react';
 import './AdminPage.css';
 
@@ -58,6 +59,9 @@ const AdminPage = () => {
   });
   const [authToken, setAuthToken] = useState('');
 
+  // Ambassador code filter
+  const [ambassadorFilter, setAmbassadorFilter] = useState('all');
+
   // API Base URL
   const API_BASE_URL = 'https://iste-backend-fcd3.onrender.com/api';
 
@@ -68,16 +72,12 @@ const AdminPage = () => {
       const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
       
       if (storedToken && isLoggedIn) {
-        // User is already logged in
         setAuthToken(storedToken);
         setIsAuthenticated(true);
         fetchRegistrations(storedToken);
       } else {
-        // User needs to log in
         setIsAuthenticated(false);
         setLoading(false);
-        
-        // Clear any stale/invalid tokens
         localStorage.removeItem('adminToken');
         localStorage.removeItem('adminLoggedIn');
       }
@@ -108,7 +108,6 @@ const AdminPage = () => {
         setIsAuthenticated(true);
         localStorage.setItem('adminToken', result.token);
         localStorage.setItem('adminLoggedIn', 'true');
-        console.log('✅ Admin login successful');
         fetchRegistrations(result.token);
       } else {
         setError(result.message || 'Login failed. Check your credentials.');
@@ -161,7 +160,6 @@ const AdminPage = () => {
       });
       
       if (response.status === 401) {
-        // Token expired or invalid
         handleLogout();
         setError('Your session has expired. Please login again.');
         return;
@@ -172,26 +170,23 @@ const AdminPage = () => {
       }
       
       const result = await response.json();
-      console.log('📊 API Response:', result);
       
       if (result.success) {
-        // UPDATED MAPPING with new pricing for polytechnic
         const mappedUsers = result.data.map(user => {
           const institution = user.institution || 'Engineering';
           const stayPreference = user.stayPreference || 'Without Stay';
           const stayDates = user.stayDates || [];
           const stayDays = stayDates.length;
+          const ambassadorCode = user.ambassadorCode || '';
           
-          // Calculate correct amounts based on UPDATED pricing
           let baseFee;
           if (institution === 'Polytechnic') {
-            baseFee = user.isIsteMember === 'Yes' ? 250 : 300; // UPDATED PRICING
+            baseFee = user.isIsteMember === 'Yes' ? 250 : 300;
           } else {
-            // Engineering students
             baseFee = user.isIsteMember === 'Yes' ? 450 : 500;
           }
           
-          const stayFee = stayDays * 217; // ₹217 per day
+          const stayFee = stayDays * 217;
           const totalAmount = baseFee + stayFee;
           
           return {
@@ -210,6 +205,7 @@ const AdminPage = () => {
             stayDays: stayDays,
             baseFee: baseFee,
             stayFee: stayFee,
+            ambassadorCode: ambassadorCode,
             transactionId: user.transactionId || '',
             amount: user.totalAmount || totalAmount,
             status: user.registrationStatus || 'pending',
@@ -248,18 +244,14 @@ const AdminPage = () => {
           };
         });
         
-        console.log('✅ Mapped users (first 2):', mappedUsers.slice(0, 2));
-        
         setUsers(mappedUsers);
         setFilteredUsers(mappedUsers);
-        
-        // Fetch statistics and stay availability
         fetchStats(token);
       } else {
         throw new Error(result.message || 'Failed to fetch registrations');
       }
     } catch (err) {
-      console.error('❌ Error fetching registrations:', err);
+      console.error('Error fetching registrations:', err);
       setError(err.message || 'Failed to load registrations. Please check your connection.');
     } finally {
       setLoading(false);
@@ -269,14 +261,12 @@ const AdminPage = () => {
   // Fetch statistics and stay availability
   const fetchStats = async (token = authToken) => {
     try {
-      // Fetch regular stats
       const statsResponse = await fetch(`${API_BASE_URL}/admin/stats`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
-      // Fetch stay availability
       const availabilityResponse = await fetch(`${API_BASE_URL}/stay-availability`);
       
       if (statsResponse.ok && availabilityResponse.ok) {
@@ -329,7 +319,6 @@ const AdminPage = () => {
       if (response.ok) {
         const result = await response.json();
         if (result.success) {
-          // Update local state
           const updatedUsers = users.map(user =>
             user.id === userId ? { 
               ...user, 
@@ -353,10 +342,8 @@ const AdminPage = () => {
             statusFilter === 'all' || user.status === statusFilter
           ));
           
-          // Update stats
           fetchStats();
           
-          // If modal is open, update selected user
           if (selectedUser && selectedUser.id === userId) {
             setSelectedUser({ 
               ...selectedUser, 
@@ -374,8 +361,6 @@ const AdminPage = () => {
               rejectionReason: ''
             });
           }
-          
-          console.log(`✅ Approved registration for: ${userName}`);
         }
       } else {
         setError('Failed to approve registration');
@@ -403,7 +388,6 @@ const AdminPage = () => {
       if (response.ok) {
         const result = await response.json();
         if (result.success) {
-          // Update local state
           const updatedUsers = users.map(user =>
             user.id === userId ? { 
               ...user, 
@@ -427,10 +411,8 @@ const AdminPage = () => {
             statusFilter === 'all' || user.status === statusFilter
           ));
           
-          // Update stats
           fetchStats();
           
-          // If modal is open, update selected user
           if (selectedUser && selectedUser.id === userId) {
             setSelectedUser({ 
               ...selectedUser, 
@@ -448,8 +430,6 @@ const AdminPage = () => {
               approvedAt: ''
             });
           }
-          
-          console.log(`❌ Rejected registration for: ${userName}`);
         }
       } else {
         setError('Failed to reject registration');
@@ -488,6 +468,7 @@ Congratulations! Your registration for ISTE INDUSTRY 5.0 has been APPROVED.
 • College: ${user.college}
 • Department: ${user.department} - ${user.year} Year
 • Institution Type: ${user.institution}
+• Ambassador Code: ${user.ambassadorCode || 'None'}
 • Accommodation: ${user.stayPreference} 
 ${user.stayPreference === 'With Stay' ? `• Stay Days: ${user.stayDays} day${user.stayDays !== 1 ? 's' : ''}` : ''}
 ${stayDatesText ? `• ${stayDatesText}` : ''}
@@ -518,6 +499,7 @@ We regret to inform you that your registration for ISTE INDUSTRY 5.0 could not b
 • Registration ID: ${registrationId}
 • Name: ${user.fullName}
 • College: ${user.college}
+• Ambassador Code: ${user.ambassadorCode || 'None'}
 • Transaction ID: ${user.transactionId}
 • Amount: ₹${user.amount}
 • Status: REJECTED ❌
@@ -548,6 +530,7 @@ Your registration for ISTE INDUSTRY 5.0 is currently PENDING approval.
 • Registration ID: ${registrationId}
 • Name: ${user.fullName}
 • College: ${user.college}
+• Ambassador Code: ${user.ambassadorCode || 'None'}
 • Department: ${user.department}
 • Transaction ID: ${user.transactionId}
 • Status: PENDING ⏳
@@ -565,19 +548,12 @@ ISTE INDUSTRY 5.0 Team`
     const emailContent = generateEmailContent(user);
     const adminEmail = 'iste.industry5.0@gmail.com';
     
-    // Create Gmail web interface URL
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(user.email)}&su=${encodeURIComponent(emailContent.subject)}&body=${encodeURIComponent(emailContent.body)}&cc=${encodeURIComponent(adminEmail)}}`;
     
-    // Debug: Log the generated URL
-    console.log('📧 Generated Gmail URL:', gmailUrl);
-    console.log('📧 Sending to:', user.email);
-    console.log('📧 Subject:', emailContent.subject);
-    
-    // Open Gmail in new tab
     window.open(gmailUrl, '_blank', 'noopener,noreferrer');
   };
 
-  // Filter users based on search and status
+  // Filter users based on search, status, and ambassador code
   useEffect(() => {
     let filtered = users;
 
@@ -588,7 +564,8 @@ ISTE INDUSTRY 5.0 Team`
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.college.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.transactionId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.institution.toLowerCase().includes(searchTerm.toLowerCase())
+        user.institution.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.ambassadorCode && user.ambassadorCode.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
@@ -597,8 +574,17 @@ ISTE INDUSTRY 5.0 Team`
       filtered = filtered.filter(user => user.status === statusFilter);
     }
 
+    // Filter by ambassador code
+    if (ambassadorFilter !== 'all') {
+      if (ambassadorFilter === 'withCode') {
+        filtered = filtered.filter(user => user.ambassadorCode && user.ambassadorCode.trim() !== '');
+      } else if (ambassadorFilter === 'withoutCode') {
+        filtered = filtered.filter(user => !user.ambassadorCode || user.ambassadorCode.trim() === '');
+      }
+    }
+
     setFilteredUsers(filtered);
-  }, [searchTerm, statusFilter, users]);
+  }, [searchTerm, statusFilter, ambassadorFilter, users]);
 
   const handleViewDetails = (user) => {
     setSelectedUser(user);
@@ -608,8 +594,9 @@ ISTE INDUSTRY 5.0 Team`
   const exportToCSV = () => {
     const headers = [
       'Name', 'Email', 'Phone', 'Institution Type', 'College', 'Department', 'Year', 
-      'ISTE Member', 'ISTE Reg No', 'Accommodation', 'Stay Days', 'Stay Dates', 'Transaction ID', 
-      'Amount', 'Status', 'Registration Date', 'Payment Status', 'Approved By', 'Approval Date', 'Rejection Reason'
+      'ISTE Member', 'ISTE Reg No', 'Ambassador Code', 'Accommodation', 'Stay Days', 'Stay Dates', 
+      'Transaction ID', 'Amount', 'Status', 'Registration Date', 'Payment Status', 
+      'Approved By', 'Approval Date', 'Rejection Reason'
     ];
     
     const csvData = filteredUsers.map(user => [
@@ -622,6 +609,7 @@ ISTE INDUSTRY 5.0 Team`
       user.year,
       user.isIsteMember,
       user.isteRegistrationNumber || '',
+      user.ambassadorCode || '',
       user.stayPreference,
       user.stayDays,
       user.stayDates ? user.stayDates.join(', ') : '',
@@ -675,6 +663,23 @@ ISTE INDUSTRY 5.0 Team`
       <span className={`institution-badge ${institutionConfig.color}`}>
         <span className="badge-icon">{institutionConfig.icon}</span>
         <span className="badge-text">{institutionConfig.text}</span>
+      </span>
+    );
+  };
+
+  const getAmbassadorBadge = (ambassadorCode) => {
+    if (ambassadorCode && ambassadorCode.trim() !== '') {
+      return (
+        <span className="ambassador-badge">
+          <span className="badge-icon">👥</span>
+          <span className="badge-text">{ambassadorCode}</span>
+        </span>
+      );
+    }
+    return (
+      <span className="ambassador-badge empty">
+        <span className="badge-icon">—</span>
+        <span className="badge-text">No Code</span>
       </span>
     );
   };
@@ -855,7 +860,7 @@ ISTE INDUSTRY 5.0 Team`
               <Search size={20} className="search-icon" />
               <input
                 type="text"
-                placeholder="Search by name, email, college, institution or transaction ID..."
+                placeholder="Search by name, email, college, institution, ambassador code or transaction ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="search-input"
@@ -873,6 +878,19 @@ ISTE INDUSTRY 5.0 Team`
                 <option value="pending">Pending ({stats.pending})</option>
                 <option value="approved">Approved ({stats.approved})</option>
                 <option value="rejected">Rejected ({stats.rejected})</option>
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <Users size={16} />
+              <select
+                value={ambassadorFilter}
+                onChange={(e) => setAmbassadorFilter(e.target.value)}
+                className="filter-select"
+              >
+                <option value="all">All Ambassador Codes</option>
+                <option value="withCode">With Code</option>
+                <option value="withoutCode">Without Code</option>
               </select>
             </div>
           </div>
@@ -905,6 +923,7 @@ ISTE INDUSTRY 5.0 Team`
                     onClick={() => {
                       setSearchTerm('');
                       setStatusFilter('all');
+                      setAmbassadorFilter('all');
                     }} 
                     className="clear-filters-btn"
                   >
@@ -919,6 +938,7 @@ ISTE INDUSTRY 5.0 Team`
                     <th>Name</th>
                     <th>Institution</th>
                     <th>College</th>
+                    <th>Ambassador Code</th>
                     <th>Accommodation</th>
                     <th>Transaction ID</th>
                     <th>Amount</th>
@@ -947,6 +967,9 @@ ISTE INDUSTRY 5.0 Team`
                         </div>
                       </td>
                       <td>
+                        {getAmbassadorBadge(user.ambassadorCode)}
+                      </td>
+                      <td>
                         {getStayBadge(user.stayPreference, user.stayDays)}
                       </td>
                       <td className="transaction-id">{user.transactionId}</td>
@@ -962,7 +985,6 @@ ISTE INDUSTRY 5.0 Team`
                             <Eye size={16} />
                           </button>
                           
-                          {/* Add Send Email button for approved/rejected users */}
                           {(user.status === 'approved' || user.status === 'rejected') && (
                             <button
                               onClick={() => handleSendEmail(user)}
@@ -1052,7 +1074,7 @@ ISTE INDUSTRY 5.0 Team`
                       {getInstitutionBadge(selectedUser.institution)}
                       <span className="institution-note">
                         Base Fee: {selectedUser.institution === 'Polytechnic' 
-                          ? (selectedUser.isIsteMember === 'Yes' ? '₹250' : '₹300') // UPDATED
+                          ? (selectedUser.isIsteMember === 'Yes' ? '₹250' : '₹300')
                           : (selectedUser.isIsteMember === 'Yes' ? '₹450' : '₹500')}
                       </span>
                     </div>
@@ -1088,6 +1110,18 @@ ISTE INDUSTRY 5.0 Team`
                 </div>
 
                 <div className="detail-group">
+                  <Users size={18} className="detail-icon" />
+                  <div>
+                    <label>Campus Ambassador Code</label>
+                    <p className="detail-value">
+                      {selectedUser.ambassadorCode && selectedUser.ambassadorCode.trim() !== '' 
+                        ? selectedUser.ambassadorCode 
+                        : 'None'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="detail-group">
                   <BedDouble size={18} className="detail-icon" />
                   <div>
                     <label>Accommodation</label>
@@ -1100,7 +1134,7 @@ ISTE INDUSTRY 5.0 Team`
                       {selectedUser.stayPreference === 'With Stay' && selectedUser.stayDays > 0 && (
                         <>
                           <span className="stay-cost">
-                            • Cost: ₹${217 * selectedUser.stayDays}
+                            • Cost: ₹{217 * selectedUser.stayDays}
                           </span>
                           {selectedUser.stayDates && selectedUser.stayDates.length > 0 && (
                             <div className="stay-dates-list">
@@ -1146,14 +1180,14 @@ ISTE INDUSTRY 5.0 Team`
                       <span>Base Fee ({selectedUser.institution}):</span>
                       <span>
                         ₹{selectedUser.institution === 'Polytechnic' 
-                          ? (selectedUser.isIsteMember === 'Yes' ? '250' : '300') // UPDATED
+                          ? (selectedUser.isIsteMember === 'Yes' ? '250' : '300')
                           : (selectedUser.isIsteMember === 'Yes' ? '450' : '500')}
                       </span>
                     </div>
                     {selectedUser.stayPreference === 'With Stay' && selectedUser.stayDays > 0 && (
                       <div className="payment-item">
                         <span>Accommodation ({selectedUser.stayDays} day{selectedUser.stayDays !== 1 ? 's' : ''}):</span>
-                        <span>₹${217 * selectedUser.stayDays}</span>
+                        <span>₹{217 * selectedUser.stayDays}</span>
                       </div>
                     )}
                     <div className="payment-total">
@@ -1212,7 +1246,6 @@ ISTE INDUSTRY 5.0 Team`
                 </>
               )}
               
-              {/* Add Send Email button in modal */}
               {(selectedUser.status === 'approved' || selectedUser.status === 'rejected') && (
                 <button
                   onClick={() => {

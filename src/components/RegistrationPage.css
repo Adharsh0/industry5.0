@@ -3795,3 +3795,130 @@ select.modern-input {
 .payment-btn:active:not(:disabled) svg {
   transform: translateX(4px) scale(0.9);
 }
+/* Ambassador Code Styles - UPDATED FOR MOBILE */
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+/* Specific style for ambassador input */
+.input-group:has(input[name="ambassadorCode"]) {
+  margin-bottom: 10px;
+}
+
+.optional-note {
+  margin-top: 4px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: left;
+  padding: 0 16px;
+  line-height: 1.3;
+  width: 100%;
+  display: block;
+}
+
+.optional-text {
+  display: block;
+  margin-left: 0;
+}
+
+.optional-note::before {
+  content: '';
+  display: none;
+}
+
+.ambassador-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  background: rgba(74, 144, 226, 0.08);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  border-left: 3px solid #4A90E2;
+  line-height: 1.3;
+}
+
+.ambassador-note svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Mobile-specific fixes */
+@media (max-width: 768px) {
+  /* Ambassador input field */
+  .input-group:has(input[name="ambassadorCode"]) .input-icon {
+    left: 12px;
+    top: 16px;
+    transform: none;
+  }
+  
+  .input-group:has(input[name="ambassadorCode"]) .modern-input {
+    padding: 14px 14px 14px 40px;
+    min-height: 48px;
+    font-size: 14px;
+  }
+  
+  .optional-note {
+    padding: 0 12px;
+    font-size: 10px;
+    margin-top: 2px;
+  }
+  
+  .ambassador-note {
+    font-size: 10px;
+    padding: 6px 10px;
+    gap: 5px;
+    margin-top: 6px;
+  }
+  
+  .ambassador-note svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Further adjustments for very small screens */
+  .input-group:has(input[name="ambassadorCode"]) .modern-input {
+    padding: 12px 12px 12px 38px;
+    min-height: 44px;
+  }
+  
+  .input-group:has(input[name="ambassadorCode"]) .input-icon {
+    left: 10px;
+    width: 16px;
+    height: 16px;
+  }
+  
+  .optional-note {
+    font-size: 9px;
+    padding: 0 10px;
+  }
+  
+  .ambassador-note {
+    font-size: 9px;
+    padding: 5px 8px;
+  }
+}
+
+/* Ensure the Users icon is properly sized */
+.input-group svg[data-lucide="users"] {
+  width: 18px;
+  height: 18px;
+}
+
+/* Fix for the input group container */
+.input-group {
+  display: block;
+  width: 100%;
+}
+
+/* Clearfix for input group */
+.input-group::after {
+  content: '';
+  display: table;
+  clear: both;
+}

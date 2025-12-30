@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   User, Mail, Phone, Building2, Send, Calendar,
   MapPin, GraduationCap, CreditCard, BedDouble, 
-  CheckCircle2, Loader2, AlertCircle, Clock, Download, ExternalLink, School
+  CheckCircle2, Loader2, AlertCircle, Clock, Download, ExternalLink, School,
+  Users
 } from 'lucide-react';
 import './RegistrationPage.css';
 
@@ -25,6 +26,7 @@ const RegistrationPage = () => {
     isteRegistrationNumber: '',
     stayPreference: '',
     stayDates: [],
+    ambassadorCode: '', // NEW FIELD
     acknowledgement: false
   });
 
@@ -652,6 +654,22 @@ const RegistrationPage = () => {
                       </div>
                     )}
 
+                    {/* NEW AMBASSADOR CODE FIELD */}
+                    <div className="input-group">
+                      <Users className="input-icon" size={20} />
+                      <input
+                        type="text"
+                        name="ambassadorCode"
+                        placeholder="Campus Ambassador Code (Optional)"
+                        value={formData.ambassadorCode}
+                        onChange={handleChange}
+                        className="modern-input"
+                      />
+                      <div className="optional-note">
+                        <span className="optional-text">Optional - Enter if you have a campus ambassador referral code</span>
+                      </div>
+                    </div>
+
                     <div className="charges-summary">
                       <div className="charges-content">
                         <h4>Payment Summary</h4>
@@ -785,6 +803,10 @@ const RegistrationPage = () => {
                 <div className="stay-availability-badge">
                   <BedDouble size={14} />
                   <span>Stay spots left: {stayAvailability.remaining}</span>
+                </div>
+                <div className="ambassador-note">
+                  <AlertCircle size={14} />
+                  <span>Campus Ambassador codes are optional</span>
                 </div>
               </div>
             </div>
@@ -934,6 +956,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
             return utcDate.toISOString();
           }) : [],
         stayDays: formData.stayPreference === 'With Stay' ? formData.stayDates.length : 0,
+        ambassadorCode: formData.ambassadorCode ? formData.ambassadorCode.trim() : '', // NEW FIELD
         baseFee: calculateBaseFee(),
         totalAmount: totalAmount,
         transactionId: transactionId.trim()
@@ -1294,6 +1317,12 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                 </span>
               </div>
               ` : ''}
+              ${formData.ambassadorCode ? `
+              <div class="detail-item">
+                <span class="detail-label">Ambassador Code</span>
+                <span class="detail-value">${formData.ambassadorCode}</span>
+              </div>
+              ` : ''}
             </div>
           </div>
           
@@ -1450,6 +1479,12 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                           });
                         }).join(', ')}
                       </span>
+                    </div>
+                  )}
+                  {formData.ambassadorCode && (
+                    <div className="detail-item">
+                      <span className="detail-label">Ambassador Code:</span>
+                      <span className="detail-value">{formData.ambassadorCode}</span>
                     </div>
                   )}
                   <div className="detail-item">
@@ -1678,6 +1713,12 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                         });
                       }).join(', ')}
                     </span>
+                  </div>
+                )}
+                {formData.ambassadorCode && (
+                  <div className="summary-item">
+                    <span className="summary-label">Ambassador Code:</span>
+                    <span className="summary-value">{formData.ambassadorCode}</span>
                   </div>
                 )}
                 <div className="summary-item">
