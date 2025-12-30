@@ -133,7 +133,7 @@ const RegistrationPage = () => {
     // Determine base fee based on institution and ISTE membership
     let baseFee;
     if (formData.institution === 'Polytechnic') {
-      baseFee = formData.isIsteMember === 'Yes' ? 300 : 350;
+      baseFee = formData.isIsteMember === 'Yes' ? 250 : 300; // UPDATED PRICING
     } else {
       // Engineering students
       baseFee = formData.isIsteMember === 'Yes' ? 450 : 500;
@@ -142,7 +142,7 @@ const RegistrationPage = () => {
     let total = baseFee;
     
     if (formData.stayPreference === 'With Stay' && formData.stayDates.length > 0) {
-      total += (217 * formData.stayDates.length); // UPDATED: ₹217 per day
+      total += (217 * formData.stayDates.length); // ₹217 per day
     }
     
     return total;
@@ -150,7 +150,7 @@ const RegistrationPage = () => {
 
   const calculateBaseFee = () => {
     if (formData.institution === 'Polytechnic') {
-      return formData.isIsteMember === 'Yes' ? 300 : 350;
+      return formData.isIsteMember === 'Yes' ? 250 : 300; // UPDATED PRICING
     }
     // Engineering students
     return formData.isIsteMember === 'Yes' ? 450 : 500;
@@ -399,7 +399,7 @@ const RegistrationPage = () => {
                       >
                         <option value="">Select Institution Type *</option>
                         <option value="Engineering">Engineering College (₹500 base fee, ₹450 for ISTE members)</option>
-                        <option value="Polytechnic">Polytechnic College (₹350 base fee, ₹300 for ISTE members)</option>
+                        <option value="Polytechnic">Polytechnic College (₹300 base fee, ₹250 for ISTE members)</option> {/* UPDATED */}
                       </select>
                     </div>
 
@@ -772,11 +772,11 @@ const RegistrationPage = () => {
                 </div>
                 <div className="price-item">
                   <span className="price-label">Polytechnic College (Non-ISTE)</span>
-                  <span className="price-value">₹350</span>
+                  <span className="price-value">₹300</span> {/* UPDATED */}
                 </div>
                 <div className="price-item">
                   <span className="price-label">Polytechnic College (ISTE Member)</span>
-                  <span className="price-value">₹300</span>
+                  <span className="price-value">₹250</span> {/* UPDATED */}
                 </div>
                 <div className="price-item">
                   <span className="price-label">Accommodation (per day)</span>
@@ -906,7 +906,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
       // Calculate base fee for backend
       const calculateBaseFee = () => {
         if (formData.institution === 'Polytechnic') {
-          return formData.isIsteMember === 'Yes' ? 300 : 350;
+          return formData.isIsteMember === 'Yes' ? 250 : 300; // UPDATED PRICING
         }
         // Engineering students
         return formData.isIsteMember === 'Yes' ? 450 : 500;
@@ -1303,7 +1303,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
               <span class="amount-label">Registration Fee (${formData.institution})</span>
               <span class="amount-value">
                 ₹${formData.institution === 'Polytechnic' 
-                  ? (formData.isIsteMember === 'Yes' ? '300' : '350')
+                  ? (formData.isIsteMember === 'Yes' ? '250' : '300') // UPDATED
                   : (formData.isIsteMember === 'Yes' ? '450' : '500')}
               </span>
             </div>
@@ -1456,7 +1456,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                     <span className="detail-label">Base Fee:</span>
                     <span className="detail-value">
                       ₹${formData.institution === 'Polytechnic' 
-                        ? (formData.isIsteMember === 'Yes' ? 300 : 350)
+                        ? (formData.isIsteMember === 'Yes' ? 250 : 300) // UPDATED
                         : (formData.isIsteMember === 'Yes' ? 450 : 500)}
                     </span>
                   </div>
@@ -1684,7 +1684,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                   <span className="summary-label">Base Fee:</span>
                   <span className="summary-value">
                     ₹${formData.institution === 'Polytechnic' 
-                      ? (formData.isIsteMember === 'Yes' ? 300 : 350)
+                      ? (formData.isIsteMember === 'Yes' ? 250 : 300) // UPDATED
                       : (formData.isIsteMember === 'Yes' ? 450 : 500)}
                   </span>
                 </div>

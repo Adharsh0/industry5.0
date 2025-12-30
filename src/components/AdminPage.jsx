@@ -175,23 +175,23 @@ const AdminPage = () => {
       console.log('📊 API Response:', result);
       
       if (result.success) {
-        // UPDATED MAPPING with new pricing and stay capacity
+        // UPDATED MAPPING with new pricing for polytechnic
         const mappedUsers = result.data.map(user => {
           const institution = user.institution || 'Engineering';
           const stayPreference = user.stayPreference || 'Without Stay';
           const stayDates = user.stayDates || [];
           const stayDays = stayDates.length;
           
-          // Calculate correct amounts based on NEW pricing
+          // Calculate correct amounts based on UPDATED pricing
           let baseFee;
           if (institution === 'Polytechnic') {
-            baseFee = user.isIsteMember === 'Yes' ? 300 : 350;
+            baseFee = user.isIsteMember === 'Yes' ? 250 : 300; // UPDATED PRICING
           } else {
             // Engineering students
             baseFee = user.isIsteMember === 'Yes' ? 450 : 500;
           }
           
-          const stayFee = stayDays * 217; // UPDATED: ₹217 per day
+          const stayFee = stayDays * 217; // ₹217 per day
           const totalAmount = baseFee + stayFee;
           
           return {
@@ -1052,7 +1052,7 @@ ISTE INDUSTRY 5.0 Team`
                       {getInstitutionBadge(selectedUser.institution)}
                       <span className="institution-note">
                         Base Fee: {selectedUser.institution === 'Polytechnic' 
-                          ? (selectedUser.isIsteMember === 'Yes' ? '₹300' : '₹350')
+                          ? (selectedUser.isIsteMember === 'Yes' ? '₹250' : '₹300') // UPDATED
                           : (selectedUser.isIsteMember === 'Yes' ? '₹450' : '₹500')}
                       </span>
                     </div>
@@ -1146,7 +1146,7 @@ ISTE INDUSTRY 5.0 Team`
                       <span>Base Fee ({selectedUser.institution}):</span>
                       <span>
                         ₹{selectedUser.institution === 'Polytechnic' 
-                          ? (selectedUser.isIsteMember === 'Yes' ? '300' : '350')
+                          ? (selectedUser.isIsteMember === 'Yes' ? '250' : '300') // UPDATED
                           : (selectedUser.isIsteMember === 'Yes' ? '450' : '500')}
                       </span>
                     </div>
