@@ -1491,7 +1491,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                     <span className="detail-label">Base Fee:</span>
                     <span className="detail-value">
                       ₹{formData.institution === 'Polytechnic' 
-                        ? (formData.isIsteMember === 'Yes' ? 250 : 300) // UPDATED
+                        ? (formData.isIsteMember === 'Yes' ? 250 : 300) 
                         : (formData.isIsteMember === 'Yes' ? 450 : 500)}
                     </span>
                   </div>

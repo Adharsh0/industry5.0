@@ -45,7 +45,7 @@ const Events = () => {
       time: "Paper Presentation: 31 Jan 2026",
       venue: "ISTE Annual State Students' Convention 2026, NEXORA",
       description: "We invite undergraduate and postgraduate students to submit original research papers for presentation at NEXORA 2026. Present your research, get published in our convention souvenir, and connect with the technical education community.",
-      registerLink: "#",
+      registerLink: "https://forms.gle/bbChoVven462q6vp9",
       category: "Special Event",
       isHighlighted: true,
       details: {
