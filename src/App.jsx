@@ -12,8 +12,9 @@ import HostSection from './components/HostSection';
 import HostedPage from './components/HostedPage';
 import SplashScreen from './components/SplashScreen';
 import Events from './components/Events';
-import CustomCursor from './components/CustomCursor'; // Import CustomCursor
+import CustomCursor from './components/CustomCursor';
 import CountdownTimer from './components/CountdownTimer';
+import SchedulePage from './components/SchedulePage'; // Import SchedulePage
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -58,10 +59,10 @@ function App() {
                   <CountdownTimer />
                   <HostedPage />
                   <AboutSection />
-                
                   <ContactSection />
                 </>
               } />
+              <Route path="/schedule" element={<SchedulePage />} /> {/* Schedule Route */}
               <Route path="/events" element={<Events />} />
               <Route path="/register" element={<RegistrationPage />} />
               <Route path="/host" element={<HostSection />} />

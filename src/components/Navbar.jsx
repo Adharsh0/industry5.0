@@ -64,7 +64,16 @@ const Navbar = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } 
     },
-    { id: 'schedule', label: 'Schedule', icon: <Calendar size={18} />, action: () => handleSectionClick('schedule') },
+    { 
+      id: 'schedule', 
+      label: 'Schedule', 
+      icon: <Calendar size={18} />, 
+      action: () => { 
+        closeMenu(); 
+        navigate('/schedule');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } 
+    },
     { id: 'host', label: 'Host', icon: <UserCheck size={18} />, action: () => { closeMenu(); navigate('/host'); } },
     { id: 'sponsors', label: 'Sponsors', icon: <Users size={18} />, action: () => handleSectionClick('sponsors') },
     { id: 'contact', label: 'Contact', icon: <Mail size={18} />, action: () => handleSectionClick('contact') },

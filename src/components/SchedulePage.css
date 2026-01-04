@@ -1,0 +1,651 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap');
+
+/* ==================== ROOT & VARIABLES ==================== */
+:root {
+  --bg: radial-gradient(circle at center, #070b12, #000);
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, 0.65);
+  --accent: #4A90E2;
+  --accent-light: #5a9aee;
+  --accent-dark: #357ABD;
+}
+
+/* ==================== GLOBAL RESETS ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ==================== MAIN CONTAINER ==================== */
+.schedule-page-container {
+  min-height: 100vh;
+  background: var(--bg);
+  position: relative;
+  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+  padding-top: 100px;
+  width: 100vw;
+  max-width: 100%;
+}
+
+/* ==================== BACKGROUND SHAPES ==================== */
+.background-orbs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.08;
+  filter: blur(60px);
+}
+
+.orb-1 {
+  width: 280px;
+  height: 280px;
+  top: 10%;
+  right: 10%;
+  background: var(--accent);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.orb-2 {
+  width: 220px;
+  height: 220px;
+  bottom: 20%;
+  left: 8%;
+  background: var(--accent);
+  animation: pulse 4s ease-in-out infinite 1s;
+}
+
+.orb-3 {
+  width: 200px;
+  height: 200px;
+  top: 40%;
+  left: 15%;
+  background: var(--accent-light);
+  animation: pulse 4s ease-in-out infinite 0.5s;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.08;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.12;
+    transform: scale(1.05);
+  }
+}
+
+/* ==================== GRID OVERLAY ==================== */
+
+
+/* ==================== BACK BUTTON ==================== */
+.back-button {
+  position: fixed;
+  top: 100px;
+  left: 20px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: 25px;
+  color: var(--text);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(74, 144, 226, 0.4);
+  transform: translateX(-5px);
+}
+
+.back-button.scrolled {
+  top: 20px;
+}
+
+/* ==================== CONTENT WRAPPER ==================== */
+.content-wrapper {
+  position: relative;
+  z-index: 10;
+  padding: 40px clamp(20px, 4vw, 40px) 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ==================== PAGE HEADER ==================== */
+.page-header {
+  text-align: center;
+  margin-bottom: clamp(50px, 6vw, 70px);
+  width: 100%;
+}
+
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: rgba(74, 144, 226, 0.1);
+  border: 1px solid rgba(74, 144, 226, 0.4);
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  margin-bottom: 24px;
+  color: var(--accent);
+}
+
+.badge-text {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.main-title {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 700;
+  font-family: 'Space Grotesk', sans-serif;
+  margin-bottom: 20px;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.title-gradient {
+  color: var(--accent);
+}
+
+.header-description {
+  color: var(--muted);
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ==================== FOLDERS CONTAINER ==================== */
+.folders-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 60px;
+  margin-bottom: 50px;
+  width: 100%;
+}
+
+/* ==================== FOLDER WRAPPER ==================== */
+.folder-wrapper {
+  position: relative;
+  height: 420px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUp 0.6s ease forwards;
+  perspective: 1000px;
+}
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== FOLDER ==================== */
+.folder {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  height: 280px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.folder-tab {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 140px;
+  height: 40px;
+  background: var(--accent);
+  border-radius: 12px 12px 0 0;
+  z-index: 2;
+}
+
+.folder-body {
+  position: absolute;
+  top: 35px;
+  left: 0;
+  right: 0;
+  height: 245px;
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(74, 144, 226, 0.08));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(74, 144, 226, 0.3);
+  border-radius: 16px;
+  overflow: visible;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.folder-wrapper:hover .folder-body {
+  border-color: rgba(74, 144, 226, 0.5);
+  box-shadow: 0 15px 50px rgba(74, 144, 226, 0.2);
+}
+
+.folder-content {
+  padding: 50px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.folder-title {
+  font-size: clamp(1.6rem, 2vw, 1.9rem);
+  font-weight: 700;
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.folder-subtitle {
+  font-size: 1.05rem;
+  color: var(--accent-light);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.folder-details {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ==================== PDF FILE (COMES OUT FROM FOLDER) ==================== */
+.pdf-file {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%) translateY(250px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.folder-wrapper:hover .pdf-file {
+  transform: translateX(-50%) translateY(-30px);
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ==================== PDF PAPER ==================== */
+.pdf-paper {
+  width: 240px;
+  height: 300px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+  transform-origin: bottom center;
+  transition: all 0.3s ease;
+}
+
+.folder-wrapper:hover .pdf-paper {
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+
+.pdf-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 40px 40px 0;
+  border-color: transparent #f7fafc transparent transparent;
+}
+
+.pdf-red-bar {
+  height: 50px;
+  background: linear-gradient(135deg, #e53e3e, #c53030);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 2px;
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+.pdf-content {
+  padding: 24px 20px;
+}
+
+.pdf-title-section {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.pdf-title-section h4 {
+  font-size: 20px;
+  color: #1a202c;
+  margin-bottom: 4px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+}
+
+.pdf-title-section p {
+  font-size: 14px;
+  color: #718096;
+  font-weight: 500;
+}
+
+.pdf-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pdf-text-line {
+  height: 4px;
+  background: #cbd5e0;
+  border-radius: 2px;
+}
+
+.pdf-text-line.short {
+  width: 60%;
+}
+
+/* ==================== DOWNLOAD BUTTON ==================== */
+.pdf-download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 8px 24px rgba(74, 144, 226, 0.3);
+  transform: scale(0.95);
+  opacity: 0.9;
+}
+
+.folder-wrapper:hover .pdf-download-btn {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.pdf-download-btn:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 12px 32px rgba(74, 144, 226, 0.5);
+}
+
+.pdf-download-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.pdf-download-btn:hover svg {
+  transform: translateY(2px);
+}
+
+/* ==================== BOTTOM INFO ==================== */
+.bottom-info {
+  text-align: center;
+  padding: 24px;
+  background: rgba(74, 144, 226, 0.05);
+  border: 1px solid rgba(74, 144, 226, 0.15);
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+}
+
+.bottom-info p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ==================== BOTTOM LINE ==================== */
+.bottom-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.5), transparent);
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 900px) {
+  .folders-container {
+    grid-template-columns: 1fr;
+    gap: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .schedule-page-container {
+    padding-top: 80px;
+  }
+
+  .back-button {
+    top: 80px;
+    left: 15px;
+    padding: 8px 14px;
+  }
+
+  .back-button.scrolled {
+    top: 15px;
+  }
+
+  .back-text {
+    display: none;
+  }
+
+  .content-wrapper {
+    padding: 30px 20px 60px;
+  }
+
+  .page-header {
+    margin-bottom: 40px;
+  }
+
+  .folders-container {
+    gap: 70px;
+    margin-bottom: 40px;
+  }
+
+  .folder-wrapper {
+    height: 380px;
+  }
+
+  .folder {
+    height: 260px;
+  }
+
+  .folder-body {
+    height: 225px;
+  }
+
+  .folder-content {
+    padding: 40px 24px 24px;
+  }
+
+  .pdf-file {
+    bottom: 180px;
+  }
+
+  .folder-wrapper:hover .pdf-file {
+    transform: translateX(-50%) translateY(-60px);
+  }
+
+  .pdf-paper {
+    width: 200px;
+    height: 250px;
+  }
+
+  .pdf-red-bar {
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .pdf-content {
+    padding: 20px 16px;
+  }
+
+  .pdf-title-section h4 {
+    font-size: 16px;
+  }
+
+  .pdf-download-btn {
+    padding: 10px 24px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .folders-container {
+    grid-template-columns: 1fr;
+  }
+
+  .folder-wrapper {
+    height: 360px;
+  }
+
+  .folder {
+    height: 240px;
+    max-width: 100%;
+  }
+
+  .folder-tab {
+    width: 120px;
+    height: 35px;
+  }
+
+  .folder-body {
+    top: 30px;
+    height: 210px;
+  }
+
+  .folder-content {
+    padding: 35px 20px 20px;
+  }
+
+  .pdf-file {
+    bottom: 160px;
+  }
+
+  .folder-wrapper:hover .pdf-file {
+    transform: translateX(-50%) translateY(-50px);
+  }
+
+  .pdf-paper {
+    width: 180px;
+    height: 220px;
+  }
+
+  .pdf-red-bar {
+    height: 35px;
+    font-size: 12px;
+  }
+
+  .pdf-content {
+    padding: 16px 12px;
+  }
+
+  .pdf-title-section {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+
+  .pdf-title-section h4 {
+    font-size: 14px;
+  }
+
+  .pdf-title-section p {
+    font-size: 12px;
+  }
+
+  .pdf-lines {
+    gap: 8px;
+  }
+
+  .pdf-text-line {
+    height: 3px;
+  }
+
+  .pdf-download-btn {
+    padding: 8px 20px;
+    font-size: 0.85rem;
+  }
+
+  .bottom-info {
+    padding: 20px;
+  }
+}
+
+/* ==================== REDUCED MOTION ==================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .folder-wrapper {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .pdf-file {
+    transition: opacity 0.3s ease !important;
+  }
+}
+
+/* ==================== SCROLLBAR ==================== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-light);
+}
