@@ -20,7 +20,7 @@ const SchedulePage = () => {
       title: 'Engineering',
       subtitle: 'Event Schedule',
       fileName: 'engineering_schedule.pdf',
-      downloadLink: 'frontend/public/flyer/Engineering Flyer.pdf',
+      downloadLink: '/flyer/Engineering Flyer.pdf',
       details: 'Download to view details',
       color: '#4A90E2'
     },
@@ -29,7 +29,7 @@ const SchedulePage = () => {
       title: 'Polytechnic',
       subtitle: 'Event Schedule',
       fileName: 'polytechnic_schedule.pdf',
-      downloadLink: 'frontend/public/flyer/Polytechnical Flyer.pdf',
+      downloadLink: '/flyer/Polytechnical Flyer.pdf',
       details: 'Download to view the details',
       color: '#6C63FF'
     }
