@@ -348,6 +348,35 @@ const Events = () => {
         "name2": "Jithin Joy",
         "phone2": "7994716579"
       }
+    },
+    {
+      "id": 11,
+      "title": "FUSION 360 - AUTODESK CERTIFIED CAD WORKSHOP",
+      "poster": "/fusion.jpg",
+      "date": "10 & 11 January 2026",
+      "time": "9:00 AM – 5:00 PM",
+      "venue": "Mar Baselios College of Engineering and Technology, Nalanchira, Thiruvananthapuram",
+      "description": "Turn your ideas into industry-ready designs with a 2-day Autodesk-certified CAD training program on Fusion 360. Learn directly from certified professionals through hands-on design workflows and real engineering applications.",
+      "registerLink": "https://forms.gle/htsEyvkPvYPFtXyc9",
+      "category": "Workshop",
+      "isHighlighted": true,
+      "details": {
+        "mode": "Offline",
+        "fee": "₹1200",
+        "lastDate": "Limited seats registration",
+        "duration": "10 Hours",
+        "certificate": "Autodesk certificate on successful completion",
+        "seats": "80 participants only"
+      },
+      "note": "Whether you’re here to learn, create, or master CAD—this is your chance to level up!",
+      "presentedBy": "ISTE MBCET Student Chapter",
+      "inAssociationWith": "InterCAD Systems Pvt. Ltd, ASME MBCET Chapter, CPDL, AUTOMATA",
+      "contact": {
+        "name1": "Dr. Jishnu Chandran R",
+        "phone1": "9447929116",
+        "name2": "Vishwabala P",
+        "phone2": "8590652130"
+      }
     }
   ];
 
