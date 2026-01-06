@@ -4,7 +4,8 @@ import {
   FaClock,
   FaHistory,
   FaStar,
-  FaArrowRight
+  FaArrowRight,
+  FaGamepad,
 } from 'react-icons/fa';
 import './AboutSection.css';
 
@@ -184,6 +185,19 @@ const AboutSection = () => {
                     <div className="stat-label">Duration</div>
                     <div className="stat-number">2</div>
                     <div className="stat-desc">Action Days</div>
+                  </div>
+                </div>
+                <div 
+                  className="stat-item" 
+                  ref={addToRefs}
+                >
+                  <div className="stat-icon">
+                    <FaGamepad />
+                  </div>
+                  <div className="stat-info">
+                    <div className="stat-label">Events</div>
+                    <div className="stat-number">20+</div>
+                    <div className="stat-desc">Fun+challenging</div>
                   </div>
                 </div>
               </div>
