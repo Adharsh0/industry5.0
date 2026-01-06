@@ -8,37 +8,38 @@ const ContactSection = () => {
   const hasAnimatedRef = useRef(new Set());
   const allElementsRef = useRef([]);
 
-  // Intersection Observer callback
+  // Optimized Intersection Observer callback
   const handleIntersection = useCallback((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const target = entry.target;
-        const id = target.id || target.className + '-' + Math.random();
-        
-        // Only animate once
-        if (!hasAnimatedRef.current.has(id)) {
-          requestAnimationFrame(() => {
-            target.classList.add('visible');
-            target.classList.add('scroll-reveal-visible');
-            
-            // Add specific directional classes
-            if (target.classList.contains('scroll-reveal-left')) {
-              target.classList.add('scroll-reveal-left-visible');
-            }
-            if (target.classList.contains('scroll-reveal-right')) {
-              target.classList.add('scroll-reveal-right-visible');
-            }
-            if (target.classList.contains('scroll-reveal-up')) {
-              target.classList.add('scroll-reveal-up-visible');
-            }
-            if (target.classList.contains('scroll-reveal-fade')) {
-              target.classList.add('scroll-reveal-fade-visible');
-            }
-            
-            hasAnimatedRef.current.add(id);
-          });
+    requestAnimationFrame(() => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const target = entry.target;
+          const id = target.dataset.observerId || target.id || target.className + '-' + Math.random();
+          
+          if (!hasAnimatedRef.current.has(id)) {
+            setTimeout(() => {
+              target.classList.add('visible');
+              target.classList.add('scroll-reveal-visible');
+              
+              // Add specific directional classes
+              if (target.classList.contains('scroll-reveal-left')) {
+                target.classList.add('scroll-reveal-left-visible');
+              }
+              if (target.classList.contains('scroll-reveal-right')) {
+                target.classList.add('scroll-reveal-right-visible');
+              }
+              if (target.classList.contains('scroll-reveal-up')) {
+                target.classList.add('scroll-reveal-up-visible');
+              }
+              if (target.classList.contains('scroll-reveal-fade')) {
+                target.classList.add('scroll-reveal-fade-visible');
+              }
+              
+              hasAnimatedRef.current.add(id);
+            }, 0);
+          }
         }
-      }
+      });
     });
   }, []);
 
@@ -51,79 +52,100 @@ const ContactSection = () => {
     ));
   }, []);
 
+  // Optimized useEffect for Intersection Observer
   useEffect(() => {
-    // Initialize Intersection Observer
-    const observerOptions = {
-      threshold: 0.15,
-      rootMargin: '0px 0px -50px 0px'
+    let resizeTimeout;
+    let observerTimeout;
+    let isObserving = false;
+
+    // Initialize Intersection Observer with debounce
+    const initializeObserver = () => {
+      if (isObserving) return;
+      
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '50px 0px -50px 0px'
+      };
+
+      observerRef.current = new IntersectionObserver(handleIntersection, observerOptions);
+
+      if (sectionRef.current) {
+        observerRef.current.observe(sectionRef.current);
+        
+        // Collect and observe all animation elements
+        const observeAllElements = () => {
+          const revealElements = collectAnimationElements();
+          allElementsRef.current = revealElements;
+          
+          requestAnimationFrame(() => {
+            revealElements.forEach((el, index) => {
+              if (!el.dataset.observerId) {
+                el.dataset.observerId = `element-${Date.now()}-${index}`;
+              }
+              
+              if (observerRef.current && el.isConnected) {
+                observerRef.current.observe(el);
+              }
+            });
+          });
+        };
+
+        // Delay initial observation for smoother load
+        observerTimeout = setTimeout(observeAllElements, 300);
+        
+        // Optimized ResizeObserver with debounce
+        const resizeObserver = new ResizeObserver(() => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            requestAnimationFrame(() => {
+              const currentElements = collectAnimationElements();
+              currentElements.forEach(el => {
+                if (observerRef.current && el.isConnected && !el.dataset.observerId) {
+                  observerRef.current.observe(el);
+                }
+              });
+            });
+          }, 150);
+        });
+        
+        resizeObserver.observe(sectionRef.current);
+        
+        isObserving = true;
+        
+        return () => {
+          resizeObserver.disconnect();
+          clearTimeout(resizeTimeout);
+          clearTimeout(observerTimeout);
+        };
+      }
     };
 
-    observerRef.current = new IntersectionObserver(handleIntersection, observerOptions);
-
-    // Observe main section
-    if (sectionRef.current) {
-      observerRef.current.observe(sectionRef.current);
-      
-      // Collect and observe all animation elements after a small delay
-      // to ensure DOM is ready
-      const observeAllElements = () => {
-        const revealElements = collectAnimationElements();
-        allElementsRef.current = revealElements;
-        
-        revealElements.forEach((el, index) => {
-          // Add unique identifier for tracking
-          if (!el.dataset.observerId) {
-            el.dataset.observerId = `element-${Date.now()}-${index}`;
-          }
-          
-          setTimeout(() => {
-            if (observerRef.current && el.isConnected) {
-              observerRef.current.observe(el);
-            }
-          }, index * 30); // Reduced delay for better timing
-        });
-      };
-
-      // Initial observation
-      setTimeout(observeAllElements, 100);
-      
-      // Also observe on resize and after animations
-      const resizeObserver = new ResizeObserver(() => {
-        setTimeout(observeAllElements, 50);
-      });
-      
-      if (sectionRef.current) {
-        resizeObserver.observe(sectionRef.current);
-      }
-      
-      // Cleanup resize observer
-      return () => {
-        resizeObserver.disconnect();
-      };
-    }
+    // Delay observer initialization for better performance
+    const initTimeout = setTimeout(initializeObserver, 100);
 
     return () => {
+      clearTimeout(initTimeout);
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
+      clearTimeout(resizeTimeout);
+      clearTimeout(observerTimeout);
+      isObserving = false;
     };
   }, [handleIntersection, collectAnimationElements]);
 
   const addToAnimationElements = useCallback((el) => {
     if (el && observerRef.current && el.isConnected) {
-      // Add unique identifier
       if (!el.dataset.observerId) {
         el.dataset.observerId = `manual-${Date.now()}`;
       }
       
-      // Observe after a small delay to ensure element is in DOM
       setTimeout(() => {
         if (observerRef.current && el.isConnected) {
           observerRef.current.observe(el);
         }
       }, 50);
       
-      // Also add to tracking array
       allElementsRef.current.push(el);
     }
   }, []);
@@ -177,20 +199,17 @@ const ContactSection = () => {
     {
       name: "Dr. Jishnu Chandran R",
       role: "ISTE Faculty Coordinator",
-      
       email: "jishnuchandran.r@mbcet.ac.in",
       category: "faculty"
     },
-     {
+    {
       name: "Ms. Asha S",
       role: "ISTE Faculty Coordinator",
       email: "asha.s@mbcet.ac.in",
       category: "faculty"
     }
-   
   ];
 
-  // Create refs for all student coordinator cards
   const studentCardRefs = useRef([]);
   const facultyCardRefs = useRef([]);
 
