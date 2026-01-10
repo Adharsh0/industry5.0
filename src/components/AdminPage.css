@@ -230,7 +230,7 @@
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
+  width:fit-content;
   overflow: hidden;
 }
 
@@ -1292,4 +1292,92 @@
 }
 ::-webkit-scrollbar{
   display: none;
+}
+/* Add these styles to your existing AdminPage.css */
+
+/* Pagination Styles */
+.pagination-controls {
+  margin: 20px 0;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.pagination-info {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-btn,
+.pagination-number {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-btn:hover:not(:disabled),
+.pagination-number:hover:not(.active) {
+  background: rgba(126, 213, 111, 0.1);
+  color: #7ED56F;
+  border-color: rgba(126, 213, 111, 0.3);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-number.active {
+  background: linear-gradient(135deg, #7ED56F 0%, #5FB952 100%);
+  color: #0a0a0a;
+  border-color: #7ED56F;
+  font-weight: 600;
+}
+
+.pagination-ellipsis {
+  color: rgba(255, 255, 255, 0.5);
+  padding: 8px 4px;
+  font-size: 0.9rem;
+}
+
+/* Make sure pagination is responsive */
+@media (max-width: 768px) {
+  .pagination-controls {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+  
+  .pagination-info {
+    order: 2;
+  }
+  
+  .pagination-buttons {
+    order: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }
