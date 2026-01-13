@@ -47,9 +47,9 @@ const AdminPage = () => {
     engineering: 0,
     polytechnic: 0,
     stayCapacity: {
-      total: 250,
+      total: 350, // UPDATED: 350 capacity
       used: 0,
-      remaining: 250
+      remaining: 350 // UPDATED: 350 capacity
     }
   });
 
@@ -57,7 +57,7 @@ const AdminPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRegistrations, setTotalRegistrations] = useState(0);
-  const [pageSize] = useState(50); // 50 registrations per page
+  const [pageSize] = useState(50);
 
   // Admin authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -149,9 +149,9 @@ const AdminPage = () => {
       engineering: 0,
       polytechnic: 0,
       stayCapacity: {
-        total: 250,
+        total: 350, // UPDATED: 350
         used: 0,
-        remaining: 250
+        remaining: 350 // UPDATED: 350
       }
     });
     setError('');
@@ -315,9 +315,9 @@ const AdminPage = () => {
             engineering: engineering,
             polytechnic: polytechnic,
             stayCapacity: {
-              total: availabilityData.totalCapacity || 250,
+              total: availabilityData.totalCapacity || 350, // UPDATED: 350
               used: availabilityData.used || 0,
-              remaining: availabilityData.remaining || 250
+              remaining: availabilityData.remaining || 350 // UPDATED: 350
             }
           });
         }
@@ -883,7 +883,7 @@ ISTE INDUSTRY 5.0 Team`
                 </p>
                 <div className="header-note">
                   <AlertCircle size={14} />
-                  <span>Stay spots now decrease immediately upon user registration (before approval)</span>
+                  <span>Stay capacity: 350 spots (Increased from 250)</span> {/* UPDATED */}
                 </div>
               </div>
             </div>
@@ -907,7 +907,7 @@ ISTE INDUSTRY 5.0 Team`
               <div className="stat-number">{stats.withAccommodation}</div>
               <div className="stat-label">With Accommodation</div>
               <div className="stat-subtext">
-                ({stats.stayCapacity.remaining} spots left)
+                ({stats.stayCapacity.remaining} of 350 spots left) {/* UPDATED */}
               </div>
             </div>
             <div className="stat-card">
