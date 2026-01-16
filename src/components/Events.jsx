@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Download } from 'lucide-react';
+import { Download, ExternalLink } from 'lucide-react';
 import './Events.css';
 
 const Events = () => {
@@ -7,6 +7,7 @@ const Events = () => {
   const [titleText, setTitleText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [backgroundPosters, setBackgroundPosters] = useState([]);
+  const [isMainEventsHovered, setIsMainEventsHovered] = useState(false);
   
   // Refs for scroll animations
   const sectionRefs = useRef([]);
@@ -377,7 +378,7 @@ const Events = () => {
         "name1": "Dr. Jishnu Chandran R",
         "phone1": "9447929116",
         "name2": "Vishwabala P",
-        "phone2": "8590652130"
+        phone2: "8590652130"
       }
     }
   ];
@@ -536,6 +537,10 @@ const Events = () => {
     document.body.removeChild(link);
   };
 
+  const handleMainEventsClick = () => {
+    window.open('https://www.playbook.com/s/johan-s-varughese-graphics/nexora-26-event-list', '_blank');
+  };
+
   return (
     <div className="events-container">
       <div className="events-hero">
@@ -576,6 +581,44 @@ const Events = () => {
             ))}
           </h1>
         </div>
+      </div>
+
+      {/* Simple Main Events Button Section */}
+      <div className="simple-main-events">
+        <h2 className="main-events-heading">MAIN EVENTS</h2>
+        <button 
+          className="creative-main-events-btn"
+          onClick={handleMainEventsClick}
+          onMouseEnter={() => setIsMainEventsHovered(true)}
+          onMouseLeave={() => setIsMainEventsHovered(false)}
+        >
+          <span className="btn-text">View Complete Event Calendar</span>
+          <span className="btn-icon">
+            <ExternalLink size={20} />
+          </span>
+          
+          {/* Animated border */}
+          <div className="btn-border">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          
+          {/* Particle effect */}
+          <div className="btn-particles">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <span 
+                key={i}
+                className="particle"
+                style={{
+                  '--i': i,
+                  '--color': i % 2 === 0 ? '#3b82f6' : '#8b5cf6'
+                }}
+              ></span>
+            ))}
+          </div>
+        </button>
       </div>
 
       <div className="events-wrapper">

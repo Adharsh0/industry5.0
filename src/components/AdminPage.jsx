@@ -25,7 +25,10 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
-  ChevronsRight
+  ChevronsRight,
+  Users2,
+  FileSpreadsheet,
+  Loader2
 } from 'lucide-react';
 import './AdminPage.css';
 
@@ -47,9 +50,9 @@ const AdminPage = () => {
     engineering: 0,
     polytechnic: 0,
     stayCapacity: {
-      total: 350, // UPDATED: 350 capacity
+      total: 350,
       used: 0,
-      remaining: 350 // UPDATED: 350 capacity
+      remaining: 350
     }
   });
 
@@ -70,6 +73,14 @@ const AdminPage = () => {
 
   // Ambassador code filter
   const [ambassadorFilter, setAmbassadorFilter] = useState('all');
+  
+  // Ambassador count state
+  const [ambassadorCount, setAmbassadorCount] = useState(null);
+  const [searchedAmbassadorCode, setSearchedAmbassadorCode] = useState('');
+
+  // Google Sheets state
+  const [isExportingToSheets, setIsExportingToSheets] = useState(false);
+  const [sheetsExportStatus, setSheetsExportStatus] = useState('');
 
   // API Base URL
   const API_BASE_URL = 'https://iste-backend-fcd3.onrender.com/api';
@@ -149,13 +160,53 @@ const AdminPage = () => {
       engineering: 0,
       polytechnic: 0,
       stayCapacity: {
-        total: 350, // UPDATED: 350
+        total: 350,
         used: 0,
-        remaining: 350 // UPDATED: 350
+        remaining: 350
       }
     });
+    setAmbassadorCount(null);
+    setSearchedAmbassadorCode('');
     setError('');
     setLoginData({ username: '', password: '' });
+  };
+
+  // Fetch ambassador code statistics
+  const fetchAmbassadorStats = async (token = authToken, code = searchTerm.trim()) => {
+    if (!code || code.length < 2) {
+      setAmbassadorCount(null);
+      setSearchedAmbassadorCode('');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/admin/ambassador-stats?code=${encodeURIComponent(code)}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success) {
+          setAmbassadorCount(result.data);
+          setSearchedAmbassadorCode(code);
+        } else {
+          setAmbassadorCount(null);
+          setSearchedAmbassadorCode('');
+        }
+      } else {
+        setAmbassadorCount(null);
+        setSearchedAmbassadorCode('');
+      }
+    } catch (err) {
+      console.error('Error fetching ambassador stats:', err);
+      setAmbassadorCount(null);
+      setSearchedAmbassadorCode('');
+    }
   };
 
   // Fetch registrations with pagination
@@ -164,11 +215,15 @@ const AdminPage = () => {
       setLoading(true);
       setError('');
       
+      // Check if search term looks like an ambassador code (starts with letters)
+      const trimmedSearchTerm = searchTerm.trim();
+      const isAmbassadorCodeSearch = /^[a-zA-Z]/.test(trimmedSearchTerm);
+      
       // Build query parameters
       const params = new URLSearchParams({
         page: page.toString(),
         limit: pageSize.toString(),
-        search: searchTerm || '',
+        search: trimmedSearchTerm || '',
         status: statusFilter === 'all' ? '' : statusFilter,
         ...(ambassadorFilter === 'withCode' && { ambassadorCode: 'exists' }),
         ...(ambassadorFilter === 'withoutCode' && { ambassadorCode: 'empty' })
@@ -271,7 +326,17 @@ const AdminPage = () => {
         setUsers(mappedUsers);
         setTotalPages(result.totalPages || 1);
         setTotalRegistrations(result.total || 0);
+        
+        // Fetch general statistics
         fetchStats(token);
+        
+        // Fetch ambassador stats if search looks like ambassador code
+        if (isAmbassadorCodeSearch && trimmedSearchTerm) {
+          fetchAmbassadorStats(token, trimmedSearchTerm);
+        } else {
+          setAmbassadorCount(null);
+          setSearchedAmbassadorCode('');
+        }
       } else {
         throw new Error(result.message || 'Failed to fetch registrations');
       }
@@ -315,9 +380,9 @@ const AdminPage = () => {
             engineering: engineering,
             polytechnic: polytechnic,
             stayCapacity: {
-              total: availabilityData.totalCapacity || 350, // UPDATED: 350
+              total: availabilityData.totalCapacity || 350,
               used: availabilityData.used || 0,
-              remaining: availabilityData.remaining || 350 // UPDATED: 350
+              remaining: availabilityData.remaining || 350
             }
           });
         }
@@ -610,6 +675,214 @@ ISTE INDUSTRY 5.0 Team`
     window.URL.revokeObjectURL(url);
   };
 
+  // Export ALL registrations to Google Sheets
+  const exportToGoogleSheets = async (exportType = 'all') => {
+    setIsExportingToSheets(true);
+    setSheetsExportStatus('Preparing data for export...');
+
+    try {
+      // First, fetch ALL registrations (not just current page)
+      let query = '';
+      
+      if (exportType === 'filtered') {
+        // Build query for current filters
+        const params = new URLSearchParams();
+        
+        if (statusFilter !== 'all') {
+          params.append('status', statusFilter);
+        }
+        
+        if (searchTerm.trim()) {
+          params.append('search', searchTerm.trim());
+        }
+        
+        if (ambassadorFilter === 'withCode') {
+          params.append('ambassadorCode', 'exists');
+        } else if (ambassadorFilter === 'withoutCode') {
+          params.append('ambassadorCode', 'empty');
+        }
+        
+        query = params.toString() ? `?${params.toString()}` : '';
+      }
+
+      setSheetsExportStatus('Fetching registrations...');
+      
+      // Get total count first to show progress
+      const countResponse = await fetch(
+        `${API_BASE_URL}/admin/registrations${query}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        }
+      );
+      
+      const countResult = await countResponse.json();
+      const totalRegistrationsCount = countResult.total || 0;
+      
+      if (totalRegistrationsCount === 0) {
+        setSheetsExportStatus('No data to export');
+        setTimeout(() => {
+          setSheetsExportStatus('');
+          setIsExportingToSheets(false);
+        }, 2000);
+        return;
+      }
+      
+      // Fetch all registrations in batches
+      const allRegistrations = [];
+      const limit = 100; // Fetch 100 at a time
+      const totalPages = Math.ceil(totalRegistrationsCount / limit);
+      
+      for (let page = 1; page <= totalPages; page++) {
+        setSheetsExportStatus(`Fetching page ${page} of ${totalPages}...`);
+        
+        const response = await fetch(
+          `${API_BASE_URL}/admin/registrations${query}${query ? '&' : '?'}page=${page}&limit=${limit}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${authToken}`
+            }
+          }
+        );
+        
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          allRegistrations.push(...result.data);
+        }
+        
+        // Small delay to avoid overwhelming the server
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      
+      setSheetsExportStatus('Formatting data for Google Sheets...');
+      
+      // Format data for Google Sheets
+      const sheetData = allRegistrations.map(user => {
+        const institution = user.institution || 'Engineering';
+        const stayPreference = user.stayPreference || 'Without Stay';
+        const stayDates = user.stayDates || [];
+        const stayDays = stayDates.length;
+        const ambassadorCode = user.ambassadorCode || '';
+        
+        let baseFee;
+        if (institution === 'Polytechnic') {
+          baseFee = user.isIsteMember === 'Yes' ? 250 : 300;
+        } else {
+          baseFee = user.isIsteMember === 'Yes' ? 450 : 500;
+        }
+        
+        const stayFee = stayDays * 217;
+        const totalAmount = user.totalAmount || (baseFee + stayFee);
+        
+        return {
+          fullName: user.fullName || '',
+          email: user.email || '',
+          phone: user.phone || '',
+          institution: institution,
+          college: user.college || '',
+          department: user.department || '',
+          year: user.year || '',
+          isIsteMember: user.isIsteMember || 'No',
+          isteRegistrationNumber: user.isteRegistrationNumber || '',
+          ambassadorCode: ambassadorCode,
+          stayPreference: stayPreference,
+          stayDays: stayDays,
+          stayDates: stayDates.join(', '),
+          transactionId: user.transactionId || '',
+          amount: totalAmount,
+          status: user.registrationStatus || 'pending',
+          registrationDate: new Date(user.registrationDate || user.createdAt).toLocaleString('en-IN'),
+          paymentStatus: user.paymentStatus || 'pending',
+          approvedBy: user.approvedBy || '',
+          approvedAt: user.approvedAt ? new Date(user.approvedAt).toLocaleString('en-IN') : '',
+          rejectedAt: user.rejectedAt ? new Date(user.rejectedAt).toLocaleString('en-IN') : '',
+          rejectionReason: user.rejectionReason || '',
+          baseFee: baseFee,
+          stayFee: stayFee
+        };
+      });
+      
+      setSheetsExportStatus('Creating Google Sheet...');
+      
+      // Open Google Sheets with pre-filled data
+      const headers = [
+        'Full Name', 'Email', 'Phone', 'Institution Type', 'College', 'Department', 'Year',
+        'ISTE Member', 'ISTE Reg No', 'Ambassador Code', 'Accommodation', 'Stay Days', 'Stay Dates',
+        'Transaction ID', 'Total Amount', 'Status', 'Registration Date', 'Payment Status',
+        'Approved By', 'Approval Date', 'Rejection Date', 'Rejection Reason', 'Base Fee', 'Stay Fee'
+      ];
+      
+      // Convert data to CSV format
+      const csvData = sheetData.map(user => [
+        user.fullName,
+        user.email,
+        user.phone,
+        user.institution,
+        user.college,
+        user.department,
+        user.year,
+        user.isIsteMember,
+        user.isteRegistrationNumber,
+        user.ambassadorCode,
+        user.stayPreference,
+        user.stayDays,
+        user.stayDates,
+        user.transactionId,
+        user.amount,
+        user.status,
+        user.registrationDate,
+        user.paymentStatus,
+        user.approvedBy,
+        user.approvedAt,
+        user.rejectedAt,
+        user.rejectionReason,
+        user.baseFee,
+        user.stayFee
+      ]);
+      
+      const csvContent = [headers, ...csvData]
+        .map(row => row.map(field => `"${field}"`).join(','))
+        .join('\n');
+      
+      // Create a temporary file for Google Sheets import
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      
+      // Open Google Sheets import page
+      const googleSheetsUrl = `https://docs.google.com/spreadsheets/u/0/create?usp=sheets_home&create=${encodeURIComponent(`ISTE_Registrations_${exportType === 'all' ? 'All' : 'Filtered'}_${new Date().toISOString().split('T')[0]}`)}`;
+      
+      window.open(googleSheetsUrl, '_blank');
+      
+      // Create download link for CSV
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `iste-registrations-${exportType === 'all' ? 'all' : 'filtered'}-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      
+      setSheetsExportStatus(`✅ Exported ${allRegistrations.length} registrations to Google Sheets`);
+      
+      setTimeout(() => {
+        setSheetsExportStatus('');
+        setIsExportingToSheets(false);
+      }, 3000);
+      
+    } catch (error) {
+      console.error('Google Sheets export error:', error);
+      setSheetsExportStatus('❌ Export failed. Please try again.');
+      setIsExportingToSheets(false);
+      
+      setTimeout(() => {
+        setSheetsExportStatus('');
+      }, 3000);
+    }
+  };
+
+  // Quick export functions
+  const handleQuickExportAll = () => exportToGoogleSheets('all');
+  const handleQuickExportFiltered = () => exportToGoogleSheets('filtered');
+
   // Render pagination controls
   const renderPagination = () => {
     if (totalPages <= 1) return null;
@@ -883,7 +1156,7 @@ ISTE INDUSTRY 5.0 Team`
                 </p>
                 <div className="header-note">
                   <AlertCircle size={14} />
-                  <span>Stay capacity: 350 spots (Increased from 250)</span> {/* UPDATED */}
+                  <span>Stay capacity: 350 spots (Increased from 250)</span>
                 </div>
               </div>
             </div>
@@ -907,7 +1180,7 @@ ISTE INDUSTRY 5.0 Team`
               <div className="stat-number">{stats.withAccommodation}</div>
               <div className="stat-label">With Accommodation</div>
               <div className="stat-subtext">
-                ({stats.stayCapacity.remaining} of 350 spots left) {/* UPDATED */}
+                ({stats.stayCapacity.remaining} of 350 spots left)
               </div>
             </div>
             <div className="stat-card">
@@ -930,6 +1203,63 @@ ISTE INDUSTRY 5.0 Team`
             <AlertCircle size={20} />
             <span>{error}</span>
             <button onClick={() => setError('')} className="error-close">×</button>
+          </div>
+        )}
+
+        {/* Google Sheets Export Status */}
+        {sheetsExportStatus && (
+          <div className={`sheets-export-status ${sheetsExportStatus.includes('❌') ? 'error' : sheetsExportStatus.includes('✅') ? 'success' : 'info'}`}>
+            {isExportingToSheets ? (
+              <Loader2 size={16} className="spin" />
+            ) : sheetsExportStatus.includes('✅') ? (
+              <CheckCircle size={16} />
+            ) : sheetsExportStatus.includes('❌') ? (
+              <AlertCircle size={16} />
+            ) : (
+              <FileSpreadsheet size={16} />
+            )}
+            <span>{sheetsExportStatus}</span>
+          </div>
+        )}
+
+        {/* Ambassador Code Count Display */}
+        {ambassadorCount && searchedAmbassadorCode && (
+          <div className="ambassador-count-container">
+            <div className="ambassador-count-card">
+              <div className="ambassador-count-header">
+                <Users2 size={24} />
+                <span className="ambassador-code-display">
+                  Ambassador Code: <strong>{searchedAmbassadorCode.toUpperCase()}</strong>
+                </span>
+              </div>
+              <div className="ambassador-count-stats">
+                <div className="count-stat">
+                  <div className="count-number">{ambassadorCount.total || 0}</div>
+                  <div className="count-label">Total Registrations</div>
+                </div>
+                <div className="count-stat">
+                  <div className="count-number">{ambassadorCount.approved || 0}</div>
+                  <div className="count-label">Approved</div>
+                </div>
+                <div className="count-stat">
+                  <div className="count-number">{ambassadorCount.pending || 0}</div>
+                  <div className="count-label">Pending</div>
+                </div>
+                <div className="count-stat">
+                  <div className="count-number">{ambassadorCount.rejected || 0}</div>
+                  <div className="count-label">Rejected</div>
+                </div>
+                <div className="count-stat">
+                  <div className="count-number">₹{ambassadorCount.totalRevenue || 0}</div>
+                  <div className="count-label">Total Revenue</div>
+                </div>
+              </div>
+              {ambassadorCount.averageRevenue && (
+                <div className="count-footnote">
+                  Avg. revenue per registration: ₹{ambassadorCount.averageRevenue}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -980,10 +1310,30 @@ ISTE INDUSTRY 5.0 Team`
               <RefreshCw size={18} className={loading ? 'spin' : ''} />
               {loading ? 'Loading...' : 'Refresh'}
             </button>
-            <button onClick={exportToCSV} className="export-btn" disabled={users.length === 0}>
-              <Download size={18} />
-              Export CSV
-            </button>
+            
+            <div className="sheets-export-dropdown">
+              <button 
+                className="sheets-export-btn" 
+                disabled={isExportingToSheets || totalRegistrations === 0}
+              >
+                <FileSpreadsheet size={18} />
+                Export to Sheets
+              </button>
+              <div className="sheets-export-options">
+                <button 
+                  onClick={handleQuickExportAll}
+                  disabled={isExportingToSheets || totalRegistrations === 0}
+                >
+                  Export All ({totalRegistrations} registrations)
+                </button>
+                <button 
+                  onClick={handleQuickExportFiltered}
+                  disabled={isExportingToSheets || users.length === 0}
+                >
+                  Export Filtered ({users.length} registrations)
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 

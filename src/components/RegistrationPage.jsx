@@ -142,6 +142,12 @@ const RegistrationPage = () => {
       return;
     }
 
+    // Check if trying to select With Stay when it's not available
+    if (formData.stayPreference === 'With Stay' && !stayAvailability.available) {
+      setFormError('Accommodation is full. Please select "Without Stay" option.');
+      return;
+    }
+
     if (formData.stayPreference === 'With Stay') {
       if (!formData.stayDates || formData.stayDates.length === 0) {
         setFormError('Please select stay dates');
@@ -298,6 +304,13 @@ const RegistrationPage = () => {
         setFormError('Please select accommodation preference');
         return;
       }
+      
+      // Check if trying to select With Stay when it's not available
+      if (formData.stayPreference === 'With Stay' && !stayAvailability.available) {
+        setFormError('Accommodation is full. Please select "Without Stay" option.');
+        return;
+      }
+      
       if (formData.stayPreference === 'With Stay') {
         if (!formData.stayDates || formData.stayDates.length === 0) {
           setFormError('Please select stay dates');
@@ -608,8 +621,7 @@ const RegistrationPage = () => {
                         value={formData.stayPreference}
                         onChange={handleChange}
                         required
-                        className="modern-input"
-                        disabled={!stayAvailability.available && stayAvailability.remaining === 0}
+                        className={`modern-input ${!stayAvailability.available && formData.stayPreference === 'With Stay' ? 'warning' : ''}`}
                       >
                         <option value="">Do you require accommodation? *</option>
                         <option value="With Stay" disabled={!stayAvailability.available}>
@@ -620,6 +632,16 @@ const RegistrationPage = () => {
                         <option value="Without Stay">No, I don't need accommodation</option>
                       </select>
                     </div>
+
+                    {/* Show warning when stay is full and user has selected With Stay */}
+                    {!stayAvailability.available && formData.stayPreference === 'With Stay' && (
+                      <div className="stay-full-error">
+                        <AlertCircle size={20} />
+                        <div>
+                          <strong>Accommodation is completely full.</strong> Please select "No, I don't need accommodation" to proceed with your registration.
+                        </div>
+                      </div>
+                    )}
 
                     {formData.stayPreference === 'With Stay' && stayAvailability.available && (
                       <div className="calendar-container">
@@ -801,7 +823,8 @@ const RegistrationPage = () => {
                           !formData.acknowledgement || 
                           isSubmitting || 
                           !formData.stayPreference || 
-                          (formData.stayPreference === 'With Stay' && formData.stayDates.length === 0)
+                          (formData.stayPreference === 'With Stay' && formData.stayDates.length === 0) ||
+                          (formData.stayPreference === 'With Stay' && !stayAvailability.available) // Disable if trying to select With Stay when not available
                         }
                         className="submit-btn"
                       >
@@ -931,6 +954,13 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
     setIsButtonPressed(true);
     createRipple(e);
     
+    // Check if stay is selected but not available
+    if (formData.stayPreference === 'With Stay' && !stayAvailability.available) {
+      setPaymentError('Accommodation is no longer available. Please go back and select "Without Stay".');
+      setIsButtonPressed(false);
+      return;
+    }
+
     if (formData.stayPreference === 'With Stay') {
       if (!formData.stayDates || formData.stayDates.length === 0) {
         setPaymentError('Please select stay dates');

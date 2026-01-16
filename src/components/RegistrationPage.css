@@ -4191,3 +4191,64 @@ select.modern-input {
 .non-refundable-notice {
   animation: fadeInUp 0.6s ease-out;
 }
+/* Stay full error message */
+.stay-full-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideDown 0.3s ease;
+}
+
+.stay-full-error strong {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Disabled option styling */
+.modern-input option:disabled {
+  color: #ef4444;
+  font-style: italic;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Warning state for select */
+.modern-input.warning {
+  border-color: #fbbf24;
+  background: rgba(251, 191, 36, 0.05);
+}
+
+.modern-input.warning:focus {
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .stay-full-error {
+    padding: 10px 14px;
+    font-size: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .stay-full-error svg {
+    align-self: flex-start;
+  }
+}

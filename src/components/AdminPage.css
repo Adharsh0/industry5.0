@@ -1402,3 +1402,358 @@
     justify-content: center;
   }
 }
+/* Ambassador Code Count Container */
+.ambassador-count-container {
+  margin-bottom: 30px;
+  animation: slideDown 0.3s ease-out;
+}
+
+.ambassador-count-card {
+  background: rgba(30, 144, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(30, 144, 255, 0.3);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(30, 144, 255, 0.15);
+}
+
+.ambassador-count-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(30, 144, 255, 0.2);
+}
+
+.ambassador-count-header svg {
+  color: #1e90ff;
+}
+
+.ambassador-code-display {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.ambassador-code-display strong {
+  color: #1e90ff;
+  background: rgba(30, 144, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-family: 'Monaco', 'Consolas', monospace;
+  letter-spacing: 1px;
+}
+
+.ambassador-count-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.count-stat {
+  text-align: center;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.count-stat:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.count-number {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e90ff;
+  margin-bottom: 5px;
+}
+
+.count-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.count-footnote {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  font-style: italic;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design for Ambassador Count Stats */
+@media (max-width: 1200px) {
+  .ambassador-count-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ambassador-count-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .ambassador-code-display {
+    font-size: 1rem;
+  }
+  
+  .count-number {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ambassador-count-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .ambassador-count-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .ambassador-code-display {
+    font-size: 0.9rem;
+  }
+}
+/* Google Sheets Export Styles */
+.sheets-export-status {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+}
+
+.sheets-export-status.info {
+  background: rgba(30, 144, 255, 0.1);
+  border: 1px solid rgba(30, 144, 255, 0.3);
+  color: #1e90ff;
+}
+
+.sheets-export-status.success {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+.sheets-export-status.error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.sheets-export-status svg {
+  flex-shrink: 0;
+}
+
+/* Google Sheets Export Button */
+.sheets-export-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.sheets-export-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #0f9d58 0%, #0a8043 100%);
+  border: 1px solid #0a8043;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sheets-export-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0a8043 0%, #065f36 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(15, 157, 88, 0.3);
+}
+
+.sheets-export-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.sheets-export-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(26, 47, 40, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 8px;
+  margin-top: 8px;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1000;
+  min-width: 250px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.sheets-export-dropdown:hover .sheets-export-options {
+  display: flex;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sheets-export-options button {
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sheets-export-options button:hover:not(:disabled) {
+  background: rgba(15, 157, 88, 0.2);
+  border-color: rgba(15, 157, 88, 0.4);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.sheets-export-options button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sheets-export-options button:first-child {
+  background: rgba(15, 157, 88, 0.15);
+  border-color: rgba(15, 157, 88, 0.3);
+}
+
+.sheets-export-options button:last-child {
+  background: rgba(30, 144, 255, 0.15);
+  border-color: rgba(30, 144, 255, 0.3);
+}
+
+/* Update action buttons group for sheets button */
+.action-buttons-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Loading spinner */
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive design for sheets export */
+@media (max-width: 1024px) {
+  .action-buttons-group {
+    justify-content: flex-start;
+  }
+  
+  .sheets-export-dropdown {
+    width: 100%;
+  }
+  
+  .sheets-export-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .sheets-export-options {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    top: auto;
+    bottom: 100px;
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+  
+  .sheets-export-dropdown:hover .sheets-export-options {
+    display: none;
+  }
+  
+  .sheets-export-dropdown:focus-within .sheets-export-options {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .controls-section {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .action-buttons-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .sheets-export-btn {
+    flex: 1;
+  }
+  
+  .export-btn, .refresh-btn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .action-buttons-group {
+    flex-direction: column;
+  }
+  
+  .refresh-btn, .export-btn, .sheets-export-btn {
+    width: 100%;
+  }
+}
