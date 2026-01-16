@@ -356,9 +356,19 @@ const RegistrationPage = () => {
           <h1 className="main-heading">
             Register for <span className="gradient-text">NEXORA</span>
           </h1>
-          <p className="header-description">
-            Join Kerala's premier technical convention. Limited seats available.
-          </p>
+         
+
+          {/* ADDED CONFIRMATION MESSAGE FOR ALL VISITORS */}
+          <div className="confirmation-note general-note">
+            <div className="confirmation-note-content">
+              <Mail size={20} />
+              <div>
+                <strong>Confirmation emails</strong> are being sent to registered participants whose registrations are completed.
+                <br />
+                Please check your inbox (including spam folder). Thank you for your patience.
+              </div>
+            </div>
+          </div>
           
 
           {/* Faculty Registration Button */}
@@ -1608,7 +1618,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                   <div className="detail-item">
                     <span className="detail-label">Base Fee:</span>
                     <span className="detail-value">
-                      ₹${formData.institution === 'Polytechnic' 
+                      ₹{formData.institution === 'Polytechnic' 
                         ? (formData.isIsteMember === 'Yes' ? 250 : 300) 
                         : (formData.isIsteMember === 'Yes' ? 450 : 500)}
                     </span>
@@ -1657,6 +1667,18 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
           <div className="registration-note">
             <AlertCircle size={16} />
             <span>Note: Stay spots decrease immediately. If rejected by admin, spots will be released.</span>
+          </div>
+
+          {/* ADDED CONFIRMATION MESSAGE IN PAYMENT PAGE TOO */}
+          <div className="confirmation-note general-note">
+            <div className="confirmation-note-content">
+              <Mail size={20} />
+              <div>
+                <strong>Confirmation emails</strong> are being sent to registered participants whose registrations are completed.
+                <br />
+                Please check your inbox (including spam folder). Thank you for your patience.
+              </div>
+            </div>
           </div>
 
           {/* Faculty Registration Button */}
@@ -1873,7 +1895,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                 <div className="summary-item">
                   <span className="summary-label">Base Fee:</span>
                   <span className="summary-value">
-                    ₹${formData.institution === 'Polytechnic' 
+                    ₹{formData.institution === 'Polytechnic' 
                       ? (formData.isIsteMember === 'Yes' ? 250 : 300)
                       : (formData.isIsteMember === 'Yes' ? 450 : 500)}
                   </span>
@@ -1881,7 +1903,7 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                 {formData.stayPreference === 'With Stay' && formData.stayDates.length > 0 && (
                   <div className="summary-item">
                     <span className="summary-label">Accommodation Fee:</span>
-                    <span className="summary-value">₹${217 * formData.stayDates.length}</span>
+                    <span className="summary-value">₹{217 * formData.stayDates.length}</span>
                   </div>
                 )}
                 <div className="summary-total">

@@ -4252,3 +4252,51 @@ select.modern-input {
     align-self: flex-start;
   }
 }
+/* Alternative: Minimalist Elegant Design */
+.confirmation-note.general-note {
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid #4A90E2;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin: 20px auto;
+  max-width: 800px;
+}
+
+.confirmation-note.general-note .confirmation-note-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.confirmation-note.general-note .confirmation-note-content svg {
+  color: #4A90E2;
+  flex-shrink: 0;
+}
+
+.confirmation-note.general-note .confirmation-note-content div {
+  flex: 1;
+  line-height: 1.5;
+  font-size: 15px;
+}
+
+.confirmation-note.general-note .confirmation-note-content div strong {
+  color: #4A90E2;
+  font-weight: 600;
+}
+
+.confirmation-note.general-note .confirmation-note-content div br {
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Hover effect */
+.confirmation-note.general-note:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-left-color: #5a9aee;
+  transform: translateX(2px);
+  transition: all 0.3s ease;
+}
