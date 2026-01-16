@@ -3,7 +3,7 @@ import {
   User, Mail, Phone, Building2, Send, Calendar,
   MapPin, GraduationCap, CreditCard, BedDouble, 
   CheckCircle2, Loader2, AlertCircle, Clock, Download, ExternalLink, School,
-  Users
+  Users, BookOpen, ArrowRight
 } from 'lucide-react';
 import './RegistrationPage.css';
 
@@ -12,7 +12,7 @@ const RegistrationPage = () => {
   const [showPayment, setShowPayment] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
-  const [stayAvailability, setStayAvailability] = useState({ available: true, remaining: 350 }); // UPDATED: 350 capacity
+  const [stayAvailability, setStayAvailability] = useState({ available: true, remaining: 350 });
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -31,6 +31,9 @@ const RegistrationPage = () => {
   });
 
   const API_BASE_URL = 'https://iste-backend-fcd3.onrender.com/api';
+  
+  // Faculty registration URL
+  const FACULTY_REGISTRATION_URL = 'https://forms.gle/LjecNio76c9wtMMt6';
 
   // Fetch stay availability on component mount
   useEffect(() => {
@@ -50,11 +53,10 @@ const RegistrationPage = () => {
       if (data.success && data.data) {
         setStayAvailability(data.data);
       } else if (data.available !== undefined) {
-        // Handle alternative response format
         setStayAvailability({
           available: data.available,
           remaining: data.remaining || 0,
-          totalCapacity: data.totalCapacity || 350, // UPDATED: 350
+          totalCapacity: data.totalCapacity || 350,
           used: data.used || 0,
           pricePerDay: data.pricePerDay || 217
         });
@@ -63,11 +65,10 @@ const RegistrationPage = () => {
       }
     } catch (error) {
       console.error('Error fetching stay availability:', error);
-      // Set default values
       setStayAvailability({
         available: true,
-        remaining: 350, // UPDATED: 350
-        totalCapacity: 350, // UPDATED: 350
+        remaining: 350,
+        totalCapacity: 350,
         used: 0,
         pricePerDay: 217
       });
@@ -86,7 +87,6 @@ const RegistrationPage = () => {
           }),
         });
         
-        // First check if response is ok
         if (!response.ok) {
           const errorText = await response.text();
           console.error('API Error:', errorText);
@@ -96,7 +96,6 @@ const RegistrationPage = () => {
         
         const result = await response.json();
         
-        // Handle both response formats
         const isAvailable = result.data 
           ? (result.success && result.data.available)
           : (result.available === true);
@@ -121,7 +120,6 @@ const RegistrationPage = () => {
     e.preventDefault();
     setFormError('');
 
-    // Validate all required fields
     const requiredFields = [
       'fullName', 'email', 'phone', 'institution', 'college', 
       'department', 'year', 'isIsteMember', 'stayPreference'
@@ -134,19 +132,16 @@ const RegistrationPage = () => {
       return;
     }
 
-    // Validate institution
     if (!formData.institution) {
       setFormError('Please select institution type');
       return;
     }
 
-    // Validate department - if "Other" is selected, check otherDepartment
     if (formData.department === 'Other' && !formData.otherDepartment.trim()) {
       setFormError('Please specify your department name when selecting "Other"');
       return;
     }
 
-    // Validate stayDates only if With Stay is selected
     if (formData.stayPreference === 'With Stay') {
       if (!formData.stayDates || formData.stayDates.length === 0) {
         setFormError('Please select stay dates');
@@ -154,7 +149,6 @@ const RegistrationPage = () => {
       }
     }
 
-    // Validate email format only (no duplication check here)
     if (formData.email) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email.toLowerCase().trim())) {
@@ -163,7 +157,6 @@ const RegistrationPage = () => {
       }
     }
 
-    // Check and reserve stay spots
     const stayAvailable = await checkAndReserveStay();
     if (!stayAvailable) {
       return;
@@ -179,7 +172,6 @@ const RegistrationPage = () => {
     setFormData(prev => {
       const updated = { ...prev, [name]: newValue };
       
-      // Reset stayDates when stayPreference changes
       if (name === 'stayPreference') {
         if (value === 'Without Stay') {
           updated.stayDates = [];
@@ -188,7 +180,6 @@ const RegistrationPage = () => {
         }
       }
       
-      // Reset otherDepartment when department changes from "Other"
       if (name === 'department' && value !== 'Other') {
         updated.otherDepartment = '';
       }
@@ -200,12 +191,10 @@ const RegistrationPage = () => {
   };
 
   const calculateTotalAmount = () => {
-    // Determine base fee based on institution and ISTE membership
     let baseFee;
     if (formData.institution === 'Polytechnic') {
       baseFee = formData.isIsteMember === 'Yes' ? 250 : 300;
     } else {
-      // Engineering students
       baseFee = formData.isIsteMember === 'Yes' ? 450 : 500;
     }
     
@@ -222,7 +211,6 @@ const RegistrationPage = () => {
     if (formData.institution === 'Polytechnic') {
       return formData.isIsteMember === 'Yes' ? 250 : 300;
     }
-    // Engineering students
     return formData.isIsteMember === 'Yes' ? 450 : 500;
   };
 
@@ -231,19 +219,15 @@ const RegistrationPage = () => {
     
     setFormData(prev => {
       const dates = [...prev.stayDates];
-      
-      // Create a standardized date string to avoid timezone issues
       const standardizedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
       const dateString = standardizedDate.toISOString();
       
       if (dates.includes(dateString)) {
-        // Remove date if already selected
         return {
           ...prev,
           stayDates: dates.filter(d => d !== dateString)
         };
       } else {
-        // Add date if not already selected and within limit
         if (dates.length < 3) {
           return {
             ...prev,
@@ -255,7 +239,7 @@ const RegistrationPage = () => {
     });
   };
 
-  // Event dates - UPDATED TO 2026
+  // Event dates - 2026
   const eventDates = [
     new Date(2026, 0, 29),
     new Date(2026, 0, 30),
@@ -329,6 +313,11 @@ const RegistrationPage = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
+  // Function to open faculty registration
+  const openFacultyRegistration = () => {
+    window.open(FACULTY_REGISTRATION_URL, '_blank', 'noopener,noreferrer');
+  };
+
   if (showPayment) {
     return <PaymentPage 
       formData={formData} 
@@ -337,6 +326,7 @@ const RegistrationPage = () => {
       setFormError={setFormError}
       apiBaseUrl={API_BASE_URL}
       stayAvailability={stayAvailability}
+      facultyRegistrationUrl={FACULTY_REGISTRATION_URL}
     />;
   }
 
@@ -356,9 +346,19 @@ const RegistrationPage = () => {
           <p className="header-description">
             Join Kerala's premier technical convention. Limited seats available.
           </p>
-          <div className="registration-note">
-            <AlertCircle size={16} />
-            <span>Stay spots decrease immediately upon registration (before admin approval)</span>
+          
+
+          {/* Faculty Registration Button */}
+          <div className="faculty-registration-prompt">
+            <button 
+              className="faculty-registration-btn"
+              onClick={openFacultyRegistration}
+              type="button"
+            >
+              <BookOpen size={18} />
+              <span>Are you a faculty member? Click here to register</span>
+              <ArrowRight size={18} />
+            </button>
           </div>
         </div>
 
@@ -638,7 +638,6 @@ const RegistrationPage = () => {
                             <div key={day} className="calendar-day-header">{day}</div>
                           ))}
                           
-                          {/* Generate calendar for January 2026 */}
                           {Array.from({ length: 31 }, (_, i) => {
                             const date = new Date(2026, 0, i + 1);
                             const dateString = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
@@ -872,7 +871,7 @@ const RegistrationPage = () => {
                 </div>
                 <div className="stay-availability-badge">
                   <BedDouble size={14} />
-                  <span>Stay spots left: {stayAvailability.remaining} of 350</span> {/* UPDATED: Show 350 total */}
+                  <span>Stay spots left: {stayAvailability.remaining} of 350</span>
                 </div>
                 <div className="ambassador-note">
                   <AlertCircle size={14} />
@@ -887,7 +886,7 @@ const RegistrationPage = () => {
   );
 };
 
-const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, apiBaseUrl, stayAvailability }) => {
+const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, apiBaseUrl, stayAvailability, facultyRegistrationUrl }) => {
   const [transactionId, setTransactionId] = useState('');
   const [paymentCompleted, setPaymentCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -939,7 +938,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
         return;
       }
       
-      // Double-check stay availability
       try {
         const stayCheckResponse = await fetch(`${apiBaseUrl}/reserve-stay`, {
           method: 'POST',
@@ -960,7 +958,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
         
         const stayCheckResult = await stayCheckResponse.json();
         
-        // Handle both response formats
         const isAvailable = stayCheckResult.data 
           ? (stayCheckResult.success && stayCheckResult.data.available)
           : (stayCheckResult.available === true);
@@ -1631,6 +1628,19 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
             <AlertCircle size={16} />
             <span>Note: Stay spots decrease immediately. If rejected by admin, spots will be released.</span>
           </div>
+
+          {/* Faculty Registration Button */}
+          <div className="faculty-registration-prompt">
+            <button 
+              className="faculty-registration-btn"
+              onClick={() => window.open(facultyRegistrationUrl, '_blank', 'noopener,noreferrer')}
+              type="button"
+            >
+              <BookOpen size={18} />
+              <span>Are you a faculty member? Click here to register</span>
+              <ArrowRight size={18} />
+            </button>
+          </div>
         </div>
 
         {paymentError && (
@@ -1688,6 +1698,23 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                       minLength={3}
                       maxLength={50}
                     />
+                  </div>
+                  
+                  {/* Non-Refundable Payment Note */}
+                  <div className="non-refundable-notice">
+                    <div className="non-refundable-header">
+                      <AlertCircle size={20} />
+                      <h4>Important Payment Notice</h4>
+                    </div>
+                    <div className="non-refundable-content">
+                      <p><strong>⚠️ Payment Policy:</strong></p>
+                      <ul>
+                        <li><strong>All payments are non-refundable.</strong> Once payment is made, it cannot be refunded under any circumstances.</li>
+                        <li>Before making payment, please ensure all your details are correct.</li>
+                        <li>If your registration is rejected by admin, stay spots will be released but payment will not be refunded.</li>
+                        <li>By proceeding with payment, you acknowledge and accept this non-refundable payment policy.</li>
+                      </ul>
+                    </div>
                   </div>
                   
                   <div className="payment-instructions">

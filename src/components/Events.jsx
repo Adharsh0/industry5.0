@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Download } from 'lucide-react';
 import './Events.css';
 
 const Events = () => {
@@ -10,6 +11,7 @@ const Events = () => {
   // Refs for scroll animations
   const sectionRefs = useRef([]);
   const eventCardRefs = useRef([]);
+  const downloadSectionRef = useRef(null);
 
   const allEvents = [
     {
@@ -368,7 +370,7 @@ const Events = () => {
         "certificate": "Autodesk certificate on successful completion",
         "seats": "80 participants only"
       },
-      "note": "Whether you’re here to learn, create, or master CAD—this is your chance to level up!",
+      "note": "Whether you're here to learn, create, or master CAD—this is your chance to level up!",
       "presentedBy": "ISTE MBCET Student Chapter",
       "inAssociationWith": "InterCAD Systems Pvt. Ltd, ASME MBCET Chapter, CPDL, AUTOMATA",
       "contact": {
@@ -380,9 +382,53 @@ const Events = () => {
     }
   ];
 
+  // Downloadable resources
+  const downloadableResources = [
+    {
+      id: 1,
+      type: 'brochure',
+      title: 'NEXORA Brochure',
+      description: 'Complete event brochure with all details, schedules, and information',
+      fileName: 'NEXORA_Brochure_2026.pdf',
+      downloadLink: '/brochure.pdf',
+      icon: '📄',
+      color: '#4A90E2'
+    },
+    {
+      id: 2,
+      type: 'rulebook',
+      title: 'Event Rulebook',
+      description: 'Detailed rules, guidelines, and regulations for all events',
+      fileName: 'NEXORA_Rulebook_2026.pdf',
+      downloadLink: 'rulebook.pdf',
+      icon: '📘',
+      color: '#6C63FF'
+    },
+    {
+      id: 3,
+      type: 'schedule',
+      title: 'Engineering Schedule',
+      description: 'Detailed schedule for Engineering events',
+      fileName: 'Engineering_Schedule.pdf',
+      downloadLink: '/schedules/Engineering_Schedule.pdf',
+      icon: '📅',
+      color: '#FF6B6B'
+    },
+    {
+      id: 4,
+      type: 'schedule',
+      title: 'Polytechnic Schedule',
+      description: 'Detailed schedule for Polytechnic events',
+      fileName: 'Polytechnic_Schedule.pdf',
+      downloadLink: '/schedules/Polytechnic_Schedule.pdf',
+      icon: '📅',
+      color: '#4ECDC4'
+    }
+  ];
+
   // Initialize section refs
   useEffect(() => {
-    sectionRefs.current = sectionRefs.current.slice(0, 1);
+    sectionRefs.current = sectionRefs.current.slice(0, 2);
     eventCardRefs.current = eventCardRefs.current.slice(0, allEvents.length);
   }, []);
 
@@ -421,6 +467,11 @@ const Events = () => {
     eventCardRefs.current.forEach((card) => {
       if (card) cardObserver.observe(card);
     });
+
+    // Observe download section
+    if (downloadSectionRef.current) {
+      sectionObserver.observe(downloadSectionRef.current);
+    }
 
     return () => {
       sectionObserver.disconnect();
@@ -476,6 +527,15 @@ const Events = () => {
     document.body.style.overflow = 'auto';
   };
 
+  const handleResourceDownload = (resource) => {
+    const link = document.createElement('a');
+    link.href = resource.downloadLink;
+    link.download = resource.fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="events-container">
       <div className="events-hero">
@@ -525,7 +585,7 @@ const Events = () => {
         >
           <div className="section-header">
             <div className="section-badge">All Events</div>
-            <h2 className="section-title1">NEXORA EVENTS 2025-26</h2>
+            <h2 className="section-title1">NEXORA PRE-EVENTS 2025-26</h2>
             <p className="section-subtitle1">Explore all our exciting events happening this season</p>
           </div>
           <div className="events-grid">
@@ -550,6 +610,55 @@ const Events = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Download Resources Section */}
+        <section 
+          ref={downloadSectionRef}
+          className="events-section"
+        >
+          <div className="section-header">
+            <div className="section-badge">Resources</div>
+            <h2 className="section-title1">Download Resources</h2>
+            <p className="section-subtitle1">Get brochures, rulebooks, and schedules for all events</p>
+          </div>
+          
+          <div className="download-resources-grid">
+            {downloadableResources.map((resource, index) => (
+              <div 
+                key={resource.id}
+                className="resource-card"
+                style={{ '--card-index': index }}
+                onClick={() => handleResourceDownload(resource)}
+              >
+                <div className="resource-card-inner">
+                  <div className="resource-icon" style={{ background: resource.color }}>
+                    <span className="resource-icon-text">{resource.icon}</span>
+                  </div>
+                  
+                  <div className="resource-content">
+                    <h3 className="resource-title">{resource.title}</h3>
+                    <p className="resource-description">{resource.description}</p>
+                    <div className="resource-meta">
+                      <span className="resource-file-name">{resource.fileName}</span>
+                    </div>
+                  </div>
+                  
+                  <button className="resource-download-btn">
+                    <Download size={20} />
+                  </button>
+                  
+                  <div className="resource-hover-effect">
+                    <div className="hover-circle" style={{ background: resource.color }}></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="download-info-note">
+            <p>Click on any resource card to download. Make sure to read the rulebook before participating in any event.</p>
           </div>
         </section>
       </div>
@@ -893,7 +1002,6 @@ const Events = () => {
                   onClick={(e) => {
                     if (selectedEvent.registerLink === '#') {
                       e.preventDefault();
-                      // Optional: Show a message that registration link is coming soon
                       alert('Registration link will be available soon!');
                     }
                   }}
