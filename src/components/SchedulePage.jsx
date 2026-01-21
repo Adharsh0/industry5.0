@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Download, ArrowLeft, Calendar } from 'lucide-react';
+import { Download, ArrowLeft, Calendar, Trophy } from 'lucide-react';
 import './SchedulePage.css';
 
 const SchedulePage = () => {
@@ -22,7 +22,8 @@ const SchedulePage = () => {
       fileName: 'engineering_schedule.pdf',
       downloadLink: '/flyer/Engineering Flyer.pdf',
       details: 'Download to view details',
-      color: '#4A90E2'
+      color: '#4A90E2',
+      icon: Calendar
     },
     {
       id: 'polytechnic',
@@ -31,7 +32,19 @@ const SchedulePage = () => {
       fileName: 'polytechnic_schedule.pdf',
       downloadLink: '/flyer/Polytechnical Flyer.pdf',
       details: 'Download to view the details',
-      color: '#6C63FF'
+      color: '#6C63FF',
+      icon: Calendar
+    },
+    {
+      id: 'prize',
+      title: 'Points & Prizes',
+      subtitle: 'Distribution Details',
+      fileName: 'points_prizes_distribution.pdf',
+      downloadLink: '/flyer/prize_distribution.pdf', // Update this with your actual PDF path
+      details: 'Download points and prize distribution details',
+      color: '#FF6B6B',
+      icon: Trophy,
+      isNew: true
     }
   ];
 
@@ -42,6 +55,9 @@ const SchedulePage = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    
+    // Optional: Show success message
+    console.log(`Downloading ${schedule.title} schedule...`);
   };
 
   return (
@@ -53,21 +69,19 @@ const SchedulePage = () => {
       </div>
       <div className="grid-overlay"></div>
 
-      
-
       <div className="content-wrapper">
         <div className="page-header">
           <div className="header-badge">
             <Calendar size={14} />
-            <span className="badge-text">EVENT SCHEDULES</span>
+            <span className="badge-text">EVENT SCHEDULES & DETAILS</span>
           </div>
           
           <h1 className="main-title">
-            Download <span className="title-gradient">Schedules</span>
+            Download <span className="title-gradient">Event Details</span>
           </h1>
           
           <p className="header-description">
-            Hover over the folder to view and download event schedules with complete details.
+            Hover over the folders to view and download event schedules, points system, and prize distribution details.
           </p>
         </div>
 
@@ -78,12 +92,23 @@ const SchedulePage = () => {
               className="folder-wrapper"
               style={{ animationDelay: `${index * 100}ms` }}
             >
+             
+              
               {/* Folder */}
               <div className="folder">
-                <div className="folder-tab" style={{ background: schedule.color }}></div>
+                <div className="folder-tab" style={{ background: schedule.color }}>
+                  <div className="folder-icon">
+                    <schedule.icon size={20} />
+                  </div>
+                </div>
                 <div className="folder-body">
                   <div className="folder-content">
-                    <h3 className="folder-title">{schedule.title}</h3>
+                    <div className="folder-title-container">
+                      <h3 className="folder-title">{schedule.title}</h3>
+                      {schedule.isNew && (
+                        <span className="folder-new-indicator">●</span>
+                      )}
+                    </div>
                     <p className="folder-subtitle">{schedule.subtitle}</p>
                     <p className="folder-details">{schedule.details}</p>
                   </div>
@@ -94,17 +119,36 @@ const SchedulePage = () => {
               <div className="pdf-file">
                 <div className="pdf-paper">
                   <div className="pdf-corner"></div>
-                  <div className="pdf-red-bar">PDF</div>
+                  <div className="pdf-red-bar" style={{ 
+                    background: schedule.id === 'prize' 
+                      ? 'linear-gradient(135deg, #FF6B6B, #C53030)' 
+                      : 'linear-gradient(135deg, #e53e3e, #c53030)' 
+                  }}>
+                    PDF
+                  </div>
                   <div className="pdf-content">
                     <div className="pdf-title-section">
                       <h4>{schedule.title}</h4>
-                      <p>Schedule</p>
+                      <p>{schedule.subtitle}</p>
                     </div>
                     <div className="pdf-lines">
                       <div className="pdf-text-line"></div>
                       <div className="pdf-text-line"></div>
                       <div className="pdf-text-line short"></div>
+                      {schedule.id === 'prize' && (
+                        <>
+                          <div className="pdf-text-line"></div>
+                          <div className="pdf-text-line short"></div>
+                          <div className="pdf-text-line"></div>
+                        </>
+                      )}
                     </div>
+                    {schedule.id === 'prize' && (
+                      <div className="prize-indicator">
+                        <Trophy size={14} />
+                        <span>Points & Prize Details</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 
@@ -112,6 +156,11 @@ const SchedulePage = () => {
                 <button
                   onClick={() => handleDownload(schedule)}
                   className="pdf-download-btn"
+                  style={{ 
+                    background: schedule.id === 'prize' 
+                      ? 'linear-gradient(135deg, #FF6B6B, #C53030)' 
+                      : 'linear-gradient(135deg, var(--accent), var(--accent-dark))' 
+                  }}
                 >
                   <Download size={16} />
                   <span>Download</span>
@@ -121,8 +170,20 @@ const SchedulePage = () => {
           ))}
         </div>
 
+        <div className="info-section">
+          <div className="info-card">
+            <h4>Important Notes</h4>
+            <ul>
+              <li>All schedules are in PDF format</li>
+              <li>Points & Prizes folder contains distribution details</li>
+              <li>Download all files for complete information</li>
+              <li>Contact organizers for any clarifications</li>
+            </ul>
+          </div>
+        </div>
+
         <div className="bottom-info">
-          <p>Hover over folders to preview and download schedules</p>
+          <p>Hover over folders to preview and download schedules & details</p>
         </div>
       </div>
 

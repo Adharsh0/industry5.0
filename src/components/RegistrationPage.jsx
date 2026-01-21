@@ -31,11 +31,8 @@ const RegistrationPage = () => {
   });
 
   const API_BASE_URL = 'https://iste-backend-fcd3.onrender.com/api';
-  
-  // Faculty registration URL
   const FACULTY_REGISTRATION_URL = 'https://forms.gle/LjecNio76c9wtMMt6';
 
-  // Fetch stay availability on component mount
   useEffect(() => {
     fetchStayAvailability();
   }, []);
@@ -120,6 +117,12 @@ const RegistrationPage = () => {
     e.preventDefault();
     setFormError('');
 
+    // Block Engineering submissions on frontend too
+    if (formData.institution === 'Engineering') {
+      setFormError('Engineering registration is now closed. Please select Polytechnic to proceed.');
+      return;
+    }
+
     const requiredFields = [
       'fullName', 'email', 'phone', 'institution', 'college', 
       'department', 'year', 'isIsteMember', 'stayPreference'
@@ -142,7 +145,6 @@ const RegistrationPage = () => {
       return;
     }
 
-    // Check if trying to select With Stay when it's not available
     if (formData.stayPreference === 'With Stay' && !stayAvailability.available) {
       setFormError('Accommodation is full. Please select "Without Stay" option.');
       return;
@@ -245,7 +247,6 @@ const RegistrationPage = () => {
     });
   };
 
-  // Event dates - 2026
   const eventDates = [
     new Date(2026, 0, 29),
     new Date(2026, 0, 30),
@@ -273,6 +274,13 @@ const RegistrationPage = () => {
         setFormError('Please select institution type');
         return;
       }
+      
+      // Block Engineering selection
+      if (formData.institution === 'Engineering') {
+        setFormError('Engineering registration is now closed. Please select Polytechnic to proceed.');
+        return;
+      }
+      
       if (!formData.college.trim()) {
         setFormError('Please enter college name');
         return;
@@ -305,7 +313,6 @@ const RegistrationPage = () => {
         return;
       }
       
-      // Check if trying to select With Stay when it's not available
       if (formData.stayPreference === 'With Stay' && !stayAvailability.available) {
         setFormError('Accommodation is full. Please select "Without Stay" option.');
         return;
@@ -326,7 +333,6 @@ const RegistrationPage = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
-  // Function to open faculty registration
   const openFacultyRegistration = () => {
     window.open(FACULTY_REGISTRATION_URL, '_blank', 'noopener,noreferrer');
   };
@@ -351,25 +357,26 @@ const RegistrationPage = () => {
         <div className="shape shape-3"></div>
       </div>
 
+      {/* Engineering Closed Banner */}
       <div className="registration-content">
         <div className="registration-header">
           <h1 className="main-heading">
             Register for <span className="gradient-text">NEXORA</span>
           </h1>
-         
 
-          {/* ADDED CONFIRMATION MESSAGE FOR ALL VISITORS */}
+          {/* Updated Confirmation Message */}
           <div className="confirmation-note general-note">
             <div className="confirmation-note-content">
               <Mail size={20} />
               <div>
-                <strong>Confirmation emails</strong> are being sent to registered participants whose registrations are completed.
+                <strong>Important Update:</strong> Engineering registrations are now closed. 
+                Only Polytechnic registrations are being accepted.
                 <br />
-                Please check your inbox (including spam folder). Thank you for your patience.
+                Confirmation emails are being sent to registered participants. 
+                Please check your inbox (including spam folder).
               </div>
             </div>
           </div>
-          
 
           {/* Faculty Registration Button */}
           <div className="faculty-registration-prompt">
@@ -491,10 +498,25 @@ const RegistrationPage = () => {
                         className="modern-input"
                       >
                         <option value="">Select Institution Type *</option>
-                        <option value="Engineering">Engineering College (₹500 base fee, ₹450 for ISTE members)</option>
-                        <option value="Polytechnic">Polytechnic College (₹300 base fee, ₹250 for ISTE members)</option>
+                        <option value="Engineering" disabled>
+                          Engineering College (Registration Full - Not Available)
+                        </option>
+                        <option value="Polytechnic">
+                          Polytechnic College (₹300 base fee, ₹250 for ISTE members)
+                        </option>
                       </select>
                     </div>
+
+                    {/* Engineering Registration Closed Warning */}
+                    {formData.institution === 'Engineering' && (
+                      <div className="registration-full-alert">
+                        <AlertCircle size={20} />
+                        <div>
+                          <strong>Engineering Registration Full!</strong> Registration for Engineering colleges is now closed. 
+                          Only Polytechnic registrations are being accepted. Please select Polytechnic to proceed.
+                        </div>
+                      </div>
+                    )}
 
                     <div className="input-group">
                       <Building2 className="input-icon" size={20} />
@@ -611,7 +633,8 @@ const RegistrationPage = () => {
                           !formData.department || 
                           (formData.department === 'Other' && !formData.otherDepartment.trim()) ||
                           !formData.year || 
-                          !formData.isIsteMember
+                          !formData.isIsteMember ||
+                          formData.institution === 'Engineering' // Disable if Engineering selected
                         }
                       >
                         Continue
@@ -643,7 +666,6 @@ const RegistrationPage = () => {
                       </select>
                     </div>
 
-                    {/* Show warning when stay is full and user has selected With Stay */}
                     {!stayAvailability.available && formData.stayPreference === 'With Stay' && (
                       <div className="stay-full-error">
                         <AlertCircle size={20} />
@@ -834,7 +856,8 @@ const RegistrationPage = () => {
                           isSubmitting || 
                           !formData.stayPreference || 
                           (formData.stayPreference === 'With Stay' && formData.stayDates.length === 0) ||
-                          (formData.stayPreference === 'With Stay' && !stayAvailability.available) // Disable if trying to select With Stay when not available
+                          (formData.stayPreference === 'With Stay' && !stayAvailability.available) ||
+                          formData.institution === 'Engineering' // Disable Engineering submissions
                         }
                         className="submit-btn"
                       >
@@ -882,13 +905,9 @@ const RegistrationPage = () => {
                 <h3 className="card-title">Registration Fee</h3>
               </div>
               <div className="pricing-details">
-                <div className="price-item">
-                  <span className="price-label">Engineering College (Non-ISTE)</span>
-                  <span className="price-value">₹500</span>
-                </div>
-                <div className="price-item">
-                  <span className="price-label">Engineering College (ISTE Member)</span>
-                  <span className="price-value">₹450</span>
+                <div className="price-item price-closed">
+                  <span className="price-label">Engineering College (Registration Full)</span>
+                  <span className="price-value">Closed</span>
                 </div>
                 <div className="price-item">
                   <span className="price-label">Polytechnic College (Non-ISTE)</span>
@@ -964,7 +983,13 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
     setIsButtonPressed(true);
     createRipple(e);
     
-    // Check if stay is selected but not available
+    // Block Engineering submissions in payment page too
+    if (formData.institution === 'Engineering') {
+      setPaymentError('Engineering registration is now closed. Please go back and select Polytechnic.');
+      setIsButtonPressed(false);
+      return;
+    }
+
     if (formData.stayPreference === 'With Stay' && !stayAvailability.available) {
       setPaymentError('Accommodation is no longer available. Please go back and select "Without Stay".');
       setIsButtonPressed(false);
@@ -1033,6 +1058,13 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
       return;
     }
 
+    // Additional Engineering check
+    if (formData.institution === 'Engineering') {
+      setPaymentError('Engineering registration is now closed.');
+      setIsButtonPressed(false);
+      return;
+    }
+
     if (formData.department === 'Other' && !formData.otherDepartment.trim()) {
       setPaymentError('Please specify your department name');
       setIsButtonPressed(false);
@@ -1043,7 +1075,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
     setPaymentError('');
 
     try {
-      // EMAIL DUPLICATION CHECK
       const emailCheckResponse = await fetch(`${apiBaseUrl}/check-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1059,7 +1090,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
         return;
       }
 
-      // Calculate base fee for backend
       const calculateBaseFee = () => {
         if (formData.institution === 'Polytechnic') {
           return formData.isIsteMember === 'Yes' ? 250 : 300;
@@ -1067,7 +1097,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
         return formData.isIsteMember === 'Yes' ? 450 : 500;
       };
 
-      // Prepare registration data
       const registrationData = {
         fullName: formData.fullName.trim(),
         email: formData.email.toLowerCase().trim(),
@@ -1490,7 +1519,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
         </div>
         
         <script>
-          // Auto print when page loads
           window.onload = function() {
             setTimeout(function() {
               window.print();
@@ -1656,6 +1684,17 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
         <div className="shape shape-3"></div>
       </div>
 
+      {/* Engineering Closed Banner in Payment Page Too */}
+      <div className="engineering-closed-banner">
+        <div className="banner-content">
+          <AlertCircle size={24} />
+          <div>
+            <strong>Important Notice:</strong> Engineering college registration is now full and closed. 
+            Only Polytechnic college registrations are being accepted.
+          </div>
+        </div>
+      </div>
+
       <div className="registration-content">
         <div className="registration-header">
           <h1 className="main-heading">
@@ -1669,14 +1708,16 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
             <span>Note: Stay spots decrease immediately. If rejected by admin, spots will be released.</span>
           </div>
 
-          {/* ADDED CONFIRMATION MESSAGE IN PAYMENT PAGE TOO */}
+          {/* Updated Confirmation Message */}
           <div className="confirmation-note general-note">
             <div className="confirmation-note-content">
               <Mail size={20} />
               <div>
-                <strong>Confirmation emails</strong> are being sent to registered participants whose registrations are completed.
+                <strong>Important Update:</strong> Engineering registrations are now closed. 
+                Only Polytechnic registrations are being accepted.
                 <br />
-                Please check your inbox (including spam folder). Thank you for your patience.
+                Confirmation emails are being sent to registered participants. 
+                Please check your inbox (including spam folder).
               </div>
             </div>
           </div>
@@ -1752,7 +1793,6 @@ const PaymentPage = ({ formData, totalAmount, setIsSubmitting, setFormError, api
                     />
                   </div>
                   
-                  {/* Non-Refundable Payment Note */}
                   <div className="non-refundable-notice">
                     <div className="non-refundable-header">
                       <AlertCircle size={20} />

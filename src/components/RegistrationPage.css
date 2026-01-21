@@ -4300,3 +4300,117 @@ select.modern-input {
   transform: translateX(2px);
   transition: all 0.3s ease;
 }
+
+/*
+*/
+/* Engineering Closed Banner */
+.engineering-closed-banner {
+  background: linear-gradient(135deg, #ff3838 0%, #ff6b6b 100%);
+  color: white;
+  padding: 15px 0;
+  margin-bottom: 20px;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 4px 12px rgba(255, 56, 56, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  animation: pulse-banner 2s infinite;
+}
+
+.banner-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.banner-content svg {
+  flex-shrink: 0;
+}
+
+.banner-content div {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.banner-content strong {
+  font-size: 15px;
+}
+
+@keyframes pulse-banner {
+  0% { opacity: 0.9; }
+  50% { opacity: 1; }
+  100% { opacity: 0.9; }
+}
+
+/* Registration Full Alert */
+.registration-full-alert {
+  background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: pulse 2s infinite;
+}
+
+.registration-full-alert svg {
+  flex-shrink: 0;
+}
+
+.registration-full-alert div {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.9; }
+  100% { opacity: 1; }
+}
+
+/* Closed Pricing Item */
+.price-item.price-closed {
+  opacity: 0.6;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.price-item.price-closed::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  right: 10px;
+  height: 2px;
+  background: #ff4757;
+  transform: translateY(-50%);
+}
+
+.price-closed .price-label {
+  color: #666 !important;
+  font-style: italic;
+}
+
+.price-closed .price-value {
+  background: #ff4757 !important;
+  color: white !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+/* Updated Confirmation Note */
+
+
+/* Disabled Engineering option in select */
+select option[value="Engineering"]:disabled {
+  color: #ff4757;
+  background-color: #fff5f5;
+  font-style: italic;
+}
