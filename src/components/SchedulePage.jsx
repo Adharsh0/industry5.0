@@ -40,7 +40,7 @@ const SchedulePage = () => {
       title: 'Points & Prizes',
       subtitle: 'Distribution Details',
       fileName: 'points_prizes_distribution.pdf',
-      downloadLink: '/flyer\Points and Prize distribution.pdf', // Update this with your actual PDF path
+      downloadLink: '/flyer/Points and Prize distribution.pdf', // Update this with your actual PDF path
       details: 'Download points and prize distribution details',
       color: '#FF6B6B',
       icon: Trophy,
