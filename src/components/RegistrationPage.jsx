@@ -923,7 +923,7 @@ const RegistrationPage = () => {
                 </div>
                 <div className="stay-availability-badge">
                   <BedDouble size={14} />
-                  <span>Stay spots left: {stayAvailability.remaining} of 350</span>
+                  <span>Stay spots left: 0 of 350</span>
                 </div>
                 <div className="ambassador-note">
                   <AlertCircle size={14} />
