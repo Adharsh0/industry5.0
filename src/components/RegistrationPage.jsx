@@ -501,7 +501,7 @@ const RegistrationPage = () => {
                         <option value="Engineering" disabled>
                           Engineering College (Registration Full - Not Available)
                         </option>
-                        <option value="Polytechnic" disabled>
+                        <option value="Polytechnic">
                           Polytechnic College (Registration Full - Not Available)
                         </option>
                       </select>
