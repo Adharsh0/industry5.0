@@ -909,14 +909,11 @@ const RegistrationPage = () => {
                   <span className="price-label">Engineering College (Registration Full)</span>
                   <span className="price-value">Closed</span>
                 </div>
-                <div className="price-item">
-                  <span className="price-label">Polytechnic College (Non-ISTE)</span>
-                  <span className="price-value">₹300</span>
+                <div className="price-item price-closed">
+                  <span className="price-label">Polytechnic College (Registration Full)</span>
+                  <span className="price-value">Closed</span>
                 </div>
-                <div className="price-item">
-                  <span className="price-label">Polytechnic College (ISTE Member)</span>
-                  <span className="price-value">₹250</span>
-                </div>
+        
                 <div className="price-item">
                   <span className="price-label">Accommodation (per day)</span>
                   <span className="price-value">₹217</span>
