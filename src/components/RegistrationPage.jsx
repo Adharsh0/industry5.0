@@ -501,8 +501,8 @@ const RegistrationPage = () => {
                         <option value="Engineering" disabled>
                           Engineering College (Registration Full - Not Available)
                         </option>
-                        <option value="Polytechnic">
-                          Polytechnic College (₹300 base fee, ₹250 for ISTE members)
+                        <option value="Polytechnic" disabled>
+                          Polytechnic College (Registration Full - Not Available)
                         </option>
                       </select>
                     </div>
