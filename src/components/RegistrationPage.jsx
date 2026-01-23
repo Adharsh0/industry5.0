@@ -657,9 +657,9 @@ const RegistrationPage = () => {
                         className={`modern-input ${!stayAvailability.available && formData.stayPreference === 'With Stay' ? 'warning' : ''}`}
                       >
                         <option value="">Do you require accommodation? *</option>
-                        <option value="With Stay" disabled={!stayAvailability.available}>
-                          {stayAvailability.available 
-                            ? `Yes, I need accommodation (₹217/day) - ${stayAvailability.remaining} spots left`
+                        <option value="With Stay" disabled={stayAvailability.available}>
+                        {stayAvailability.available 
+                            ? `Yes, I need accommodation (₹217/day) - 0 spots left`
                             : 'Accommodation full - No spots available'}
                         </option>
                         <option value="Without Stay">No, I don't need accommodation</option>
