@@ -51,7 +51,7 @@ const SchedulePage = () => {
       title: 'Event Venue',
       subtitle: 'Location & Directions',
       fileName: 'event_venue_details.pdf',
-      downloadLink: 'flyer/Event Schedule.pdf',
+      downloadLink: '/flyer/Points and Prize distribution.pdf',
       details: 'Venue location and directions',
       color: '#2ECC71',
       icon: MapPin,
