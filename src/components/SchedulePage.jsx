@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Download, ArrowLeft, Calendar, Trophy, MapPin } from 'lucide-react';
+import { Download, Calendar, Trophy } from 'lucide-react';
 import './SchedulePage.css';
 
 const SchedulePage = () => {
@@ -79,8 +79,8 @@ const SchedulePage = () => {
           </h1>
 
           <p className="header-description">
-            Hover over the folders to view and download event schedules, points system,
-            prize distribution, and venue details.
+            Hover over the folders to view and download event schedules,
+            points system, and prize distribution.
           </p>
         </div>
 
@@ -102,7 +102,9 @@ const SchedulePage = () => {
                   <div className="folder-content">
                     <div className="folder-title-container">
                       <h3 className="folder-title">{schedule.title}</h3>
-                      {schedule.isNew && <span className="folder-new-indicator">●</span>}
+                      {schedule.isNew && (
+                        <span className="folder-new-indicator">●</span>
+                      )}
                     </div>
                     <p className="folder-subtitle">{schedule.subtitle}</p>
                     <p className="folder-details">{schedule.details}</p>
@@ -120,8 +122,6 @@ const SchedulePage = () => {
                       background:
                         schedule.id === 'prize'
                           ? 'linear-gradient(135deg, #FF6B6B, #C53030)'
-                          : schedule.id === 'venue'
-                          ? 'linear-gradient(135deg, #2ECC71, #1E8449)'
                           : 'linear-gradient(135deg, #e53e3e, #c53030)'
                     }}
                   >
@@ -138,7 +138,7 @@ const SchedulePage = () => {
                       <div className="pdf-text-line"></div>
                       <div className="pdf-text-line"></div>
                       <div className="pdf-text-line short"></div>
-                      {(schedule.id === 'prize' || schedule.id === 'venue') && (
+                      {schedule.id === 'prize' && (
                         <>
                           <div className="pdf-text-line"></div>
                           <div className="pdf-text-line short"></div>
@@ -152,13 +152,6 @@ const SchedulePage = () => {
                         <span>Points & Prize Details</span>
                       </div>
                     )}
-
-                    {schedule.id === 'venue' && (
-                      <div className="prize-indicator">
-                        <MapPin size={14} />
-                        <span>Venue Information</span>
-                      </div>
-                    )}
                   </div>
                 </div>
 
@@ -169,8 +162,6 @@ const SchedulePage = () => {
                     background:
                       schedule.id === 'prize'
                         ? 'linear-gradient(135deg, #FF6B6B, #C53030)'
-                        : schedule.id === 'venue'
-                        ? 'linear-gradient(135deg, #2ECC71, #1E8449)'
                         : 'linear-gradient(135deg, var(--accent), var(--accent-dark))'
                   }}
                 >
@@ -188,7 +179,6 @@ const SchedulePage = () => {
             <ul>
               <li>All files are provided in PDF format</li>
               <li>Points & Prizes includes distribution details</li>
-              <li>Event Venue contains location and directions</li>
               <li>Download all files for complete information</li>
             </ul>
           </div>
