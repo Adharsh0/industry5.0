@@ -29,7 +29,6 @@ const Events = () => {
     {
       title: "Competitions – 2 Days",
       subtitle: "30 & 31 January 2026",
-      
       posters: [
         "/2wheeler.jpeg", "/builditright.jpeg", "/Circuit Decathlon.jpeg", "/mazerunner.jpeg",
         "/lathemaster.jpeg", "/minnal.jpeg", "/pro_debugging.jpeg", "/prompt master.jpeg",
@@ -140,9 +139,9 @@ const Events = () => {
 
       {/* Main Events Button */}
       <div className="simple-main-events">
-        <h2 className="main-events-heading">Register Now!!!</h2>
+        <h2 className="main-events-heading">Main Events</h2>
         <button className="creative-main-events-btn" onClick={() => window.open('https://www.playbook.com/s/johan-s-varughese-graphics/nexora-26-event-list', '_blank')}>
-          <span className="btn-text">Join us</span>
+          <span className="btn-text">View Complete Event Calendar</span>
           <ExternalLink size={20} />
         </button>
       </div>
@@ -159,15 +158,11 @@ const Events = () => {
               <h3 className="main-event-title">{cat.title}</h3>
               <p className="main-event-subtitle">{cat.subtitle}</p>
               <div className="main-event-posters">
-                {cat.events.map((event, i) => (
-  <div
-    key={i}
-    className="main-event-poster"
-    onClick={() => handleEventClick(event)}
-  >
-    <img src={event.poster} alt={event.title} />
-  </div>
-))}
+                {cat.posters.map((p, i) => (
+                  <div key={i} className="main-event-poster">
+                    <img src={p} alt="" />
+                  </div>
+                ))}
               </div>
             </div>
           ))}
