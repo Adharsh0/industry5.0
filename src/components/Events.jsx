@@ -29,6 +29,25 @@ const Events = () => {
     {
       title: "Competitions – 2 Days",
       subtitle: "30 & 31 January 2026",
+      events: [
+      {
+        title: "2 Wheeler Design",
+        poster: "/2wheeler.jpeg",
+        date: "30–31 January 2026",
+        time: "Full Day",
+        venue: "MBCET",
+        description: "Design and engineering challenge focused on two-wheeler systems.",
+        registerLink: "https://forms.gle/2WHEELER_FORM"
+      },
+      {
+        title: "Circuit Decathlon",
+        poster: "/Circuit Decathlon.jpeg",
+        date: "30–31 January 2026",
+        time: "Full Day",
+        venue: "MBCET",
+        description: "Multi-round electronics and circuit design competition.",
+        registerLink: "https://forms.gle/CIRCUIT_FORM"
+      }
       posters: [
         "/2wheeler.jpeg", "/builditright.jpeg", "/Circuit Decathlon.jpeg", "/mazerunner.jpeg",
         "/lathemaster.jpeg", "/minnal.jpeg", "/pro_debugging.jpeg", "/prompt master.jpeg",
@@ -158,11 +177,15 @@ const Events = () => {
               <h3 className="main-event-title">{cat.title}</h3>
               <p className="main-event-subtitle">{cat.subtitle}</p>
               <div className="main-event-posters">
-                {cat.posters.map((p, i) => (
-                  <div key={i} className="main-event-poster">
-                    <img src={p} alt="" />
-                  </div>
-                ))}
+                {cat.events.map((event, i) => (
+  <div
+    key={i}
+    className="main-event-poster"
+    onClick={() => handleEventClick(event)}
+  >
+    <img src={event.poster} alt={event.title} />
+  </div>
+))}
               </div>
             </div>
           ))}
