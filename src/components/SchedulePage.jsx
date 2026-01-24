@@ -45,17 +45,6 @@ const SchedulePage = () => {
       color: '#FF6B6B',
       icon: Trophy,
       isNew: true
-    },
-    {
-      id: 'venue',
-      title: 'Event Venue',
-      subtitle: 'Location & Directions',
-      fileName: 'event_venue_details.pdf',
-      downloadLink: '/flyer/Points and Prize distribution.pdf',
-      details: 'Venue location and directions',
-      color: '#2ECC71',
-      icon: MapPin,
-      isNew: true
     }
   ];
 
