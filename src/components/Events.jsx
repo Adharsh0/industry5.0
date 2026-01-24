@@ -29,25 +29,7 @@ const Events = () => {
     {
       title: "Competitions – 2 Days",
       subtitle: "30 & 31 January 2026",
-      events: [
-      {
-        title: "2 Wheeler Design",
-        poster: "/2wheeler.jpeg",
-        date: "30–31 January 2026",
-        time: "Full Day",
-        venue: "MBCET",
-        description: "Design and engineering challenge focused on two-wheeler systems.",
-        registerLink: "https://forms.gle/2WHEELER_FORM"
-      },
-      {
-        title: "Circuit Decathlon",
-        poster: "/Circuit Decathlon.jpeg",
-        date: "30–31 January 2026",
-        time: "Full Day",
-        venue: "MBCET",
-        description: "Multi-round electronics and circuit design competition.",
-        registerLink: "https://forms.gle/CIRCUIT_FORM"
-      }
+      
       posters: [
         "/2wheeler.jpeg", "/builditright.jpeg", "/Circuit Decathlon.jpeg", "/mazerunner.jpeg",
         "/lathemaster.jpeg", "/minnal.jpeg", "/pro_debugging.jpeg", "/prompt master.jpeg",
@@ -158,9 +140,9 @@ const Events = () => {
 
       {/* Main Events Button */}
       <div className="simple-main-events">
-        <h2 className="main-events-heading">Main Events</h2>
+        <h2 className="main-events-heading">Register Now!!!</h2>
         <button className="creative-main-events-btn" onClick={() => window.open('https://www.playbook.com/s/johan-s-varughese-graphics/nexora-26-event-list', '_blank')}>
-          <span className="btn-text">View Complete Event Calendar</span>
+          <span className="btn-text">Join us</span>
           <ExternalLink size={20} />
         </button>
       </div>
