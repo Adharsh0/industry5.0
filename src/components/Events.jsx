@@ -13,6 +13,74 @@ const Events = () => {
   const sectionRefs = useRef([]);
   const eventCardRefs = useRef([]);
   const downloadSectionRef = useRef(null);
+/* ================= MAIN EVENTS ================= */
+
+const mainEventCategories = [
+  {
+    title: "Hackathon",
+    subtitle: "24-Hour Flagship Innovation Challenge",
+    posters: [
+      "/hack1.jpeg",
+      "/hack2.jpeg",
+      "/hack3.jpeg"
+    ]
+  },
+  {
+    title: "Workshops @ Nexora",
+    subtitle: "Hands-on Technical & Skill Sessions",
+    posters: [
+      "/cludburst.jpeg",
+      "/drone.jpeg",
+      "/ethical.jpeg",
+      "/clay.jpeg",
+      "/data.jpeg"
+    ]
+  },
+  {
+    title: "Competitions – 2 Days",
+    subtitle: "30 & 31 January 2026",
+    posters: [
+    "/2wheeler.jpeg",
+    "/builditright.jpeg",
+    "/Circuit Decathlon.jpeg",
+    "/mazerunner.jpeg",
+    "/lathemaster.jpeg",
+    "/minnal.jpeg",
+    "/pro_debugging.jpeg",
+    "/prompt master.jpeg",
+    "/sodeso.jpeg",
+    "/terra.jpeg",
+    "/treassurhunt.jpeg",
+    "/wiringDeca.jpeg",
+    "/builder_brain.jpeg",
+    "/calli.jpeg"
+  ]
+    )
+  },
+  {
+    title: "Competitions – 30 January",
+    subtitle: "One-Day Events",
+    posters: [
+    "/0g.jpeg",
+    "/cad wizard.jpeg",
+    "/debate.jpeg",
+    "/ideaorbit.jpeg",
+    "/mazeescape.jpeg",
+    "/rj_hunt.jpeg",
+    "/robowar.jpeg",
+    "/x.jpeg"
+  ]
+  },
+  {
+    title: "Competitions – 31 January",
+    subtitle: "Final Day Events",
+    posters: [
+      "/pp.jpeg",
+      "/carroms.jpeg",
+      "/quiz.jpeg"
+    ]
+  }
+];
 
   const allEvents = [
     {
@@ -429,9 +497,9 @@ const Events = () => {
 
   // Initialize section refs
   useEffect(() => {
-    sectionRefs.current = sectionRefs.current.slice(0, 2);
-    eventCardRefs.current = eventCardRefs.current.slice(0, allEvents.length);
-  }, []);
+  eventCardRefs.current = eventCardRefs.current.slice(0, allEvents.length);
+}, []);
+
 
   // Intersection Observer for scroll animations
   useEffect(() => {
@@ -622,12 +690,35 @@ const Events = () => {
       </div>
 
       <div className="events-wrapper">
-        <section 
-          ref={el => sectionRefs.current[0] = el}
-          className="events-section"
-        >
+	<section className="events-section main-events-section">
+  <div className="section-header">
+    <div className="section-badge">Main Events</div>
+    <h2 className="section-title1">NEXORA 2026 – MAIN EVENTS</h2>
+    <p className="section-subtitle1">
+      Flagship events of ISTE State Students Convention
+    </p>
+  </div>
+
+  {mainEventCategories.map((category, index) => (
+    <div key={index} className="main-event-category">
+      <h3 className="main-event-title">{category.title}</h3>
+      <p className="main-event-subtitle">{category.subtitle}</p>
+
+      <div className="main-event-posters">
+        {category.posters.map((poster, i) => (
+          <div key={i} className="main-event-poster">
+            <img src={poster} alt={`${category.title} ${i + 1}`} />
+          </div>
+        ))}
+      </div>
+    </div>
+  ))}
+</section>
+
+        <section ref={el => sectionRefs.current[0] = el} className="events-section">
           <div className="section-header">
             <div className="section-badge">All Events</div>
+
             <h2 className="section-title1">NEXORA PRE-EVENTS 2025-26</h2>
             <p className="section-subtitle1">Explore all our exciting events happening this season</p>
           </div>
