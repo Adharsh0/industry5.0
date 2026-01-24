@@ -651,69 +651,53 @@ const mainEventCategories = [
         </div>
       </div>
 
-      {/* Simple Main Events Button Section */}
-      <div className="simple-main-events">
-        <h2 className="main-events-heading">MAIN EVENTS</h2>
-        <button 
-          className="creative-main-events-btn"
-          onClick={handleMainEventsClick}
-          onMouseEnter={() => setIsMainEventsHovered(true)}
-          onMouseLeave={() => setIsMainEventsHovered(false)}
-        >
-          <span className="btn-text">View Complete Event Calendar</span>
-          <span className="btn-icon">
-            <ExternalLink size={20} />
-          </span>
-          
-          {/* Animated border */}
-          <div className="btn-border">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+{/* Main Events Section */}
+      <section style={{ padding: '60px 20px', maxWidth: '1400px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <div style={{ display: 'inline-block', padding: '8px 20px', backgroundColor: '#6366f1', borderRadius: '20px', fontSize: '12px', marginBottom: '20px' }}>
+            Main Events
           </div>
-          
-          {/* Particle effect */}
-          <div className="btn-particles">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <span 
-                key={i}
-                className="particle"
-                style={{
-                  '--i': i,
-                  '--color': i % 2 === 0 ? '#3b82f6' : '#8b5cf6'
+          <h2 style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '10px' }}>NEXORA 2026 – MAIN EVENTS</h2>
+          <p style={{ color: '#9ca3af', fontSize: '18px' }}>Flagship events of ISTE State Students Convention</p>
+        </div>
+
+        {mainEventCategories.map((category, index) => (
+          <div key={index} style={{ marginBottom: '80px' }}>
+            <h3 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '10px', color: '#6366f1' }}>
+              {category.title}
+            </h3>
+            <p style={{ color: '#9ca3af', fontSize: '16px', marginBottom: '30px' }}>
+              {category.subtitle}
+            </p>
+
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', 
+              gap: '20px' 
+            }}>
+              {category.posters.map((poster, i) => (
+                <div key={i} style={{ 
+                  borderRadius: '12px', 
+                  overflow: 'hidden', 
+                  backgroundColor: '#1a1a1a',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+                  transition: 'transform 0.3s ease',
+                  cursor: 'pointer'
                 }}
-              ></span>
-            ))}
-          </div>
-        </button>
-      </div>
-
-      <div className="events-wrapper">
-	<section className="events-section main-events-section">
-  <div className="section-header">
-    <div className="section-badge">Main Events</div>
-    <h2 className="section-title1">NEXORA 2026 – MAIN EVENTS</h2>
-    <p className="section-subtitle1">
-      Flagship events of ISTE State Students Convention
-    </p>
-  </div>
-
-  {mainEventCategories.map((category, index) => (
-    <div key={index} className="main-event-category">
-      <h3 className="main-event-title">{category.title}</h3>
-      <p className="main-event-subtitle">{category.subtitle}</p>
-
-      <div className="main-event-posters">
-        {category.posters.map((poster, i) => (
-          <div key={i} className="main-event-poster">
-            <img src={poster} alt={`${category.title} ${i + 1}`} />
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  <img 
+                    src={poster} 
+                    alt={`${category.title} ${i + 1}`} 
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         ))}
-      </div>
-    </div>
-  ))}
-</section>
+      </section>
 
         <section ref={el => sectionRefs.current[0] = el} className="events-section">
           <div className="section-header">
