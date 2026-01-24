@@ -139,9 +139,9 @@ const Events = () => {
 
       {/* Main Events Button */}
       <div className="simple-main-events">
-        <h2 className="main-events-heading">Main Events</h2>
+        <h2 className="main-events-heading">Register Now</h2>
         <button className="creative-main-events-btn" onClick={() => window.open('https://www.playbook.com/s/johan-s-varughese-graphics/nexora-26-event-list', '_blank')}>
-          <span className="btn-text">View Complete Event Calendar</span>
+          <span className="btn-text">Event Spotlight</span>
           <ExternalLink size={20} />
         </button>
       </div>
