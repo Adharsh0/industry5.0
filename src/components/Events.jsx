@@ -33,7 +33,7 @@ const Events = () => {
         "/2wheeler.jpeg", "/builditright.jpeg", "/Circuit Decathlon.jpeg", "/mazerunner.jpeg",
         "/lathemaster.jpeg", "/minnal.jpeg", "/pro_debugging.jpeg", "/prompt master.jpeg",
         "/sodeso.jpeg", "/terra.jpeg", "/treassurhunt.jpeg", "/wiringDeca.jpeg",
-        "/builder_brain.jpeg", "/calli.jpeg"
+        "/builder_brain.webp", "/calli.webp"
       ]
     },
     {
@@ -139,7 +139,7 @@ const Events = () => {
 
       {/* Main Events Button */}
       <div className="simple-main-events">
-        <h2 className="main-events-heading">MAIN EVENTS</h2>
+        <h2 className="main-events-heading">Main Events</h2>
         <button className="creative-main-events-btn" onClick={() => window.open('https://www.playbook.com/s/johan-s-varughese-graphics/nexora-26-event-list', '_blank')}>
           <span className="btn-text">View Complete Event Calendar</span>
           <ExternalLink size={20} />
