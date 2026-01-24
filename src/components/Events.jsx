@@ -55,7 +55,7 @@ const mainEventCategories = [
     "/builder_brain.jpeg",
     "/calli.jpeg"
   ]
-    )
+    
   },
   {
     title: "Competitions – 30 January",
