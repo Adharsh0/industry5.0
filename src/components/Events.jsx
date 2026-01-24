@@ -13,74 +13,6 @@ const Events = () => {
   const sectionRefs = useRef([]);
   const eventCardRefs = useRef([]);
   const downloadSectionRef = useRef(null);
-/* ================= MAIN EVENTS ================= */
-
-const mainEventCategories = [
-  {
-    title: "Hackathon",
-    subtitle: "24-Hour Flagship Innovation Challenge",
-    posters: [
-      "/hack1.jpeg",
-      "/hack2.jpeg",
-      "/hack3.jpeg"
-    ]
-  },
-  {
-    title: "Workshops @ Nexora",
-    subtitle: "Hands-on Technical & Skill Sessions",
-    posters: [
-      "/cludburst.jpeg",
-      "/drone.jpeg",
-      "/ethical.jpeg",
-      "/clay.jpeg",
-      "/data.jpeg"
-    ]
-  },
-  {
-    title: "Competitions – 2 Days",
-    subtitle: "30 & 31 January 2026",
-    posters: [
-    "/2wheeler.jpeg",
-    "/builditright.jpeg",
-    "/Circuit Decathlon.jpeg",
-    "/mazerunner.jpeg",
-    "/lathemaster.jpeg",
-    "/minnal.jpeg",
-    "/pro_debugging.jpeg",
-    "/prompt master.jpeg",
-    "/sodeso.jpeg",
-    "/terra.jpeg",
-    "/treassurhunt.jpeg",
-    "/wiringDeca.jpeg",
-    "/builder_brain.jpeg",
-    "/calli.jpeg"
-  ]
-    
-  },
-  {
-    title: "Competitions – 30 January",
-    subtitle: "One-Day Events",
-    posters: [
-    "/0g.jpeg",
-    "/cad wizard.jpeg",
-    "/debate.jpeg",
-    "/ideaorbit.jpeg",
-    "/mazeescape.jpeg",
-    "/rj_hunt.jpeg",
-    "/robowar.jpeg",
-    "/x.jpeg"
-  ]
-  },
-  {
-    title: "Competitions – 31 January",
-    subtitle: "Final Day Events",
-    posters: [
-      "/pp.jpeg",
-      "/carroms.jpeg",
-      "/quiz.jpeg"
-    ]
-  }
-];
 
   const allEvents = [
     {
@@ -497,9 +429,9 @@ const mainEventCategories = [
 
   // Initialize section refs
   useEffect(() => {
-  eventCardRefs.current = eventCardRefs.current.slice(0, allEvents.length);
-}, []);
-
+    sectionRefs.current = sectionRefs.current.slice(0, 2);
+    eventCardRefs.current = eventCardRefs.current.slice(0, allEvents.length);
+  }, []);
 
   // Intersection Observer for scroll animations
   useEffect(() => {
@@ -651,58 +583,51 @@ const mainEventCategories = [
         </div>
       </div>
 
-{/* Main Events Section */}
-      <section style={{ padding: '60px 20px', maxWidth: '1400px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-          <div style={{ display: 'inline-block', padding: '8px 20px', backgroundColor: '#6366f1', borderRadius: '20px', fontSize: '12px', marginBottom: '20px' }}>
-            Main Events
+      {/* Simple Main Events Button Section */}
+      <div className="simple-main-events">
+        <h2 className="main-events-heading">MAIN EVENTS</h2>
+        <button 
+          className="creative-main-events-btn"
+          onClick={handleMainEventsClick}
+          onMouseEnter={() => setIsMainEventsHovered(true)}
+          onMouseLeave={() => setIsMainEventsHovered(false)}
+        >
+          <span className="btn-text">View Complete Event Calendar</span>
+          <span className="btn-icon">
+            <ExternalLink size={20} />
+          </span>
+          
+          {/* Animated border */}
+          <div className="btn-border">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
-          <h2 style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '10px' }}>NEXORA 2026 – MAIN EVENTS</h2>
-          <p style={{ color: '#9ca3af', fontSize: '18px' }}>Flagship events of ISTE State Students Convention</p>
-        </div>
-
-        {mainEventCategories.map((category, index) => (
-          <div key={index} style={{ marginBottom: '80px' }}>
-            <h3 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '10px', color: '#6366f1' }}>
-              {category.title}
-            </h3>
-            <p style={{ color: '#9ca3af', fontSize: '16px', marginBottom: '30px' }}>
-              {category.subtitle}
-            </p>
-
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', 
-              gap: '20px' 
-            }}>
-              {category.posters.map((poster, i) => (
-                <div key={i} style={{ 
-                  borderRadius: '12px', 
-                  overflow: 'hidden', 
-                  backgroundColor: '#1a1a1a',
-                  boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
-                  transition: 'transform 0.3s ease',
-                  cursor: 'pointer'
+          
+          {/* Particle effect */}
+          <div className="btn-particles">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <span 
+                key={i}
+                className="particle"
+                style={{
+                  '--i': i,
+                  '--color': i % 2 === 0 ? '#3b82f6' : '#8b5cf6'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                >
-                  <img 
-                    src={poster} 
-                    alt={`${category.title} ${i + 1}`} 
-                    style={{ width: '100%', height: 'auto', display: 'block' }}
-                  />
-                </div>
-              ))}
-            </div>
+              ></span>
+            ))}
           </div>
-        ))}
-      </section>
+        </button>
+      </div>
 
-        <section ref={el => sectionRefs.current[0] = el} className="events-section">
+      <div className="events-wrapper">
+        <section 
+          ref={el => sectionRefs.current[0] = el}
+          className="events-section"
+        >
           <div className="section-header">
             <div className="section-badge">All Events</div>
-
             <h2 className="section-title1">NEXORA PRE-EVENTS 2025-26</h2>
             <p className="section-subtitle1">Explore all our exciting events happening this season</p>
           </div>
