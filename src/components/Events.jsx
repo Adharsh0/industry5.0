@@ -33,7 +33,7 @@ const Events = () => {
         "/2wheeler.jpeg", "/builditright.jpeg", "/Circuit Decathlon.jpeg", "/mazerunner.jpeg",
         "/lathemaster.jpeg", "/minnal.jpeg", "/pro_debugging.jpeg", "/prompt master.jpeg",
         "/sodeso.jpeg", "/terra.jpeg", "/treassurhunt.jpeg", "/wiringDeca.jpeg",
-        "/builder_brain.webp", "/calli.webp"
+        "builderbrain.webp", "/calli.webp"
       ]
     },
     {
