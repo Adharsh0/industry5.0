@@ -108,26 +108,8 @@ const CountdownTimer = () => {
             style={{ width: `${progress}%` }}
           />
         </div>
-
-       <div
-  style={{
-    padding: '8px 16px',
-    fontSize: '13px',
-    fontWeight: 600,
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-    color: '#ffffff',
-    background: 'linear-gradient(135deg, #8b8b8b, #5f5f5f)',
-    borderRadius: '18px',
-    opacity: 0.85,
-    cursor: 'not-allowed',
-    boxShadow: '0 6px 14px rgba(0, 0, 0, 0.25)',
-    userSelect: 'none',
-    display: 'inline-block',
-    pointerEvents: 'none'
-  }}
->
-  Registration Closed
+<div className="registration-closed-badge">
+  <span>Registration Closed</span>
 </div>
 
       </div>
