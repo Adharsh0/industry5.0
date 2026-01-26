@@ -109,7 +109,7 @@ const CountdownTimer = () => {
           />
         </div>
 
-       
+       <div>Registrations CLosed</div>
       </div>
     </div>
     </div>
