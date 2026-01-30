@@ -12,7 +12,8 @@ const RankList = () => {
   const engineeringColleges = [
     { rank: 1, name: "Government Engineering College Thrissur", points: 1730, color: '#FFD700' },
     { rank: 2, name: "Government Engineering College Wayanad", points: 400, color: '#C0C0C0' },
-    { rank: 3, name: "Government Engineering College Barton Hill", points: 340, color: '#CD7F32' }
+    { rank: 3, name: "Government College of Engineering Kannur", points: 335, color: '#CD7F32', shared: true },
+    { rank: 3, name: "Government Engineering College Barton Hill", points: 335, color: '#CD7F32', shared: true }
   ];
 
   const polytechnicColleges = [
@@ -61,10 +62,16 @@ const RankList = () => {
 
   const currentData = activeTab === 'engineering' ? engineeringColleges : polytechnicColleges;
   const totalPoints = currentData.reduce((sum, c) => sum + c.points, 0);
+  
+  // Get podium data
+  const firstPlace = currentData.find(c => c.rank === 1);
+  const secondPlace = currentData.find(c => c.rank === 2);
+  const thirdPlaceColleges = currentData.filter(c => c.rank === 3);
+  const hasSharedThird = thirdPlaceColleges.length > 1;
 
   return (
     <div className="ranklist-container">
-      {/* Hero Section - Keeping original design */}
+      {/* Hero Section */}
       <div className="ranklist-hero">
         <div className="hero-background">
           <div className="gradient-orb orb-1"></div>
@@ -83,9 +90,7 @@ const RankList = () => {
 
       {/* Main Content */}
       <div className={`ranklist-wrapper ${isVisible ? 'visible' : ''}`} ref={sectionRef}>
-        {/* Stats Banner */}
-       
-        {/* Category Tabs */}
+        {/* Category Header */}
         <div className="category-header">
           <div className="header-content">
             <h2 className="section-title">
@@ -96,6 +101,7 @@ const RankList = () => {
           </div>
         </div>
 
+        {/* Category Tabs */}
         <div className="category-tabs">
           <button 
             className={`tab-button ${activeTab === 'engineering' ? 'active' : ''}`}
@@ -110,7 +116,6 @@ const RankList = () => {
               </div>
               <div className="tab-text-content">
                 <span className="tab-text">Engineering Colleges</span>
-               
               </div>
             </div>
           </button>
@@ -127,7 +132,6 @@ const RankList = () => {
               </div>
               <div className="tab-text-content">
                 <span className="tab-text">Polytechnic Colleges</span>
-              
               </div>
             </div>
           </button>
@@ -144,20 +148,14 @@ const RankList = () => {
           <div className="podium-container">
             {/* 2nd Place */}
             <div className="podium-card podium-second" style={{ '--delay': '0.2s' }}>
-              <div className="podium-rank-badge" style={{ background: currentData[1].color }}>
+              <div className="podium-rank-badge" style={{ background: secondPlace.color }}>
                 {getRankIcon(2)}
                 <div className="badge-glow"></div>
               </div>
-              <div className="podium-position">
-                2nd Place
-                <div className="improvement-badge">
-                  <TrendingUp size={12} />
-                  <span>{currentData[1].improvement}</span>
-                </div>
-              </div>
-              <h3 className="podium-college-name">{currentData[1].name}</h3>
+              <div className="podium-position">2nd Place</div>
+              <h3 className="podium-college-name">{secondPlace.name}</h3>
               <div className="podium-points">
-                <span className="points-number">{currentData[1].points}</span>
+                <span className="points-number">{secondPlace.points}</span>
                 <span className="points-label">Points</span>
               </div>
               <div className="podium-stand stand-silver">
@@ -172,21 +170,17 @@ const RankList = () => {
               <div className="crown-wrapper">
                 <Crown size={24} className="crown-icon" />
               </div>
-              <div className="podium-rank-badge champion" style={{ background: currentData[0].color }}>
+              <div className="podium-rank-badge champion" style={{ background: firstPlace.color }}>
                 {getRankIcon(1)}
                 <div className="champion-glow"></div>
                 <div className="sparkle"></div>
               </div>
               <div className="podium-position champion-text">
                 <span>Champion</span>
-                <div className="improvement-badge champion-improvement">
-                  <TrendingUp size={12} />
-                  <span>{currentData[0].improvement}</span>
-                </div>
               </div>
-              <h3 className="podium-college-name">{currentData[0].name}</h3>
+              <h3 className="podium-college-name">{firstPlace.name}</h3>
               <div className="podium-points champion-points">
-                <span className="points-number">{currentData[0].points}</span>
+                <span className="points-number">{firstPlace.points}</span>
                 <span className="points-label">Points</span>
               </div>
               <div className="podium-stand stand-gold">
@@ -197,23 +191,30 @@ const RankList = () => {
               </div>
             </div>
 
-            {/* 3rd Place */}
-            <div className="podium-card podium-third" style={{ '--delay': '0.4s' }}>
-              <div className="podium-rank-badge" style={{ background: currentData[2].color }}>
+            {/* 3rd Place - Shows both if shared */}
+            <div className={`podium-card podium-third ${hasSharedThird ? 'shared-position' : ''}`} style={{ '--delay': '0.4s' }}>
+              <div className="podium-rank-badge" style={{ background: thirdPlaceColleges[0].color }}>
                 {getRankIcon(3)}
                 <div className="badge-glow"></div>
               </div>
               <div className="podium-position">
-                3rd Place
-                <div className="improvement-badge">
-                  <TrendingUp size={12} />
-                  <span>{currentData[2].improvement}</span>
-                </div>
+                3rd Place {hasSharedThird && <span className="shared-badge">Shared</span>}
               </div>
-              <h3 className="podium-college-name">{currentData[2].name}</h3>
+              {hasSharedThird ? (
+                <div className="shared-colleges-container">
+                  {thirdPlaceColleges.map((college, idx) => (
+                    <div key={idx} className="shared-college-item">
+                      <div className="shared-college-bullet">•</div>
+                      <h3 className="podium-college-name shared-college-name">{college.name}</h3>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <h3 className="podium-college-name">{thirdPlaceColleges[0].name}</h3>
+              )}
               <div className="podium-points">
-                <span className="points-number">{currentData[2].points}</span>
-                <span className="points-label">Points</span>
+                <span className="points-number">{thirdPlaceColleges[0].points}</span>
+                <span className="points-label">Points {hasSharedThird && '(Each)'}</span>
               </div>
               <div className="podium-stand stand-bronze">
                 <div className="stand-glow"></div>
@@ -240,7 +241,47 @@ const RankList = () => {
           </div>
         </div>
 
+        {/* Complete Rankings Section */}
+        <div className="complete-rankings-section">
+          <div className="rankings-header">
+            <h2 className="rankings-title">
+              <Sparkles size={24} />
+              Complete Rankings
+            </h2>
+            <p className="rankings-subtitle">Full leaderboard for {activeTab === 'engineering' ? 'Engineering' : 'Polytechnic'} colleges</p>
+          </div>
 
+          <div className="rankings-table">
+            {currentData.map((college, index) => (
+              <div 
+                key={index}
+                className={`ranking-row ${college.shared ? 'shared-rank' : ''}`}
+                style={{ '--delay': `${index * 0.1}s` }}
+              >
+                <div className="rank-badge" style={{ background: college.color }}>
+                  <span className="rank-number-large">{college.rank}</span>
+                  {college.shared && <span className="shared-indicator">*</span>}
+                </div>
+                
+                <div className="college-info">
+                  <h3 className="college-name-full">{college.name}</h3>
+                  {college.shared && <span className="shared-label">Tied for 3rd Place</span>}
+                </div>
+
+                <div className="points-display">
+                  <span className="points-value-large">{college.points}</span>
+                  <span className="points-text-small">points</span>
+                </div>
+
+                <div className="rank-icon-wrapper">
+                  {getRankIcon(college.rank)}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          
+        </div>
       </div>
     </div>
   );

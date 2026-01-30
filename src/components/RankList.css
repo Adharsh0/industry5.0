@@ -45,32 +45,7 @@
   mix-blend-mode: screen;
 }
 
-.orb-1 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, #3b82f6, #8b5cf6, transparent 70%);
-  top: -300px;
-  left: -300px;
-}
 
-.orb-2 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #ec4899, #8b5cf6, transparent 70%);
-  bottom: -250px;
-  right: -250px;
-  animation-delay: 7s;
-}
-
-.orb-3 {
-  width: 450px;
-  height: 450px;
-  background: radial-gradient(circle, #10b981, #3b82f6, transparent 70%);
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation-delay: 14s;
-}
 
 @keyframes float {
   0%, 100% { transform: translate(0, 0) scale(1); }
@@ -1070,3 +1045,357 @@
     align-items: center;
   }
 }
+/* Shared Badge */
+.shared-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    background: rgba(255, 215, 0, 0.2);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    border-radius: 8px;
+    margin-left: 8px;
+    color: #fbbf24;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Complete Rankings Section */
+  .complete-rankings-section {
+    margin-top: 80px;
+    padding-top: 80px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .rankings-header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  
+  .rankings-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 12px;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  
+  .rankings-title svg {
+    color: #fbbf24;
+  }
+  
+  .rankings-subtitle {
+    font-size: 1.125rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 300;
+  }
+  
+  .rankings-table {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .ranking-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 24px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 24px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    animation: slideInRow 0.6s ease forwards;
+    animation-delay: var(--delay);
+  }
+  
+  @keyframes slideInRow {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .ranking-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(10px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  }
+  
+  .ranking-row.shared-rank {
+    border-left: 3px solid rgba(255, 215, 0, 0.5);
+  }
+  
+  .rank-badge {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+  }
+  
+  .rank-number-large {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #000000;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  
+  .shared-indicator {
+    position: absolute;
+    top: 2px;
+    right: 8px;
+    font-size: 1.5rem;
+    color: #fbbf24;
+    animation: twinkle 2s ease-in-out infinite;
+  }
+  
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  
+  .college-info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .college-name-full {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  
+  .shared-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: #fbbf24;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 4px 12px;
+    border-radius: 12px;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  
+  .points-display {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  
+  .points-value-large {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  
+  .points-text-small {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .rank-icon-wrapper {
+    color: rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+  }
+  
+  .rankings-note {
+    max-width: 1000px;
+    margin: 40px auto 0;
+    padding: 20px 24px;
+    background: rgba(255, 215, 0, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 16px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .note-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  
+  .note-text {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  /* Responsive for rankings table */
+  @media (max-width: 768px) {
+    .ranking-row {
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+    }
+  
+    .points-display {
+      grid-column: 2;
+      align-items: flex-start;
+      margin-top: 12px;
+    }
+  
+    .rank-icon-wrapper {
+      display: none;
+    }
+  
+    .rank-badge {
+      width: 60px;
+      height: 60px;
+    }
+  
+    .rank-number-large {
+      font-size: 1.75rem;
+    }
+  
+    .college-name-full {
+      font-size: 1.125rem;
+    }
+  
+    .points-value-large {
+      font-size: 2rem;
+    }
+  
+    .rankings-note {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .rankings-title {
+      font-size: 2rem;
+    }
+  
+    .college-name-full {
+      font-size: 1rem;
+    }
+  
+    .points-value-large {
+      font-size: 1.75rem;
+    }
+  }
+  /* Shared Position Styles */
+.podium-card.shared-position {
+    min-height: 550px;
+  }
+  
+  .shared-colleges-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+    width: 100%;
+    padding: 0 10px;
+  }
+  
+  .shared-college-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    text-align: left;
+  }
+  
+  .shared-college-bullet {
+    color: #CD7F32;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  .shared-college-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.4;
+    min-height: auto;
+  }
+  
+  .podium-college-name.shared-college-name {
+    min-height: auto;
+    display: block;
+    text-align: left;
+    padding: 0;
+  }
+  
+  /* Update shared badge */
+  .shared-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 3px 10px;
+    background: rgba(205, 127, 50, 0.2);
+    border: 1px solid rgba(205, 127, 50, 0.5);
+    border-radius: 10px;
+    margin-left: 8px;
+    color: #CD7F32;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulseGlow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(205, 127, 50, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(205, 127, 50, 0.6);
+    }
+  }
+  
+  /* Responsive adjustments for shared colleges */
+  @media (max-width: 768px) {
+    .podium-card.shared-position {
+      min-height: auto;
+    }
+  
+    .shared-college-name {
+      font-size: 1rem;
+    }
+  
+    .shared-college-bullet {
+      font-size: 1.25rem;
+    }
+  
+    .shared-colleges-container {
+      gap: 10px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .shared-college-name {
+      font-size: 0.9375rem;
+    }
+  
+    .shared-badge {
+      font-size: 0.6rem;
+      padding: 2px 8px;
+    }
+  }
