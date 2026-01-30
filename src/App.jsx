@@ -15,6 +15,7 @@ import Events from './components/Events';
 import CustomCursor from './components/CustomCursor';
 import CountdownTimer from './components/CountdownTimer';
 import SchedulePage from './components/SchedulePage'; // Import SchedulePage
+import RankList from './components/RankList';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -68,6 +69,7 @@ function App() {
               <Route path="/host" element={<HostSection />} />
               <Route path="/admin-iste-qwert" element={<AdminPage />} />
               <Route path="*" element={<Navigate to="/" />} />
+              <Route path="/rankings" element={<RankList />} />
             </Routes>
             <Footer />
           </div>

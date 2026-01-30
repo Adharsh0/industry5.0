@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, Home, Info, Calendar, Users, Award, Mail, UserCheck, X } from 'lucide-react';
+import { Menu, Home, Info, Calendar, Users, Award, Mail, UserCheck, X, Trophy } from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -75,7 +75,16 @@ const Navbar = () => {
       } 
     },
     { id: 'host', label: 'Host', icon: <UserCheck size={18} />, action: () => { closeMenu(); navigate('/host'); } },
-    { id: 'sponsors', label: 'Sponsors', icon: <Users size={18} />, action: () => handleSectionClick('sponsors') },
+    { 
+      id: 'rank', 
+      label: 'Rankings', 
+      icon: <Trophy size={18} />, 
+      action: () => { 
+        closeMenu(); 
+        navigate('/rankings');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } 
+    },
     { id: 'contact', label: 'Contact', icon: <Mail size={18} />, action: () => handleSectionClick('contact') },
   ];
 
