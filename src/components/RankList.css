@@ -1399,3 +1399,261 @@
       padding: 2px 8px;
     }
   }
+  /* ================= RESPONSIVE PODIUM FIX ================= */
+
+@media (max-width: 768px) {
+  .podium-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    gap: 15px;
+    max-width: 100%;
+    align-items: flex-end;
+  }
+  
+  /* Reset the order changes */
+  .podium-first,
+  .podium-second,
+  .podium-third {
+    order: initial !important;
+    transform: none !important;
+    margin-bottom: 0 !important;
+  }
+  
+  /* Scale down the champion card */
+  .podium-first {
+    transform: scale(0.9) !important;
+    z-index: 5;
+  }
+  
+  /* Adjust podium heights for mobile */
+  .podium-stand {
+    height: 150px !important;
+  }
+  
+  .stand-gold {
+    height: 180px !important;
+  }
+  
+  .stand-silver {
+    height: 120px !important;
+  }
+  
+  .stand-bronze {
+    height: 100px !important;
+  }
+  
+  /* Adjust other elements */
+  .podium-rank-badge {
+    width: 70px !important;
+    height: 70px !important;
+    margin: 0 auto 20px !important;
+  }
+  
+  .podium-rank-badge.champion {
+    width: 90px !important;
+    height: 90px !important;
+  }
+  
+  .podium-college-name {
+    font-size: 1rem !important;
+    min-height: 50px !important;
+    padding: 0 10px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .points-number {
+    font-size: 2rem !important;
+  }
+  
+  .stand-number {
+    font-size: 3rem !important;
+    bottom: 15px !important;
+  }
+  
+  /* Adjust shared position styles for mobile */
+  .podium-card.shared-position {
+    min-height: auto !important;
+  }
+  
+  .shared-college-name {
+    font-size: 0.9rem !important;
+  }
+  
+  .crown-wrapper {
+    top: -15px !important;
+  }
+  
+  .crown-icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+  .podium-container {
+    gap: 8px;
+    grid-template-columns: 1fr 1.1fr 1fr;
+  }
+  
+  .podium-stand {
+    height: 120px !important;
+  }
+  
+  .stand-gold {
+    height: 150px !important;
+  }
+  
+  .stand-silver {
+    height: 100px !important;
+  }
+  
+  .stand-bronze {
+    height: 80px !important;
+  }
+  
+  .podium-rank-badge {
+    width: 60px !important;
+    height: 60px !important;
+    margin: 0 auto 15px !important;
+  }
+  
+  .podium-rank-badge.champion {
+    width: 75px !important;
+    height: 75px !important;
+  }
+  
+  .podium-college-name {
+    font-size: 0.875rem !important;
+    min-height: 40px !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .podium-position {
+    font-size: 0.75rem !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .points-number {
+    font-size: 1.75rem !important;
+  }
+  
+  .stand-number {
+    font-size: 2.5rem !important;
+  }
+  
+  .podium-points {
+    padding: 15px !important;
+    margin-bottom: 25px !important;
+  }
+  
+  /* Fix for shared colleges on very small screens */
+  .shared-colleges-container {
+    gap: 8px !important;
+  }
+  
+  .shared-college-name {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Alternative mobile layout if 3-column doesn't work well */
+@media (max-width: 576px) {
+  .podium-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 0 10px;
+  }
+  
+  .podium-card {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .podium-first {
+    flex: 1.2;
+  }
+  
+  .podium-second,
+  .podium-third {
+    flex: 1;
+  }
+}
+
+/* Fix for horizontal scrolling on mobile */
+@media (max-width: 768px) {
+  .ranklist-container,
+  .ranklist-wrapper,
+  .podium-section,
+  .podium-container {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
+  .podium-container {
+    padding: 0 10px;
+  }
+}
+
+/* Ensure podium cards stay visible */
+@media (max-width: 768px) {
+  .podium-card {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (max-width: 768px) {
+  .tab-button {
+    padding: 20px;
+  }
+  
+  .ranking-row {
+    padding: 16px;
+    grid-template-columns: 60px 1fr auto;
+    gap: 16px;
+  }
+  
+  .rank-badge {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  .rank-number-large {
+    font-size: 1.5rem !important;
+  }
+  
+  .college-name-full {
+    font-size: 1rem !important;
+  }
+  
+  .points-value-large {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* Fix podium legend for mobile */
+@media (max-width: 768px) {
+  .podium-legend {
+    flex-direction: row !important;
+    gap: 20px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .legend-item {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .legend-text {
+    font-size: 0.75rem;
+  }
+}

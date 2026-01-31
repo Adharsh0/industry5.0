@@ -167,9 +167,7 @@ const RankList = () => {
 
             {/* 1st Place */}
             <div className="podium-card podium-first" style={{ '--delay': '0s' }}>
-              <div className="crown-wrapper">
-                <Crown size={24} className="crown-icon" />
-              </div>
+              
               <div className="podium-rank-badge champion" style={{ background: firstPlace.color }}>
                 {getRankIcon(1)}
                 <div className="champion-glow"></div>
