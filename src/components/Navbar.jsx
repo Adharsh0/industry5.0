@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, Home, Info, Calendar, Users, Award, Mail, UserCheck, X, Trophy } from 'lucide-react';
+import {
+  Menu,
+  Home,
+  Info,
+  Calendar,
+  Award,
+  Mail,
+  UserCheck,
+  Trophy,
+  Image
+} from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -19,11 +29,7 @@ const Navbar = () => {
 
   // Lock scroll when menu is open
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
@@ -45,7 +51,8 @@ const Navbar = () => {
       if (element) {
         const offset = 80;
         const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        const offsetPosition =
+          elementPosition + window.pageYOffset - offset;
         window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
       }
     }, 100);
@@ -53,38 +60,66 @@ const Navbar = () => {
 
   const navItems = [
     { id: 'home', label: 'Home', icon: <Home size={18} />, action: handleHomeClick },
+
     { id: 'about', label: 'About', icon: <Info size={18} />, action: () => handleSectionClick('about') },
-    { 
-      id: 'events', 
-      label: 'Events', 
-      icon: <Award size={18} />, 
-      action: () => { 
-        closeMenu(); 
+
+    {
+      id: 'events',
+      label: 'Events',
+      icon: <Award size={18} />,
+      action: () => {
+        closeMenu();
         navigate('/events');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      } 
+      }
     },
-    { 
-      id: 'schedule', 
-      label: 'Schedule', 
-      icon: <Calendar size={18} />, 
-      action: () => { 
-        closeMenu(); 
+
+    {
+      id: 'gallery',
+      label: 'Gallery',
+      icon: <Image size={18} />,
+      action: () => {
+        closeMenu();
+        window.open(
+          'https://drive.google.com/drive/folders/1abY6XioattXm7xTPpP00j4509m-sBDRr',
+          '_blank',
+          'noopener,noreferrer'
+        );
+      }
+    },
+
+    {
+      id: 'schedule',
+      label: 'Schedule',
+      icon: <Calendar size={18} />,
+      action: () => {
+        closeMenu();
         navigate('/schedule');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      } 
+      }
     },
-    { id: 'host', label: 'Host', icon: <UserCheck size={18} />, action: () => { closeMenu(); navigate('/host'); } },
-    { 
-      id: 'rank', 
-      label: 'Rankings', 
-      icon: <Trophy size={18} />, 
-      action: () => { 
-        closeMenu(); 
+
+    {
+      id: 'host',
+      label: 'Host',
+      icon: <UserCheck size={18} />,
+      action: () => {
+        closeMenu();
+        navigate('/host');
+      }
+    },
+
+    {
+      id: 'rank',
+      label: 'Rankings',
+      icon: <Trophy size={18} />,
+      action: () => {
+        closeMenu();
         navigate('/rankings');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      } 
+      }
     },
+
     { id: 'contact', label: 'Contact', icon: <Mail size={18} />, action: () => handleSectionClick('contact') },
   ];
 
@@ -92,7 +127,7 @@ const Navbar = () => {
     <>
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
-          {/* Logo Section */}
+          {/* Logo */}
           <div className="logo-section" onClick={handleHomeClick}>
             <div className="logo-wrapper">
               <img
@@ -121,14 +156,14 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Desktop Registration Button */}
+          {/* Register Button */}
           <Link to="/register" className="register-btn">
             <span className="btn-text">Register Now</span>
             <span className="btn-glow"></span>
           </Link>
 
           {/* Mobile Menu Toggle */}
-          <button 
+          <button
             className="mobile-menu-toggle"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
@@ -142,8 +177,11 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
-      <div className={`mobile-menu-overlay ${menuOpen ? 'active' : ''}`} onClick={closeMenu} />
+      {/* Mobile Overlay */}
+      <div
+        className={`mobile-menu-overlay ${menuOpen ? 'active' : ''}`}
+        onClick={closeMenu}
+      />
 
       {/* Mobile Menu */}
       <div className={`mobile-menu ${menuOpen ? 'active' : ''}`}>
@@ -161,9 +199,9 @@ const Navbar = () => {
               </button>
             ))}
           </div>
-          
-          <Link 
-            to="/register" 
+
+          <Link
+            to="/register"
             className="mobile-menu-register"
             onClick={closeMenu}
           >
