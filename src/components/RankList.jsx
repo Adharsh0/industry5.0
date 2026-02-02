@@ -10,16 +10,15 @@ const RankList = () => {
   const sectionRef = useRef(null);
 
   const engineeringColleges = [
-    { rank: 1, name: "Government Engineering College Thrissur", points: 1730, color: '#FFD700' },
-    { rank: 2, name: "Government Engineering College Wayanad", points: 400, color: '#C0C0C0' },
-    { rank: 3, name: "Government College of Engineering Kannur", points: 335, color: '#CD7F32', shared: true },
-    { rank: 3, name: "Government Engineering College Barton Hill", points: 335, color: '#CD7F32', shared: true }
+    { rank: 1, name: "Government Engineering College Thrissur", points: 2165, color: '#FFD700' },
+    { rank: 2, name: "Government Engineering College Wayanad", points: 900, color: '#C0C0C0' },
+    { rank: 3, name: "Government College of Engineering Kannur", points: 660, color: '#CD7F32', shared: true }
   ];
 
   const polytechnicColleges = [
-    { rank: 1, name: "JDT Islam Polytechnic College", points: 190, color: '#FFD700' },
-    { rank: 2, name: "Model Polytechnic College Vadakara", points: 80, color: '#C0C0C0' },
-    { rank: 3, name: "Seethi Sahib Memorial Polytechnic College Tirur", points: 15, color: '#CD7F32' }
+    { rank: 1, name: "JDT Islam Polytechnic College", points: 970, color: '#FFD700' },
+    { rank: 2, name: "Model Polytechnic College Vadakara", points: 815, color: '#C0C0C0' },
+    { rank: 3, name: "Seethi Sahib Memorial Polytechnic College Tirur", points: 100, color: '#CD7F32' }
   ];
 
   useEffect(() => {
