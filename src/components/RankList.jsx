@@ -155,7 +155,7 @@ const RankList = () => {
               <h3 className="podium-college-name">{secondPlace.name}</h3>
               <div className="podium-points">
                 <span className="points-number">{secondPlace.points}</span>
-                <span className="points-label">Points</span>
+                
               </div>
               <div className="podium-stand stand-silver">
                 <div className="stand-glow"></div>
@@ -178,7 +178,7 @@ const RankList = () => {
               <h3 className="podium-college-name">{firstPlace.name}</h3>
               <div className="podium-points champion-points">
                 <span className="points-number">{firstPlace.points}</span>
-                <span className="points-label">Points</span>
+                
               </div>
               <div className="podium-stand stand-gold">
                 <div className="stand-glow"></div>
@@ -211,7 +211,7 @@ const RankList = () => {
               )}
               <div className="podium-points">
                 <span className="points-number">{thirdPlaceColleges[0].points}</span>
-                <span className="points-label">Points {hasSharedThird && '(Each)'}</span>
+               
               </div>
               <div className="podium-stand stand-bronze">
                 <div className="stand-glow"></div>
@@ -267,7 +267,7 @@ const RankList = () => {
 
                 <div className="points-display">
                   <span className="points-value-large">{college.points}</span>
-                  <span className="points-text-small">points</span>
+                  
                 </div>
 
                 <div className="rank-icon-wrapper">
